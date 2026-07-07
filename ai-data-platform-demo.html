@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Ready Data Platform Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .nav-button {
+            background: white;
+            border: none;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            min-height: 500px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .card p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95em;
+        }
+
+        .metric-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .metric-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .tree {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .tree-item {
+            padding: 8px 0;
+            margin-left: 20px;
+            color: #333;
+        }
+
+        .diagram {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .flow-item {
+            background: #667eea;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .flow-arrow {
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .submenu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .submenu-item {
+            background: #e8ebff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submenu-item:hover {
+            background: #d8e0ff;
+            transform: translateX(5px);
+        }
+
+        .submenu-item h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .submenu-item p {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #764ba2;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 AI-Ready Data Platform</h1>
+            <p>Enterprise Data Governance, Semantic Intelligence & AI Readiness</p>
+        </header>
+
+        <div class="main-nav">
+            <button class="nav-button active" onclick="showSection('overview')">Overview</button>
+            <button class="nav-button" onclick="showSection('datasources')">Data Sources</button>
+            <button class="nav-button" onclick="showSection('quality')">Data Quality</button>
+            <button class="nav-button" onclick="showSection('catalog')">Catalog</button>
+            <button class="nav-button" onclick="showSection('business')">Business Context</button>
+            <button class="nav-button" onclick="showSection('lineage')">Lineage</button>
+            <button class="nav-button" onclick="showSection('ai')">AI Readiness</button>
+        </div>
+
+        <div class="content-area">
+            <!-- Overview Section -->
+            <div id="overview" class="section active">
+                <h2>📊 Overview Dashboard</h2>
+                <p><strong>Purpose:</strong> What is happening on my platform?</p>
+                <p>The Overview provides executives, admins, and all users with a centralized view of the platform's overall health and status.</p>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Key Metrics</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="label">Connected Sources</div>
+                        <div class="value">24</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">AI Ready Assets</div>
+                        <div class="value">156</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Quality Score</div>
+                        <div class="value">94%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Policy Violations</div>
+                        <div class="value">3</div>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Dashboard Components</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Connected Sources</h3>
+                        <p>Active enterprise data connections across SAP, Oracle, Salesforce, and Snowflake</p>
+                    </div>
+                    <div class="card">
+                        <h3>AI Ready Assets</h3>
+                        <p>Certified datasets ready for AI and ML applications</p>
+                    </div>
+                    <div class="card">
+                        <h3>Metadata Coverage</h3>
+                        <p>100% visibility into data definitions and business glossary</p>
+                    </div>
+                    <div class="card">
+                        <h3>Lineage Coverage</h3>
+                        <p>End-to-end traceability from source to AI</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Sources Section -->
+            <div id="datasources" class="section">
+                <h2>📥 Data Sources</h2>
+                <p><strong>Purpose:</strong> Bring enterprise data together</p>
+                <p>Connect and ingest data from across the enterprise, monitor ingestion pipelines, and explore available data assets.</p>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Supported Connections</h3>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <h4>SAP</h4>
+                        <p>Enterprise resource planning data</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>ORACLE</h4>
+                        <p>Legacy database systems</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>SALESFORCE</h4>
+                        <p>Customer relationship management</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>SNOWFLAKE</h4>
+                        <p>Cloud data warehouse</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Available Data Assets</h3>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <h4>Claims</h4>
+                        <p>Healthcare claim records</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Members</h4>
+                        <p>Member/customer profiles</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Policies</h4>
+                        <p>Insurance policy data</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Payments</h4>
+                        <p>Payment transaction records</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Providers</h4>
+                        <p>Healthcare provider information</p>
+                    </div>
+                </div>
+
+                <div class="tree" style="margin-top: 30px;">
+                    <div style="font-weight: bold; color: #667eea;">Data Ingestion Pipeline</div>
+                    <div class="tree-item">├── Connection Monitoring</div>
+                    <div class="tree-item">├── Data Profiling</div>
+                    <div class="tree-item">├── Schema Detection</div>
+                    <div class="tree-item">├── Quality Checks</div>
+                    <div class="tree-item">└── Lineage Tracking</div>
+                </div>
+            </div>
+
+            <!-- Data Quality Section -->
+            <div id="quality" class="section">
+                <h2>✅ Data Quality</h2>
+                <p><strong>Purpose:</strong> Improve trust and make data reliable</p>
+                <p>Profile, validate, and remediate data through comprehensive quality checks, rules, and business validations.</p>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Quality Statistics</h3>
+                <div class="grid">
+                    <div class="metric-box">
+                        <h4>Completeness</h4>
+                        <div class="metric-value">98%</div>
+                        <p>Records with required fields populated</p>
+                    </div>
+                    <div class="metric-box">
+                        <h4>Consistency</h4>
+                        <div class="metric-value">96%</div>
+                        <p>Data conforming to defined standards</p>
+                    </div>
+                    <div class="metric-box">
+                        <h4>Validity</h4>
+                        <div class="metric-value">99%</div>
+                        <p>Records passing validation rules</p>
+                    </div>
+                    <div class="metric-box">
+                        <h4>Uniqueness</h4>
+                        <div class="metric-value">97%</div>
+                        <p>Duplicate detection and resolution</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Quality Issue Types</h3>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <h4>Nulls</h4>
+                        <p>Missing or empty values</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Duplicates</h4>
+                        <p>Redundant records</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Freshness</h4>
+                        <p>Stale or outdated data</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Patterns</h4>
+                        <p>Anomalous data patterns</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Validation Rules</h3>
+                <div class="tree">
+                    <div style="font-weight: bold; color: #667eea;">Format Validations</div>
+                    <div class="tree-item">├── Email Format</div>
+                    <div class="tree-item">├── Phone Number</div>
+                    <div class="tree-item">├── Country Code</div>
+                    <div class="tree-item">├── PII Detection</div>
+                    <div class="tree-item">├── Outlier Detection</div>
+                    <div class="tree-item">└── Business Rules Engine</div>
+                </div>
+            </div>
+
+            <!-- Catalog Section -->
+            <div id="catalog" class="section">
+                <h2>📚 Catalog</h2>
+                <p><strong>Purpose:</strong> Make data understandable and discoverable</p>
+                <p>Add business meaning to technical data through metadata management, business glossaries, and asset documentation.</p>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Catalog Features</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Schema Explorer</h3>
+                        <p>Browse and understand data structure and relationships</p>
+                    </div>
+                    <div class="card">
+                        <h3>Business Glossary</h3>
+                        <p>Standardized business terminology and definitions</p>
+                    </div>
+                    <div class="card">
+                        <h3>Metadata Management</h3>
+                        <p>Complete data asset documentation and ownership</p>
+                    </div>
+                    <div class="card">
+                        <h3>Search & Discovery</h3>
+                        <p>Find relevant datasets across the enterprise</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Metadata Hierarchy</h3>
+                <div class="tree">
+                    <div style="font-weight: bold; color: #667eea;">Data Assets</div>
+                    <div class="tree-item">├── Schema</div>
+                    <div class="tree-item">├── Metadata</div>
+                    <div class="tree-item">├── Business Glossary</div>
+                    <div class="tree-item">├── Search Tags</div>
+                    <div class="tree-item">└── Certification Status</div>
+                </div>
+            </div>
+
+            <!-- Business Context Section -->
+            <div id="business" class="section">
+                <h2>🧠 Business Context</h2>
+                <p><strong>Purpose:</strong> Connect the meaning and provide complete business context for AI decisions</p>
+                <p>Translate technical data into business language through semantic models, ontologies, and knowledge graphs.</p>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Core Components</h3>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <h4>Semantic Models</h4>
+                        <p>Business concept definitions and relationships</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Ontology</h4>
+                        <p>Standardized business vocabulary</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Entity Mapping</h4>
+                        <p>Map technical fields to business entities</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Knowledge Graph</h4>
+                        <p>Connected enterprise entities and relationships</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Ontology Example: Claim</h3>
+                <div class="tree">
+                    <div style="font-weight: bold; color: #667eea;">Claim Entity</div>
+                    <div class="tree-item">├── Attributes</div>
+                    <div class="tree-item">│   ├── Claim ID</div>
+                    <div class="tree-item">│   ├── Claim Date</div>
+                    <div class="tree-item">│   ├── Amount</div>
+                    <div class="tree-item">│   └── Status</div>
+                    <div class="tree-item">├── Relationships</div>
+                    <div class="tree-item">│   ├── filedBy → Member</div>
+                    <div class="tree-item">│   ├── coveredBy → Policy</div>
+                    <div class="tree-item">│   ├── processedBy → Adjuster</div>
+                    <div class="tree-item">│   └── paidThrough → Payment</div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Knowledge Graph: Enterprise Connections</h3>
+                <div class="diagram">
+                    <div class="flow">
+                        <div class="flow-item">Customer</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Policy</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Claim</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Provider</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Payment</div>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Context Graph: AI Decision Reasoning</h3>
+                <div class="diagram">
+                    <div class="flow">
+                        <div class="flow-item">Member</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Policy</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Claim</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">LPI Score</div>
+                    </div>
+                    <div class="flow">
+                        <div class="flow-item">Propensity Model</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Fraud Risk</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">AI Decision</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lineage Section -->
+            <div id="lineage" class="section">
+                <h2>🔄 Lineage & Governance</h2>
+                <p><strong>Purpose:</strong> Trace the data and explain where it came from</p>
+                <p>End-to-end traceability from source systems through transformations to AI models for complete transparency.</p>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Data Flow Pipeline</h3>
+                <div class="diagram">
+                    <div class="flow">
+                        <div class="flow-item">Oracle</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">ETL</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Validation</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Semantic</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-item">Knowledge Graph</div>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Lineage Capabilities</h3>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <h4>Pipeline Lineage</h4>
+                        <p>Track data through ETL processes</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Transformations</h4>
+                        <p>Understand data transformations</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Column Lineage</h4>
+                        <p>Trace individual column origins</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Source to AI</h4>
+                        <p>Full path from source to AI model</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Audit Trail</h3>
+                <div class="tree">
+                    <div style="font-weight: bold; color: #667eea;">Lineage Tracking</div>
+                    <div class="tree-item">├── Pipeline Execution Logs</div>
+                    <div class="tree-item">├── Data Quality Checks</div>
+                    <div class="tree-item">├── Transformation History</div>
+                    <div class="tree-item">├── Policy Compliance</div>
+                    <div class="tree-item">└── Impact Analysis</div>
+                </div>
+            </div>
+
+            <!-- AI Readiness Section -->
+            <div id="ai" class="section">
+                <h2>🤖 AI Readiness</h2>
+                <p><strong>Purpose:</strong> Measure AI readiness and certify datasets for AI applications</p>
+                <p>Comprehensive assessment of data quality, metadata completeness, governance, and semantic understanding.</p>
+
+                <h3 style="color: #667eea; margin-top: 30px;">AI Readiness Scorecard</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="label">Quality</div>
+                        <div class="value">92%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Metadata</div>
+                        <div class="value">100%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Glossary</div>
+                        <div class="value">91%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Ontology</div>
+                        <div class="value">87%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Lineage</div>
+                        <div class="value">100%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Knowledge Graph</div>
+                        <div class="value">90%</div>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Overall AI Readiness: <span class="badge">95% CERTIFIED</span></h3>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Certification Status</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h3>✅ AI Ready</h3>
+                        <p>Certified datasets ready for production AI/ML use</p>
+                    </div>
+                    <div class="card">
+                        <h3>⏳ Pending</h3>
+                        <p>Under certification review</p>
+                    </div>
+                    <div class="card">
+                        <h3>❌ Rejected</h3>
+                        <p>Failed certification requirements</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">AI Data Products</h3>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <h4>Customer 360</h4>
+                        <p><span class="badge">AI Ready</span><br>Complete customer entity with quality score: 96%</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Claims 360</h4>
+                        <p><span class="badge">AI Ready</span><br>Comprehensive claim data with quality score: 94%</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Provider 360</h4>
+                        <p><span class="badge">AI Ready</span><br>Provider information with quality score: 92%</p>
+                    </div>
+                    <div class="submenu-item">
+                        <h4>Fraud Dataset</h4>
+                        <p><span class="badge">AI Ready</span><br>Fraud detection ready dataset with quality score: 95%</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px;">Recommendations</h3>
+                <div class="tree">
+                    <div style="font-weight: bold; color: #667eea;">Action Items</div>
+                    <div class="tree-item">⚠️ Missing Metadata - 12 assets</div>
+                    <div class="tree-item">⚠️ Missing Owner - 8 assets</div>
+                    <div class="tree-item">⚠️ Missing Description - 15 assets</div>
+                    <div class="tree-item">⚠️ Poor Quality - 3 assets</div>
+                    <div class="tree-item">⚠️ Broken Lineage - 2 assets</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🚀 AI-Ready Data Platform Demo | Enterprise Data Governance & AI Intelligence</p>
+            <p style="margin-top: 10px; opacity: 0.7;">© 2026 GHCP Proj1 | Making Enterprise Data Ready for AI</p>
+        </footer>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+            }
+
+            // Update active button
+            const buttons = document.querySelectorAll('.nav-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
