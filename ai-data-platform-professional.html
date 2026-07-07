@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Ready Data Platform</title>
+    <style>
+        :root {
+            --ink: #12202f;
+            --muted: #617186;
+            --soft: #eef3f7;
+            --line: #d9e2ea;
+            --panel: #ffffff;
+            --nav: #111923;
+            --nav-2: #172331;
+            --blue: #2f6fed;
+            --teal: #0f9f9a;
+            --green: #1a9b58;
+            --amber: #d89018;
+            --red: #d94a3f;
+            --purple: #7651d9;
+            --shadow: 0 12px 34px rgba(20, 39, 61, .11);
+            --radius: 8px;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f4f7fa;
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 272px minmax(0, 1fr);
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, var(--nav), var(--nav-2));
+            color: #d9e8f5;
+            padding: 20px 14px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px 22px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            margin-bottom: 16px;
+        }
+
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #35c2a6, #2f6fed);
+            box-shadow: 0 10px 28px rgba(47,111,237,.28);
+            font-weight: bold;
+            color: white;
+            font-size: 20px;
+        }
+
+        .brand-title {
+            font-weight: 750;
+            line-height: 1.15;
+            letter-spacing: 0;
+            color: #fff;
+        }
+
+        .brand-sub {
+            color: #8fa2b5;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .nav-group-label {
+            color: #7f91a2;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin: 18px 12px 8px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border: 0;
+            color: #cbd9e6;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-height: 42px;
+            padding: 0 12px;
+            border-radius: 8px;
+            text-align: left;
+            transition: .18s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255,255,255,.09);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            box-shadow: inset 3px 0 0 #35c2a6;
+        }
+
+        .main {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 72px;
+            background: rgba(255,255,255,.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 26px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .search {
+            flex: 1;
+            min-width: 180px;
+            height: 42px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 13px;
+            background: #f8fafc;
+            color: var(--muted);
+        }
+
+        .search input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tool {
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--ink);
+            border-radius: 8px;
+            height: 40px;
+            min-width: 40px;
+            display: inline-grid;
+            place-items: center;
+            box-shadow: 0 3px 10px rgba(20,39,61,.04);
+        }
+
+        .workspace {
+            padding: 26px;
+            max-width: 1620px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn .35s ease both;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero {
+            color: #fff;
+            border-radius: 8px;
+            padding: 28px;
+            background: linear-gradient(135deg, rgba(18,32,47,.96), rgba(23,49,67,.94)),
+                        url("data:image/svg+xml,%3Csvg width='1200' height='420' viewBox='0 0 1200 420' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='.52' fill='none' stroke='%2357d8c4' stroke-width='1.2'%3E%3Cpath d='M80 245C206 110 330 316 455 177S678 104 784 215s236 23 337-96'/%3E%3Cpath d='M34 315c145-109 274 22 386-53s205-205 352-69 242 80 378-16'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: cover;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(280px, .7fr);
+            gap: 22px;
+            overflow: hidden;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #96f1df;
+            margin-bottom: 12px;
+        }
+
+        h1, h2, h3, p {
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: clamp(31px, 4vw, 54px);
+            line-height: 1.03;
+            letter-spacing: 0;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: #d8e8f3;
+            font-size: 16px;
+            max-width: 760px;
+            line-height: 1.55;
+            margin-bottom: 0;
+        }
+
+        .hero-side {
+            align-self: stretch;
+            display: grid;
+            gap: 12px;
+        }
+
+        .status-tile {
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 8px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-tile strong {
+            display: block;
+            font-size: 24px;
+            color: #fff;
+            margin-top: 5px;
+        }
+
+        .status-tile span {
+            color: #b7c8d8;
+            font-size: 13px;
+        }
+
+        .live-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #35c2a6;
+            box-shadow: 0 0 0 0 rgba(53,194,166,.62);
+            animation: pulse 1.6s infinite;
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            70% { box-shadow: 0 0 0 9px rgba(53,194,166,0); }
+            100% { box-shadow: 0 0 0 0 rgba(53,194,166,0); }
+        }
+
+        .section {
+            margin-top: 22px;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 13px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 4px;
+            letter-spacing: 0;
+        }
+
+        .section-copy {
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.45;
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .grid.cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+        .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: 0 6px 24px rgba(20,39,61,.06);
+            padding: 17px;
+            transition: .18s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .kpi {
+            min-height: 144px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi .label {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .kpi .value {
+            font-size: 34px;
+            font-weight: 830;
+            letter-spacing: 0;
+            margin-top: 9px;
+        }
+
+        .trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--green);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 24px;
+            border-radius: 999px;
+            padding: 3px 9px;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .badge.green { background: #e8f7ef; color: var(--green); }
+        .badge.blue { background: #eaf0ff; color: var(--blue); }
+        .badge.amber { background: #fff4dd; color: var(--amber); }
+        .badge.red { background: #ffebe9; color: var(--red); }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #eaf0f5;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 6px;
+            margin: 20px 0;
+        }
+
+        .tab {
+            border: 0;
+            border-radius: 7px;
+            min-height: 36px;
+            padding: 0 13px;
+            color: #536477;
+            background: transparent;
+            font-weight: 750;
+            transition: .16s ease;
+        }
+
+        .tab.active {
+            background: #fff;
+            color: var(--ink);
+            box-shadow: 0 4px 14px rgba(20,39,61,.08);
+        }
+
+        .tab-view { display: none; }
+        .tab-view.active { display: block; animation: fadeIn .25s ease both; }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--ink);
+            border-radius: 8px;
+            min-height: 40px;
+            padding: 0 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(20,39,61,.05);
+        }
+
+        .btn.primary {
+            color: #fff;
+            background: #1d5edc;
+            border-color: #1d5edc;
+        }
+
+        .flow-diagram {
+            background: #f9f9f9;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .flow-item {
+            background: var(--blue);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            font-size: 1.5em;
+            color: var(--blue);
+        }
+
+        .tree {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-top: 20px;
+            border: 1px solid var(--line);
+        }
+
+        .tree-item {
+            padding: 8px 0;
+            margin-left: 20px;
+            color: #333;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            max-width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+        }
+
+        th, td {
+            padding: 13px 14px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        th {
+            color: #536477;
+            background: #f7fafc;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        tr:last-child td { border-bottom: 0; }
+
+        .row-title {
+            font-weight: 850;
+            color: var(--ink);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .row-sub {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, var(--blue), var(--teal));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .metric-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .placeholder {
+            min-height: 460px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding: 34px;
+        }
+
+        .placeholder h1 {
+            color: var(--ink);
+            font-size: clamp(28px, 4vw, 48px);
+        }
+
+        .placeholder p {
+            color: var(--muted);
+            max-width: 640px;
+            line-height: 1.55;
+        }
+
+        @media (max-width: 820px) {
+            .app { grid-template-columns: 1fr; }
+            .sidebar {
+                position: fixed;
+                z-index: 45;
+                transform: translateX(-104%);
+                transition: .25s ease;
+                width: 278px;
+            }
+            .grid.cols-5,
+            .grid.cols-4,
+            .grid.cols-3,
+            .grid.cols-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark">🚀</div>
+                <div>
+                    <div class="brand-title">AI-Ready<br>Data Platform</div>
+                    <div class="brand-sub">Healthcare Insurance</div>
+                </div>
+            </div>
+            <div class="nav-group-label">Main Navigation</div>
+            <button class="nav-item active" data-page="overview">📊 Overview</button>
+            <button class="nav-item" data-page="sources">📥 Data Sources</button>
+            <button class="nav-item" data-page="quality">✅ Data Quality</button>
+            <button class="nav-item" data-page="catalog">📚 Catalog</button>
+            <button class="nav-item" data-page="business">🧠 Business Context</button>
+            <button class="nav-item" data-page="lineage">🔄 Lineage</button>
+            <button class="nav-item" data-page="ai">🤖 AI Readiness</button>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="search">
+                    <span>🔍</span>
+                    <input placeholder="Search datasets, rules, claims, members, providers">
+                </div>
+                <div class="top-actions">
+                    <select style="height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:#fff;color:var(--ink);">
+                        <option>Production</option>
+                        <option>QA</option>
+                        <option>Development</option>
+                    </select>
+                    <button class="tool" title="Help">❓</button>
+                    <button class="tool" title="Settings">⚙️</button>
+                </div>
+            </header>
+
+            <div class="workspace">
+                <!-- Overview Page -->
+                <section class="page active" id="overviewPage">
+                    <div class="hero">
+                        <div>
+                            <div class="eyebrow"><span class="live-dot"></span> Platform Healthy</div>
+                            <h1>Welcome to the AI-Ready Data Platform</h1>
+                            <p>Enterprise data governance, semantic intelligence, and AI certification for healthcare insurance. Transform fragmented data into trusted, contextual, AI-ready assets.</p>
+                        </div>
+                        <div class="hero-side">
+                            <div class="status-tile"><span>All Systems Operational</span><strong>99.98%</strong></div>
+                            <div class="status-tile"><span>AI Readiness</span><strong>91%</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="grid cols-4">
+                            <div class="card kpi"><span class="label">Connected Systems</span><span class="value">28</span><span class="trend">+4 this week</span></div>
+                            <div class="card kpi"><span class="label">Enterprise Datasets</span><span class="value">1,247</span><span class="trend">+83 discovered</span></div>
+                            <div class="card kpi"><span class="label">AI Ready Products</span><span class="value">156</span><span class="trend">+12 certified</span></div>
+                            <div class="card kpi"><span class="label">Overall Quality Score</span><span class="value">94%</span><span class="trend">+6.2%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-head">
+                            <div><h2 class="section-title">AI Readiness Journey</h2><p class="section-copy">Data enrichment at every stage increases business value</p></div>
+                        </div>
+                        <div class="flow-diagram">
+                            <div class="flow">
+                                <div class="flow-item">Raw Data</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Profiled</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Quality Validated</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Metadata Enriched</div>
+                            </div>
+                            <div class="flow">
+                                <div class="flow-item">Business Glossary</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Semantic Layer</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Ontology Mapped</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">AI Ready ✓</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section grid cols-2">
+                        <div class="card">
+                            <h2 class="section-title">Top AI Data Products</h2>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead><tr><th>Product</th><th>Domain</th><th>Quality</th><th>Status</th></tr></thead>
+                                    <tbody>
+                                        <tr><td><span class="row-title">Customer 360</span><span class="row-sub">AI Data Product</span></td><td>Member</td><td>96%</td><td><span class="badge green">Ready</span></td></tr>
+                                        <tr><td><span class="row-title">Claims 360</span><span class="row-sub">AI Data Product</span></td><td>Claims</td><td>94%</td><td><span class="badge green">Ready</span></td></tr>
+                                        <tr><td><span class="row-title">Provider 360</span><span class="row-sub">AI Data Product</span></td><td>Network</td><td>92%</td><td><span class="badge blue">Published</span></td></tr>
+                                        <tr><td><span class="row-title">Fraud Dataset</span><span class="row-sub">AI Data Product</span></td><td>Risk</td><td>95%</td><td><span class="badge green">Ready</span></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2 class="section-title">Platform Health Metrics</h2>
+                            <div class="grid cols-2">
+                                <div class="metric-card" style="background:linear-gradient(135deg, #2f6fed, #0f9f9a);"><span class="label">Metadata Coverage</span><span class="value">100%</span></div>
+                                <div class="metric-card" style="background:linear-gradient(135deg, #1a9b58, #15a08d);"><span class="label">Lineage Coverage</span><span class="value">100%</span></div>
+                                <div class="metric-card" style="background:linear-gradient(135deg, #7651d9, #6341c8);"><span class="label">Ontology Coverage</span><span class="value">87%</span></div>
+                                <div class="metric-card" style="background:linear-gradient(135deg, #d89018, #c87a0f);"><span class="label">Knowledge Graph</span><span class="value">90%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Sources Page -->
+                <section class="page" id="sourcesPage">
+                    <div class="hero">
+                        <div>
+                            <div class="eyebrow"><span class="live-dot"></span> Data Discovery Active</div>
+                            <h1>Get the Data</h1>
+                            <p>Connect and ingest enterprise data from operational, clinical, CRM, and analytical systems. Monitor pipelines and profile assets for quality readiness.</p>
+                        </div>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab(event, 'connections')">Connections</button>
+                        <button class="tab" onclick="switchTab(event, 'assets')">Data Assets</button>
+                        <button class="tab" onclick="switchTab(event, 'pipelines')">Pipelines</button>
+                        <button class="tab" onclick="switchTab(event, 'profiling')">Profiling</button>
+                    </div>
+
+                    <div id="connections" class="tab-view active">
+                        <h2 class="section-title">Enterprise Connections</h2>
+                        <p class="section-copy">Connected operational, clinical, CRM, document, and analytical systems</p>
+                        <div class="grid cols-3" style="margin-top:20px;">
+                            <div class="card"><h3>SAP</h3><p>Enterprise Resource Planning Data</p><p><span class="badge green">Connected</span></p></div>
+                            <div class="card"><h3>ORACLE</h3><p>Legacy Database Systems</p><p><span class="badge green">Connected</span></p></div>
+                            <div class="card"><h3>SALESFORCE</h3><p>Customer Relationship Management</p><p><span class="badge green">Connected</span></p></div>
+                            <div class="card"><h3>SNOWFLAKE</h3><p>Cloud Data Warehouse</p><p><span class="badge green">Connected</span></p></div>
+                            <div class="card"><h3>FHIR API</h3><p>Healthcare Interoperability</p><p><span class="badge green">Connected</span></p></div>
+                            <div class="card"><h3>HL7 EMR</h3><p>Electronic Medical Records</p><p><span class="badge amber">Warning</span></p></div>
+                        </div>
+                    </div>
+
+                    <div id="assets" class="tab-view" style="display:none;">
+                        <h2 class="section-title">Discovered Data Assets</h2>
+                        <p class="section-copy">Catalog-style view of datasets discovered during connection and profiling</p>
+                        <div class="table-wrap" style="margin-top:20px;">
+                            <table>
+                                <thead><tr><th>Asset Name</th><th>Domain</th><th>Source</th><th>Owner</th><th>Records</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td><span class="row-title">Claims</span></td><td>Claims</td><td>Oracle</td><td>Claims Dept</td><td>18.2M</td><td><span class="badge green">Ready</span></td></tr>
+                                    <tr><td><span class="row-title">Members</span></td><td>Member</td><td>FHIR API</td><td>Member Ops</td><td>8.9M</td><td><span class="badge green">Ready</span></td></tr>
+                                    <tr><td><span class="row-title">Policies</span></td><td>Policy</td><td>SAP</td><td>Policy Admin</td><td>5.1M</td><td><span class="badge green">Ready</span></td></tr>
+                                    <tr><td><span class="row-title">Providers</span></td><td>Network</td><td>REST API</td><td>Network Team</td><td>2.4M</td><td><span class="badge amber">Attention</span></td></tr>
+                                    <tr><td><span class="row-title">Payments</span></td><td>Finance</td><td>Snowflake</td><td>Finance Team</td><td>7.8M</td><td><span class="badge green">Ready</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="pipelines" class="tab-view" style="display:none;">
+                        <h2 class="section-title">Data Ingestion Pipelines</h2>
+                        <p class="section-copy">Monitor data pipeline execution, transformations, and quality checks</p>
+                        <div class="tree" style="margin-top:20px;">
+                            <div style="font-weight:bold;color:var(--blue);margin-bottom:10px;">📊 Data Ingestion Pipeline</div>
+                            <div class="tree-item">├── Connection Monitoring</div>
+                            <div class="tree-item">├── Data Profiling</div>
+                            <div class="tree-item">├── Schema Detection</div>
+                            <div class="tree-item">├── Quality Checks</div>
+                            <div class="tree-item">└── Lineage Tracking</div>
+                        </div>
+                    </div>
+
+                    <div id="profiling" class="tab-view" style="display:none;">
+                        <h2 class="section-title">Data Profiling Results</h2>
+                        <p class="section-copy">Statistical analysis and pattern detection across enterprise datasets</p>
+                        <div class="grid cols-2" style="margin-top:20px;">
+                            <div class="card"><h3>Claims Dataset Profile</h3><ul style="margin:15px 0;color:var(--muted);"><li>📊 Rows: 18.2M</li><li>📋 Columns: 124</li><li>🔐 Sensitive Fields: 14</li><li>🔄 Refresh: Today</li></ul></div>
+                            <div class="card"><h3>Detected Patterns</h3><ul style="margin:15px 0;color:var(--muted);"><li>✓ ICD-10 Codes (96%)</li><li>✓ CPT Procedures (94%)</li><li>✓ NPI Providers (97%)</li><li>✓ Member IDs (99%)</li></ul></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Quality Page -->
+                <section class="page" id="qualityPage">
+                    <div class="hero">
+                        <div>
+                            <div class="eyebrow"><span class="live-dot"></span> Data Trust Platform</div>
+                            <h1>Trust the Data</h1>
+                            <p>Quality validation, anomaly detection, remediation, and recommendations turn discovered data into reliable enterprise assets ready for semantic enrichment and AI consumption.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="grid cols-5">
+                            <div class="card kpi"><span class="label">Quality Score</span><span class="value">96%</span><span class="trend">+18.4%</span></div>
+                            <div class="card kpi"><span class="label">Healthy Datasets</span><span class="value">184</span><span class="trend">+29</span></div>
+                            <div class="card kpi"><span class="label">Rules Passed</span><span class="value">1,248</span><span class="trend">98.1%</span></div>
+                            <div class="card kpi"><span class="label">Critical Issues</span><span class="value">12</span><span class="trend">-174</span></div>
+                            <div class="card kpi"><span class="label">AI Confidence</span><span class="value">94%</span><span class="trend">+33 pts</span></div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Quality Dimensions</h2>
+                        <p class="section-copy">Six trust signals measured across all healthcare insurance data products</p>
+                        <div class="grid cols-3" style="margin-top:20px;">
+                            <div class="card"><h3>Completeness</h3><p style="color:var(--muted);">98% - Records with required fields populated</p><p><span class="badge green">Low Risk</span></p></div>
+                            <div class="card"><h3>Consistency</h3><p style="color:var(--muted);">96% - Data conforming to defined standards</p><p><span class="badge green">Low Risk</span></p></div>
+                            <div class="card"><h3>Validity</h3><p style="color:var(--muted);">99% - Records passing validation rules</p><p><span class="badge green">Low Risk</span></p></div>
+                            <div class="card"><h3>Accuracy</h3><p style="color:var(--muted);">95% - Data matching source systems</p><p><span class="badge green">Low Risk</span></p></div>
+                            <div class="card"><h3>Uniqueness</h3><p style="color:var(--muted);">97% - Duplicate records identified</p><p><span class="badge amber">Medium</span></p></div>
+                            <div class="card"><h3>Freshness</h3><p style="color:var(--muted);">96% - Data updated within SLA</p><p><span class="badge green">Low Risk</span></p></div>
+                        </div>
+                    </div>
+
+                    <div class="tabs" style="margin-top:30px;">
+                        <button class="tab active" onclick="switchTab(event, 'rules')">Quality Rules</button>
+                        <button class="tab" onclick="switchTab(event, 'issues')">Issues</button>
+                        <button class="tab" onclick="switchTab(event, 'recommendations')">Recommendations</button>
+                    </div>
+
+                    <div id="rules" class="tab-view active" style="margin-top:20px;">
+                        <h2 class="section-title">Business Validation Rules</h2>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>Rule Name</th><th>Category</th><th>Status</th><th>Records Evaluated</th><th>Failed</th><th>Impact</th></tr></thead>
+                                <tbody>
+                                    <tr><td><span class="row-title">Member ID cannot be empty</span></td><td>Mandatory</td><td><span class="badge green">Passed</span></td><td>18.2M</td><td>0</td><td>Critical</td></tr>
+                                    <tr><td><span class="row-title">Claim Amount cannot be negative</span></td><td>Business</td><td><span class="badge green">Passed</span></td><td>18.2M</td><td>0</td><td>Critical</td></tr>
+                                    <tr><td><span class="row-title">Diagnosis Code must be valid ICD-10</span></td><td>Healthcare</td><td><span class="badge amber">Warning</span></td><td>11.7M</td><td>4,821</td><td>High</td></tr>
+                                    <tr><td><span class="row-title">Provider NPI must be valid</span></td><td>Compliance</td><td><span class="badge red">Failed</span></td><td>2.4M</td><td>18,402</td><td>Critical</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="issues" class="tab-view" style="display:none;margin-top:20px;">
+                        <h2 class="section-title">Identified Data Quality Issues</h2>
+                        <div class="grid cols-2">
+                            <div class="card"><h3>Duplicate Claims</h3><p>42,810 records - High Severity</p><p style="color:var(--muted);font-size:13px;">Inflates loss ratios and can distort fraud models. Merge duplicate claim groups using claim line fingerprinting.</p><p style="margin-top:10px;"><span class="badge red">Critical</span></p></div>
+                            <div class="card"><h3>Missing Diagnosis Codes</h3><p>18,244 records - Critical Severity</p><p style="color:var(--muted);font-size:13px;">Prevents clinical risk grouping and claim adjudication context. Infer candidate ICD-10 codes from encounter history.</p><p style="margin-top:10px;"><span class="badge red">Critical</span></p></div>
+                            <div class="card"><h3>Invalid Policy Numbers</h3><p>9,812 records - Critical Severity</p><p style="color:var(--muted);font-size:13px;">Breaks claim-policy relationships and member entitlement checks. Resolve against policy administration timeline.</p><p style="margin-top:10px;"><span class="badge red">Critical</span></p></div>
+                            <div class="card"><h3>Invalid ICD10 Codes</h3><p>4,821 records - High Severity</p><p style="color:var(--muted);font-size:13px;">Compromises clinical analytics and compliance reporting. Validate against current ICD-10 reference set.</p><p style="margin-top:10px;"><span class="badge amber">High</span></p></div>
+                        </div>
+                    </div>
+
+                    <div id="recommendations" class="tab-view" style="display:none;margin-top:20px;">
+                        <h2 class="section-title">Quality Recommendations</h2>
+                        <div class="grid cols-1">
+                            <div class="card"><h3>📊 Claims dataset is ready for metadata generation</h3><p>Estimated AI confidence improvement: 8%. Publish the certified profile into Catalog.</p><p><span class="badge green">High Impact</span></p></div>
+                            <div class="card"><h3>🛡️ Member dataset requires glossary mapping</h3><p>Map subscriber, dependent, member, and patient terms before semantic enrichment.</p><p><span class="badge blue">Medium Impact</span></p></div>
+                            <div class="card"><h3>⚠️ Provider dataset contains duplicate NPIs</h3><p>Use NPI registry matching and network affiliation to merge provider identities.</p><p><span class="badge amber">High Impact</span></p></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Catalog Page -->
+                <section class="page" id="catalogPage">
+                    <div class="placeholder card"><div><h1>📚 Catalog</h1><p>Module Coming in Next Phase. Trusted data will be enriched with metadata, ownership, business definitions, and discoverability to create shared enterprise understanding.</p></div></div>
+                </section>
+
+                <!-- Business Context Page -->
+                <section class="page" id="businessPage">
+                    <div class="hero">
+                        <div>
+                            <div class="eyebrow"><span class="live-dot"></span> Business Intelligence</div>
+                            <h1>Connect the Meaning</h1>
+                            <p>Semantic models, ontology, entity mapping, and knowledge graphs translate technical data into business language and provide context for AI decisions.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Core Components</h2>
+                        <div class="grid cols-2" style="margin-top:20px;">
+                            <div class="card">
+                                <h3>🎯 Semantic Models</h3>
+                                <p>Business concept definitions and relationships between enterprise entities</p>
+                            </div>
+                            <div class="card">
+                                <h3>📖 Ontology</h3>
+                                <p>Standardized business vocabulary and entity schemas</p>
+                            </div>
+                            <div class="card">
+                                <h3>🔗 Entity Mapping</h3>
+                                <p>Map technical fields to business entities (customer_id → Customer)</p>
+                            </div>
+                            <div class="card">
+                                <h3>🕸️ Knowledge Graph</h3>
+                                <p>Connected enterprise entities and their relationships</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Entity Mapping Example: Claim</h2>
+                        <div class="tree" style="margin-top:20px;">
+                            <div style="font-weight:bold;color:var(--blue);margin-bottom:10px;">Claim Entity</div>
+                            <div class="tree-item">├── Attributes</div>
+                            <div class="tree-item">│   ├── Claim ID</div>
+                            <div class="tree-item">│   ├── Claim Date</div>
+                            <div class="tree-item">│   ├── Amount</div>
+                            <div class="tree-item">│   └── Status</div>
+                            <div class="tree-item">├── Relationships</div>
+                            <div class="tree-item">│   ├── filedBy → Member</div>
+                            <div class="tree-item">│   ├── coveredBy → Policy</div>
+                            <div class="tree-item">│   ├── processedBy → Adjuster</div>
+                            <div class="tree-item">│   └── paidThrough → Payment</div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Enterprise Knowledge Graph</h2>
+                        <div class="flow-diagram">
+                            <div class="flow">
+                                <div class="flow-item">Customer</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Policy</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Claim</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Provider</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Payment</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Context Graph: AI Decision Reasoning</h2>
+                        <p class="section-copy">Complete business context behind AI decisions showing how connected entities contribute to recommendations</p>
+                        <div class="flow-diagram">
+                            <div class="flow">
+                                <div class="flow-item">Member</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Policy</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Claim</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">LPI Score</div>
+                            </div>
+                            <div class="flow">
+                                <div class="flow-item">Propensity Model</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Fraud Risk</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">AI Decision</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Lineage Page -->
+                <section class="page" id="lineagePage">
+                    <div class="hero">
+                        <div>
+                            <div class="eyebrow"><span class="live-dot"></span> Governance Platform</div>
+                            <h1>Trace the Data</h1>
+                            <p>End-to-end lineage, governance policies, compliance controls, and audit readiness provide complete traceability from source systems through transformations to AI models.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Data Flow Pipeline: Source to AI</h2>
+                        <div class="flow-diagram">
+                            <div class="flow">
+                                <div class="flow-item">Oracle</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">ETL</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Validation</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Semantic Layer</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-item">Knowledge Graph</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Lineage Tracking</h2>
+                        <div class="tree" style="margin-top:20px;">
+                            <div style="font-weight:bold;color:var(--blue);margin-bottom:10px;">📊 Lineage Components</div>
+                            <div class="tree-item">├── Pipeline Lineage - Track data through ETL processes</div>
+                            <div class="tree-item">├── Transformations - Understand data transformations and enrichments</div>
+                            <div class="tree-item">├── Column Lineage - Trace individual column origins and transformations</div>
+                            <div class="tree-item">├── Source to AI - Complete path from source to AI model</div>
+                            <div class="tree-item">├── Policy Compliance - Governance policy enforcement</div>
+                            <div class="tree-item">└── Impact Analysis - Trace downstream impacts of changes</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AI Readiness Page -->
+                <section class="page" id="aiPage">
+                    <div class="hero">
+                        <div>
+                            <div class="eyebrow"><span class="live-dot"></span> AI Certification</div>
+                            <h1>Certify the Data for AI</h1>
+                            <p>Comprehensive AI readiness assessment measuring quality, metadata, semantic coverage, ontology, lineage, and governance for AI and ML consumption.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">AI Readiness Scorecard</h2>
+                        <div class="grid cols-6" style="margin-top:20px;">
+                            <div class="card" style="padding:15px;"><h3 style="font-size:14px;">Quality</h3><div style="font-size:28px;font-weight:bold;color:var(--blue);margin:10px 0;">92%</div></div>
+                            <div class="card" style="padding:15px;"><h3 style="font-size:14px;">Metadata</h3><div style="font-size:28px;font-weight:bold;color:var(--green);margin:10px 0;">100%</div></div>
+                            <div class="card" style="padding:15px;"><h3 style="font-size:14px;">Glossary</h3><div style="font-size:28px;font-weight:bold;color:var(--blue);margin:10px 0;">91%</div></div>
+                            <div class="card" style="padding:15px;"><h3 style="font-size:14px;">Ontology</h3><div style="font-size:28px;font-weight:bold;color:var(--amber);margin:10px 0;">87%</div></div>
+                            <div class="card" style="padding:15px;"><h3 style="font-size:14px;">Lineage</h3><div style="font-size:28px;font-weight:bold;color:var(--green);margin:10px 0;">100%</div></div>
+                            <div class="card" style="padding:15px;"><h3 style="font-size:14px;">Knowledge Graph</h3><div style="font-size:28px;font-weight:bold;color:var(--teal);margin:10px 0;">90%</div></div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="card" style="background:linear-gradient(135deg, var(--blue), var(--teal));color:white;padding:30px;text-align:center;">
+                            <h2 style="color:white;margin:0;">Overall AI Readiness Score</h2>
+                            <div style="font-size:64px;font-weight:bold;margin:20px 0;">95%</div>
+                            <p style="color:rgba(255,255,255,.9);margin:0;"><span class="badge green">✓ CERTIFIED FOR AI</span></p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Certification Status</h2>
+                        <div class="grid cols-3" style="margin-top:20px;">
+                            <div class="card"><h3>✅ AI Ready</h3><p>Certified datasets ready for production AI/ML use</p></div>
+                            <div class="card"><h3>⏳ Pending</h3><p>Under certification review and validation</p></div>
+                            <div class="card"><h3>❌ Rejected</h3><p>Failed certification requirements</p></div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">AI Data Products Ready for Consumption</h2>
+                        <div class="table-wrap" style="margin-top:20px;">
+                            <table>
+                                <thead><tr><th>Product Name</th><th>Domain</th><th>Quality</th><th>Metadata</th><th>Semantic</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td><span class="row-title">Customer 360</span><span class="row-sub">Comprehensive customer entity</span></td><td>Member</td><td>96%</td><td>100%</td><td>92%</td><td><span class="badge green">AI Ready</span></td></tr>
+                                    <tr><td><span class="row-title">Claims 360</span><span class="row-sub">Complete claim lifecycle</span></td><td>Claims</td><td>94%</td><td>100%</td><td>89%</td><td><span class="badge green">AI Ready</span></td></tr>
+                                    <tr><td><span class="row-title">Provider 360</span><span class="row-sub">Provider information</span></td><td>Network</td><td>92%</td><td>98%</td><td>85%</td><td><span class="badge green">AI Ready</span></td></tr>
+                                    <tr><td><span class="row-title">Fraud Dataset</span><span class="row-sub">Fraud detection ready</span></td><td>Risk</td><td>95%</td><td>100%</td><td>91%</td><td><span class="badge green">AI Ready</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Recommendations for AI Enhancement</h2>
+                        <div class="grid cols-1" style="margin-top:20px;">
+                            <div class="card"><h3>⚠️ Missing Metadata - 12 assets</h3><p>Add business definitions and owner assignments to increase discoverability and governance</p></div>
+                            <div class="card"><h3>⚠️ Missing Owner - 8 assets</h3><p>Assign stewardship and accountability for data quality and updates</p></div>
+                            <div class="card"><h3>⚠️ Poor Quality - 3 assets</h3><p>Run remediation workflow and revalidate before certification</p></div>
+                            <div class="card"><h3>⚠️ Broken Lineage - 2 assets</h3><p>Update transformation documentation for complete traceability</p></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                const pageId = btn.dataset.page + 'Page';
+                document.getElementById(pageId).classList.add('active');
+            });
+        });
+
+        // Tab switching
+        function switchTab(e, viewId) {
+            const parent = e.target.closest('.tabs');
+            parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            const section = e.target.closest('.page') || document.querySelector('.page.active');
+            section.querySelectorAll('.tab-view').forEach(v => v.style.display = 'none');
+            const view = section.querySelector('#' + viewId);
+            if (view) view.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
