@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data for AI Platform - End-to-End Demo</title>
+    <style>
+        :root {
+            --ink: #12202f;
+            --muted: #617186;
+            --soft: #eef3f7;
+            --line: #d9e2ea;
+            --panel: #ffffff;
+            --nav: #111923;
+            --nav-2: #172331;
+            --blue: #2f6fed;
+            --teal: #0f9f9a;
+            --green: #1a9b58;
+            --amber: #d89018;
+            --red: #d94a3f;
+            --purple: #7651d9;
+            --shadow: 0 12px 34px rgba(20, 39, 61, .11);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f4f7fa;
+            color: var(--ink);
+            min-height: 100vh;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 272px minmax(0, 1fr);
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, var(--nav), var(--nav-2));
+            color: #d9e8f5;
+            padding: 20px 14px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px 22px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            margin-bottom: 16px;
+        }
+
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #35c2a6, #2f6fed);
+            box-shadow: 0 10px 28px rgba(47,111,237,.28);
+            font-weight: bold;
+            color: white;
+            font-size: 18px;
+        }
+
+        .brand-title {
+            font-weight: 750;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .brand-sub {
+            color: #8fa2b5;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .nav-group-label {
+            color: #7f91a2;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin: 18px 12px 8px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border: 0;
+            color: #cbd9e6;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-height: 40px;
+            padding: 0 12px;
+            border-radius: 8px;
+            text-align: left;
+            transition: .18s ease;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255,255,255,.09);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            box-shadow: inset 3px 0 0 #35c2a6;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 72px;
+            background: rgba(255,255,255,.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 26px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .workspace {
+            padding: 26px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn .35s ease both;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero {
+            color: #fff;
+            border-radius: 8px;
+            padding: 28px;
+            background: linear-gradient(135deg, rgba(18,32,47,.96), rgba(23,49,67,.94));
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 36px;
+            line-height: 1.1;
+            margin: 0 0 12px 0;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin: 0 0 4px 0;
+        }
+
+        h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+
+        .hero p {
+            color: #d8e8f3;
+            font-size: 16px;
+            line-height: 1.55;
+            margin: 0;
+            max-width: 760px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 6px 24px rgba(20,39,61,.06);
+        }
+
+        .kpi-card h3 {
+            margin: 0;
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .kpi-card .value {
+            font-size: 32px;
+            font-weight: 830;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .kpi-card .trend {
+            font-size: 12px;
+            color: var(--green);
+            font-weight: 800;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #eaf0f5;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 6px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            border: 0;
+            border-radius: 7px;
+            min-height: 36px;
+            padding: 0 13px;
+            color: #536477;
+            background: transparent;
+            font-weight: 750;
+            transition: .16s ease;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: #fff;
+            color: var(--ink);
+            box-shadow: 0 4px 14px rgba(20,39,61,.08);
+        }
+
+        .tab-view { display: none; }
+        .tab-view.active { display: block; }
+
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .grid.cols-1 { grid-template-columns: 1fr; }
+        .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+        .card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 6px 24px rgba(20,39,61,.06);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .badge.green { background: #e8f7ef; color: var(--green); }
+        .badge.blue { background: #eaf0ff; color: var(--blue); }
+        .badge.amber { background: #fff4dd; color: var(--amber); }
+        .badge.red { background: #ffebe9; color: var(--red); }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+        }
+
+        th {
+            background: #f7fafc;
+            color: #536477;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        tr:hover { background: #f7fbff; }
+
+        .metric-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 16px;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e3ebf2;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--teal));
+            width: 0%;
+            transition: width 0.8s ease;
+        }
+
+        .pipeline-stage {
+            background: #f9f9f9;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .stage-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stage-name {
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .stage-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .metric-box {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .metric-label {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-top: 4px;
+        }
+
+        .tree {
+            background: #f9f9f9;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .flow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .flow-item {
+            background: var(--blue);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            white-space: nowrap;
+            font-weight: 600;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            color: var(--blue);
+            font-size: 20px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            border-left: 4px solid;
+        }
+
+        .alert.warning { background: #fff9f0; border-color: var(--amber); color: #7a5a18; }
+        .alert.error { background: #fff0ee; border-color: var(--red); color: #6b3a37; }
+        .alert.success { background: #f0fdf5; border-color: var(--green); color: #1a4a2e; }
+
+        .log {
+            background: #0f1722;
+            color: #d9e8f5;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 11px;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-line {
+            display: flex;
+            gap: 10px;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+
+        .log-time { color: #7f91a2; min-width: 80px; }
+        .log-ok { color: #8cf0bd; }
+        .log-warn { color: #ffd487; }
+        .log-error { color: #ff9b91; }
+
+        p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+
+        @media (max-width: 900px) {
+            .app { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .grid.cols-2, .grid.cols-3 { grid-template-columns: 1fr; }
+            h1 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark">⚡</div>
+                <div>
+                    <div class="brand-title">Data for AI<br>Platform</div>
+                    <div class="brand-sub">Healthcare Insurance</div>
+                </div>
+            </div>
+
+            <div class="nav-group-label">Platform Layers</div>
+            <button class="nav-item active" onclick="showPage('data-layer')">📊 Data Layer</button>
+            <button class="nav-item" onclick="showPage('context-layer')">🧠 Context Layer</button>
+            <button class="nav-item" onclick="showPage('ai-layer')">🤖 AI Layer</button>
+            
+            <div class="nav-group-label">Governance</div>
+            <button class="nav-item" onclick="showPage('governance')">🛡️ Governance</button>
+            <button class="nav-item" onclick="showPage('operate')">⚙️ Operations</button>
+
+            <div class="nav-group-label">Use Cases</div>
+            <button class="nav-item" onclick="showPage('lpi')">📈 LPI Propensity</button>
+            <button class="nav-item" onclick="showPage('overpayment')">💰 Overpayment</button>
+            <button class="nav-item" onclick="showPage('fraud')">🚨 Fraud Risk</button>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+            <header class="topbar">
+                <div style="flex:1;"><h2 style="margin:0;color:var(--ink);">Data for AI Platform - End-to-End Demo</h2></div>
+                <div style="font-size:12px;color:var(--muted);">Live • Healthcare Insurance Claims</div>
+            </header>
+
+            <div class="workspace">
+                <!-- ========== DATA LAYER ========== -->
+                <section class="page active" id="data-layer">
+                    <div class="hero">
+                        <h1>📊 Data Layer</h1>
+                        <p>Enterprise data ingestion, validation, transformation, and preparation for AI consumption. Get the data, trust the data, standardize the meaning.</p>
+                    </div>
+
+                    <!-- KPIs -->
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <h3>DQ Pass Rate (24hrs)</h3>
+                            <div class="value">98.6%</div>
+                            <div class="trend">✓ +1.2% from yesterday</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Records Ingested (24hrs)</h3>
+                            <div class="value">1.24M</div>
+                            <div class="trend">✓ All systems healthy</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Promoted Downstream (24hrs)</h3>
+                            <div class="value">1.20M</div>
+                            <div class="trend">✓ 96.8% promotion rate</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Quarantined (24hrs)</h3>
+                            <div class="value">40K</div>
+                            <div class="trend">⚠️ 3.2% requires review</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Pipelines Running</h3>
+                            <div class="value">24/28</div>
+                            <div class="trend">✓ 85.7% operational</div>
+                        </div>
+                    </div>
+
+                    <!-- TABS -->
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab(event, 'sources')">📊 Sources</button>
+                        <button class="tab" onclick="switchTab(event, 'pipelines')">🔄 Pipelines</button>
+                        <button class="tab" onclick="switchTab(event, 'mappings')">🗺️ Mappings</button>
+                        <button class="tab" onclick="switchTab(event, 'rules')">✔️ DQ Rules</button>
+                        <button class="tab" onclick="switchTab(event, 'runs')">▶️ Runs</button>
+                        <button class="tab" onclick="switchTab(event, 'drift')">📈 Drift</button>
+                        <button class="tab" onclick="switchTab(event, 'lineage')">🔗 Lineage</button>
+                    </div>
+
+                    <!-- SOURCES TAB -->
+                    <div id="sources" class="tab-view active">
+                        <h2>Enterprise Data Sources (8 Connected Systems)</h2>
+                        <div class="grid cols-2">
+                            <div class="card">
+                                <h3>🏥 Core Adjudication Engine (Facets)</h3>
+                                <p><strong>Purpose:</strong> Primary healthcare claims adjudication platform</p>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Last Refresh:</span>
+                                    <span style="font-weight:700;">2 min ago</span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Next Run:</span>
+                                    <span style="font-weight:700;">In 13 mins</span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Replication:</span>
+                                    <span><span class="badge blue">CDC</span></span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Tables / Rows:</span>
+                                    <span style="font-weight:700;">142 / 287M</span>
+                                </div>
+                                <p style="font-size:12px;color:var(--muted);margin-top:12px;"><strong>Data:</strong> Medical Claims, Claim Lines, Member Eligibility, Benefit Plans, Payments, Denials, EOB</p>
+                            </div>
+
+                            <div class="card">
+                                <h3>📦 Claims Data Warehouse (Snowflake)</h3>
+                                <p><strong>Purpose:</strong> Central analytical repository</p>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Last Refresh:</span>
+                                    <span style="font-weight:700;">5 min ago</span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Next Run:</span>
+                                    <span style="font-weight:700;">In 10 mins</span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Replication:</span>
+                                    <span><span class="badge green">Batch</span></span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Tables / Rows:</span>
+                                    <span style="font-weight:700;">89 / 1.2B</span>
+                                </div>
+                                <p style="font-size:12px;color:var(--muted);margin-top:12px;"><strong>Data:</strong> Historical Claims, Financial Analytics, Provider Performance, Regulatory Data, AI Feature Store</p>
+                            </div>
+
+                            <div class="card">
+                                <h3>👨‍⚕️ UM & Clinical Case Mgmt</h3>
+                                <p><strong>Purpose:</strong> Clinical review & authorization management</p>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Last Refresh:</span>
+                                    <span style="font-weight:700;">8 min ago</span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Status:</span>
+                                    <span><span class="badge green">Connected</span></span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Tables / Rows:</span>
+                                    <span style="font-weight:700;">67 / 124M</span>
+                                </div>
+                                <p style="font-size:12px;color:var(--muted);margin-top:12px;"><strong>Data:</strong> Prior Authorization, Clinical Reviews, Care Management, Medical Necessity, Case Notes</p>
+                            </div>
+
+                            <div class="card">
+                                <h3>🩺 Provider Master & Audit</h3>
+                                <p><strong>Purpose:</strong> Provider repository & credentialing</p>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Last Refresh:</span>
+                                    <span style="font-weight:700;">1 hr ago</span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Status:</span>
+                                    <span><span class="badge green">Connected</span></span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Tables / Rows:</span>
+                                    <span style="font-weight:700;">45 / 8.2M</span>
+                                </div>
+                                <p style="font-size:12px;color:var(--muted);margin-top:12px;"><strong>Data:</strong> Provider Demographics, NPI, Taxonomy, Credentialing, Audit Findings, Recovery Cases</p>
+                            </div>
+
+                            <div class="card">
+                                <h3>📡 Clearinghouse</h3>
+                                <p><strong>Purpose:</strong> Electronic claims exchange (EDI)</p>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Last Refresh:</span>
+                                    <span style="font-weight:700;">3 min ago</span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Status:</span>
+                                    <span><span class="badge amber">Warning</span></span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Tables / Rows:</span>
+                                    <span style="font-weight:700;">28 / 432M</span>
+                                </div>
+                                <p style="font-size:12px;color:var(--muted);margin-top:12px;"><strong>Data:</strong> 837 Claims, 835 Remittance, Eligibility Transactions, Rejections, Acknowledgements</p>
+                            </div>
+
+                            <div class="card">
+                                <h3>📚 Document Lakehouse</h3>
+                                <p><strong>Purpose:</strong> Structured & unstructured documents</p>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Last Refresh:</span>
+                                    <span style="font-weight:700;">12 min ago</span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Status:</span>
+                                    <span><span class="badge green">Connected</span></span>
+                                </div>
+                                <div class="metric-row" style="border:none;">
+                                    <span>Tables / Rows:</span>
+                                    <span style="font-weight:700;">34 / 156M</span>
+                                </div>
+                                <p style="font-size:12px;color:var(--muted);margin-top:12px;"><strong>Data:</strong> Medical Records, Clinical Notes, EOBs, Appeal Letters, Images, PDFs, Transcripts, OCR Output</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PIPELINES TAB -->
+                    <div id="pipelines" class="tab-view" style="display:none;">
+                        <h2>5-Stage Data Processing Pipeline</h2>
+                        
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <div>
+                                    <div class="stage-name">📥 Stage 1: Ingest</div>
+                                    <p style="margin:4px 0 0 0;font-size:12px;color:var(--muted);">Receive structured and unstructured data streams</p>
+                                </div>
+                                <span class="badge green">Running</span>
+                            </div>
+                            <p style="font-size:12px;color:var(--muted);"><strong>Owner:</strong> Data Engineering Team | <strong>Purpose:</strong> File reception, API ingestion, streaming events, CDC processing</p>
+                            <div class="stage-metrics">
+                                <div class="metric-box">
+                                    <div class="metric-label">Throughput</div>
+                                    <div class="metric-value">4,096 rec/sec</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Success Rate</div>
+                                    <div class="metric-value">100%</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Records (24h)</div>
+                                    <div class="metric-value">1.24M</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Processing Rate</div>
+                                    <div class="metric-value">High</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <div>
+                                    <div class="stage-name">📋 Stage 2: Parse</div>
+                                    <p style="margin:4px 0 0 0;font-size:12px;color:var(--muted);">Convert raw files into standardized structure</p>
+                                </div>
+                                <span class="badge green">Running</span>
+                            </div>
+                            <p style="font-size:12px;color:var(--muted);"><strong>Owner:</strong> Data Engineering Team | <strong>Supported Formats:</strong> JSON, XML, CSV, Excel, Parquet, PDF Metadata</p>
+                            <p style="font-size:12px;color:var(--muted);"><strong>Responsibilities:</strong> Schema Detection, Schema Repair, Data Parsing, Drift Detection, Format Standardization</p>
+                            <div class="stage-metrics">
+                                <div class="metric-box">
+                                    <div class="metric-label">Throughput</div>
+                                    <div class="metric-value">4,878 rec/sec</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Success Rate</div>
+                                    <div class="metric-value">99.2%</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Drift Events</div>
+                                    <div class="metric-value">38</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Pending</div>
+                                    <div class="metric-value">4</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <div>
+                                    <div class="stage-name">✅ Stage 3: Validate (Data Quality)</div>
+                                    <p style="margin:4px 0 0 0;font-size:12px;color:var(--muted);">Data quality validation & compliance checks</p>
+                                </div>
+                                <span class="badge amber">Warning</span>
+                            </div>
+                            <p style="font-size:12px;color:var(--muted);"><strong>Owner:</strong> Data Quality Team | <strong>Purpose:</strong> Ensure all incoming records comply with business & technical validation rules</p>
+                            <p style="font-size:12px;color:var(--muted);"><strong>Validation Categories:</strong> Mandatory Fields, Data Types, Range Checks, Duplicate Detection, Cross-System Validation, Business Rules, Anomaly Detection</p>
+                            <div class="alert warning" style="margin-top:12px;">
+                                <strong>⚠️ VIN Validation Failed:</strong> 4 records affected - VIN length does not match required format (must be exactly 17 characters)
+                            </div>
+                            <div class="stage-metrics">
+                                <div class="metric-box">
+                                    <div class="metric-label">Throughput</div>
+                                    <div class="metric-value">4,791 rec/sec</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Pass Rate</div>
+                                    <div class="metric-value">97.1%</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">DQ Score</div>
+                                    <div class="metric-value">97.1%</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Failed Records</div>
+                                    <div class="metric-value">4</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <div>
+                                    <div class="stage-name">🔄 Stage 4: Transform</div>
+                                    <p style="margin:4px 0 0 0;font-size:12px;color:var(--muted);">Convert to enterprise canonical model</p>
+                                </div>
+                                <span class="badge green">Running</span>
+                            </div>
+                            <p style="font-size:12px;color:var(--muted);"><strong>Owner:</strong> Data Modeling Team | <strong>Purpose:</strong> Convert validated data into enterprise canonical model</p>
+                            <p style="font-size:12px;color:var(--muted);"><strong>Activities:</strong> Field Mapping, Type Conversion, Data Standardization, Data Enrichment, Business Joins, Derived Field Calculation</p>
+                            <div class="stage-metrics">
+                                <div class="metric-box">
+                                    <div class="metric-label">Throughput</div>
+                                    <div class="metric-value">4,724 rec/sec</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Success Rate</div>
+                                    <div class="metric-value">99.8%</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Active Mappings</div>
+                                    <div class="metric-value">312</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Avg Processing</div>
+                                    <div class="metric-value">3.2s</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <div>
+                                    <div class="stage-name">🧠 Stage 5: Semantic Validation</div>
+                                    <p style="margin:4px 0 0 0;font-size:12px;color:var(--muted);">Business relationships & ontology validation</p>
+                                </div>
+                                <span class="badge green">Running</span>
+                            </div>
+                            <p style="font-size:12px;color:var(--muted);"><strong>Owner:</strong> Data Governance Team | <strong>Purpose:</strong> Validate business relationships using enterprise ontology and knowledge graph</p>
+                            <p style="font-size:12px;color:var(--muted);"><strong>Semantic Checks:</strong> Claim belongs to Policy, Adjuster licensed in claim state, Medical Provider is in network</p>
+                            <div class="stage-metrics">
+                                <div class="metric-box">
+                                    <div class="metric-label">Throughput</div>
+                                    <div class="metric-value">4,624 rec/sec</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Success Rate</div>
+                                    <div class="metric-value">99.7%</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Relationships Validated</div>
+                                    <div class="metric-value">1.18M</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">Status</div>
+                                    <div class="metric-value">Healthy</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top:30px;">Live Activity Log</h3>
+                        <div class="log">
+                            <div class="log-line"><span class="log-time">09:41:15</span><span class="log-ok">✓ Data ingestion completed successfully</span></div>
+                            <div class="log-line"><span class="log-time">09:41:18</span><span class="log-ok">✓ Schema parsing completed</span></div>
+                            <div class="log-line"><span class="log-time">09:41:22</span><span class="log-ok">✓ Validation started</span></div>
+                            <div class="log-line"><span class="log-time">09:41:25</span><span class="log-warn">⚠ Four VIN validation failures detected</span></div>
+                            <div class="log-line"><span class="log-time">09:41:29</span><span class="log-warn">⚠ Failed records moved to quarantine</span></div>
+                            <div class="log-line"><span class="log-time">09:41:34</span><span class="log-ok">✓ Pipeline processing resumed</span></div>
+                            <div class="log-line"><span class="log-time">09:41:37</span><span class="log-ok">✓ Data successfully published downstream</span></div>
+                        </div>
+                    </div>
+
+                    <!-- MAPPINGS TAB -->
+                    <div id="mappings" class="tab-view" style="display:none;">
+                        <h2>Field Mapping Configuration</h2>
+                        <div class="grid cols-1">
+                            <div class="card">
+                                <h3>Mapping Summary</h3>
+                                <div class="metric-row">
+                                    <span>Connected Data Sources</span>
+                                    <span><strong>8 Systems</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Total Enterprise Mappings</span>
+                                    <span><strong>524 Active</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Business Entities</span>
+                                    <span><strong>18 Entities</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Transformation Rules</span>
+                                    <span><strong>146 Rules</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Validation Success</span>
+                                    <span><strong>99.4%</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Pending Approvals</span>
+                                    <span><strong>12 Changes</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top:30px;">Supported Transformation Rules</h3>
+                        <div class="card">
+                            <p><strong>Date Standardization • Currency Conversion • CPT Normalization • HCPCS Normalization • ICD-10 Validation • NPI Validation • Taxonomy Mapping • Member Identifier Standardization • Provider Deduplication • Address Standardization • Diagnosis Code Validation • Procedure Code Validation • Benefit Plan Mapping • Network Mapping • Null Value Handling • Default Value Assignment</strong></p>
+                        </div>
+
+                        <h3 style="margin-top:30px;">Sample Field Mappings</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Source System</th>
+                                        <th>Source Table</th>
+                                        <th>Source Field</th>
+                                        <th>Enterprise Entity</th>
+                                        <th>Enterprise Field</th>
+                                        <th>Mapping Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Facets</td>
+                                        <td>Claims</td>
+                                        <td>CLAIM_ID</td>
+                                        <td>Claim</td>
+                                        <td>Claim_ID</td>
+                                        <td><span class="badge blue">Direct</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Facets</td>
+                                        <td>Claims</td>
+                                        <td>MEMBER_ID</td>
+                                        <td>Member</td>
+                                        <td>Member_ID</td>
+                                        <td><span class="badge blue">Direct</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Facets</td>
+                                        <td>Claims</td>
+                                        <td>PAID_AMOUNT</td>
+                                        <td>Payment</td>
+                                        <td>Paid_Amount</td>
+                                        <td><span class="badge green">Currency</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Facets</td>
+                                        <td>Claims</td>
+                                        <td>CLAIM_STATUS</td>
+                                        <td>Claim</td>
+                                        <td>Status</td>
+                                        <td><span class="badge amber">Lookup</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Provider Master</td>
+                                        <td>Provider</td>
+                                        <td>NPI</td>
+                                        <td>Provider</td>
+                                        <td>National_Provider_ID</td>
+                                        <td><span class="badge blue">Direct</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Member Portal</td>
+                                        <td>Member</td>
+                                        <td>DOB</td>
+                                        <td>Member</td>
+                                        <td>Date_of_Birth</td>
+                                        <td><span class="badge red">Date Conversion</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 style="margin-top:30px;">Business Validation Rules</h3>
+                        <div class="card">
+                            <p>• Member must exist before claim adjudication</p>
+                            <p>• Provider must be active on the date of service</p>
+                            <p>• NPI must contain 10 digits</p>
+                            <p>• ICD-10 diagnosis codes must be valid</p>
+                            <p>• CPT/HCPCS procedure codes must be active</p>
+                            <p>• Date of Service cannot be in the future</p>
+                            <p>• Authorization must exist for services requiring prior approval</p>
+                            <p>• Paid Amount cannot exceed Allowed Amount without an override</p>
+                            <p>• Rendering Provider must belong to the contracted network when required</p>
+                            <p>• Denial Reason Code must exist in the enterprise reference table</p>
+                        </div>
+                    </div>
+
+                    <!-- DQ RULES TAB -->
+                    <div id="rules" class="tab-view" style="display:none;">
+                        <h2>Data Quality Rules & Scorecard</h2>
+                        <div class="grid cols-1">
+                            <div class="card">
+                                <h3>Executive Quality Dashboard</h3>
+                                <div class="metric-row">
+                                    <span>Total Active Rules</span>
+                                    <span><strong>325 Rules</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Rules Executed Today</span>
+                                    <span><strong>4,250 Executions</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Overall Data Quality Score</span>
+                                    <span><strong>98.6%</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Failed Records</span>
+                                    <span><strong>3,677</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Critical Rule Violations</span>
+                                    <span><strong>24</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Rules Awaiting Approval</span>
+                                    <span><strong>8</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top:30px;">Quality Dimensions</h3>
+                        <div class="grid cols-2">
+                            <div class="card">
+                                <h3>Completeness</h3>
+                                <div class="progress-bar"><div class="progress-fill" style="width:99.1%;"></div></div>
+                                <p style="margin-top:8px;font-size:13px;color:var(--muted);">99.1% - Records with required fields present</p>
+                            </div>
+                            <div class="card">
+                                <h3>Accuracy</h3>
+                                <div class="progress-bar"><div class="progress-fill" style="width:98.4%;"></div></div>
+                                <p style="margin-top:8px;font-size:13px;color:var(--muted);">98.4% - Data matching source systems</p>
+                            </div>
+                            <div class="card">
+                                <h3>Consistency</h3>
+                                <div class="progress-bar"><div class="progress-fill" style="width:97.8%;"></div></div>
+                                <p style="margin-top:8px;font-size:13px;color:var(--muted);">97.8% - Conforming to standards</p>
+                            </div>
+                            <div class="card">
+                                <h3>Validity</h3>
+                                <div class="progress-bar"><div class="progress-fill" style="width:99.3%;"></div></div>
+                                <p style="margin-top:8px;font-size:13px;color:var(--muted);">99.3% - Passing validation rules</p>
+                            </div>
+                            <div class="card">
+                                <h3>Timeliness</h3>
+                                <div class="progress-bar"><div class="progress-fill" style="width:99.7%;"></div></div>
+                                <p style="margin-top:8px;font-size:13px;color:var(--muted);">99.7% - Data arriving on schedule</p>
+                            </div>
+                            <div class="card">
+                                <h3>Integrity</h3>
+                                <div class="progress-bar"><div class="progress-fill" style="width:98.9%;"></div></div>
+                                <p style="margin-top:8px;font-size:13px;color:var(--muted);">98.9% - Referential integrity maintained</p>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top:30px;">Rule Categories & Examples</h3>
+                        <div class="grid cols-2">
+                            <div class="card">
+                                <h3>Member Rules</h3>
+                                <p style="font-size:12px;">• Member ID cannot be null</p>
+                                <p style="font-size:12px;">• Date of Birth must be valid</p>
+                                <p style="font-size:12px;">• Eligibility must exist for Date of Service</p>
+                                <p style="font-size:12px;">• Member must be active</p>
+                            </div>
+                            <div class="card">
+                                <h3>Provider Rules</h3>
+                                <p style="font-size:12px;">• NPI must contain exactly 10 digits</p>
+                                <p style="font-size:12px;">• Provider must be active</p>
+                                <p style="font-size:12px;">• Provider specialty must exist</p>
+                                <p style="font-size:12px;">• Provider must belong to contracted network</p>
+                            </div>
+                            <div class="card">
+                                <h3>Claims Rules</h3>
+                                <p style="font-size:12px;">• Claim Number cannot be blank</p>
+                                <p style="font-size:12px;">• Claim Status must exist</p>
+                                <p style="font-size:12px;">• Date of Service cannot be future dated</p>
+                                <p style="font-size:12px;">• Claim Amount must be greater than zero</p>
+                            </div>
+                            <div class="card">
+                                <h3>Clinical Rules</h3>
+                                <p style="font-size:12px;">• ICD-10 diagnosis must be valid</p>
+                                <p style="font-size:12px;">• CPT/HCPCS procedure must be active</p>
+                                <p style="font-size:12px;">• Authorization required for selected procedures</p>
+                                <p style="font-size:12px;">• Diagnosis must support procedure</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RUNS TAB -->
+                    <div id="runs" class="tab-view" style="display:none;">
+                        <h2>Pipeline Execution Runs</h2>
+                        <div class="grid cols-1">
+                            <div class="card">
+                                <h3>Execution Summary</h3>
+                                <div class="metric-row">
+                                    <span>Pipelines Executed Today</span>
+                                    <span><strong>528</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Successful Runs</span>
+                                    <span><strong>516</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Failed Runs</span>
+                                    <span><strong>7</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Running Pipelines</span>
+                                    <span><strong>5</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Average Processing Time</span>
+                                    <span><strong>4.3 minutes</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>SLA Compliance</span>
+                                    <span><strong>99.2%</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top:30px;">Active Runs</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Pipeline</th>
+                                        <th>Source System</th>
+                                        <th>Start Time</th>
+                                        <th>Records Processed</th>
+                                        <th>Current Stage</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Claims Ingestion</td>
+                                        <td>Facets</td>
+                                        <td>09:35:12</td>
+                                        <td>287,451</td>
+                                        <td>Validate</td>
+                                        <td><span class="badge blue">Running</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Provider Sync</td>
+                                        <td>Provider Master</td>
+                                        <td>09:40:00</td>
+                                        <td>12,847</td>
+                                        <td>Transform</td>
+                                        <td><span class="badge blue">Running</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Clinical Review</td>
+                                        <td>UM System</td>
+                                        <td>09:42:15</td>
+                                        <td>5,234</td>
+                                        <td>Parse</td>
+                                        <td><span class="badge blue">Running</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- DRIFT TAB -->
+                    <div id="drift" class="tab-view" style="display:none;">
+                        <h2>Data Drift Monitoring</h2>
+                        <div class="grid cols-1">
+                            <div class="card">
+                                <h3>Drift Monitoring Dashboard</h3>
+                                <div class="metric-row">
+                                    <span>Active Drift Alerts</span>
+                                    <span><strong>6</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Datasets Monitored</span>
+                                    <span><strong>48</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Features Monitored</span>
+                                    <span><strong>1,250</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>AI Models Impacted</span>
+                                    <span><strong>3</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Critical Drift Events</span>
+                                    <span><strong>2</strong></span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Monitoring Coverage</span>
+                                    <span><strong>100%</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top:30px;">Detected Drift Events</h3>
+                        <div class="alert warning">
+                            <strong>🔴 Volume Drift - Claims:</strong> Daily claims normally 25,000 → Today 62,000 (Critical - 248% increase)
+                        </div>
+                        <div class="alert warning">
+                            <strong>🟡 Statistical Drift - Paid Amount:</strong> Distribution shift detected in payment amounts (Confidence: 92%)
+                        </div>
+                        <div class="alert success">
+                            <strong>✓ Schema Drift:</strong> Facets added Telehealth_Flag field (Detected & Monitored)
+                        </div>
+                        <div class="card" style="margin-top:16px;">
+                            <h3>AI Impact Assessment</h3>
+                            <div class="metric-row">
+                                <span>Payment Integrity Model Confidence</span>
+                                <span>98% → 92% ⚠️</span>
+                            </div>
+                            <p style="font-size:12px;color:var(--muted);">Recommendation: Retrain using latest claims data</p>
+                        </div>
+                    </div>
+
+                    <!-- LINEAGE TAB -->
+                    <div id="lineage" class="tab-view" style="display:none;">
+                        <h2>Enterprise Data Lineage & Traceability</h2>
+                        
+                        <h3 style="margin-top:20px;">5-Stage Enterprise Processing Pipeline</h3>
+                        <div class="flow">
+                            <div class="flow-item">📥 Ingest</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-item">📋 Parse</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-item">✅ Validate</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-item">🔄 Transform</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-item">🧠 Semantic</div>
+                        </div>
+
+                        <h3 style="margin-top:30px;">Lineage Example: Claim Paid Amount</h3>
+                        <div class="tree">Facets (Source System)
+  └─ CLAIM_HEADER table
+     └─ PAID_AMOUNT field
+        └─ [Stage 1: Ingest] → Ingestion Pipeline
+        └─ [Stage 2: Parse] → JSON/XML Parsing
+        └─ [Stage 3: Validate] → Range Check Validation (Amount > 0)
+        └─ [Stage 4: Transform] → Currency Standardization
+        └─ Enterprise Mapping → Payment.Paid_Amount
+        └─ [Stage 5: Semantic] → Payment Entity Linking
+        └─ [Silver Layer] → Standardized Claims Dataset
+        └─ [Gold Layer] → Payment Analytics Dataset
+        └─ [AI Model] → Payment Integrity Model
+        └─ [Application] → Claims Workbench
+        └─ [Dashboard] → Executive Financial Dashboard
+
+Connected Downstream Consumers:
+  • Claims Workbench (Claims Team)
+  • Payment Integrity Platform (Audit Team)
+  • Executive Dashboard (Finance Leadership)
+  • Fraud Detection Model (AI Agent)
+  • Regulatory Reporting System (Compliance)</div>
+
+                        <h3 style="margin-top:30px;">Storage Layers</h3>
+                        <div class="grid cols-3">
+                            <div class="card">
+                                <h3>🟤 Bronze Layer</h3>
+                                <p style="font-size:12px;">Raw ingested data with original structure and content</p>
+                                <p style="font-size:12px;color:var(--muted);"><strong>Contains:</strong> Original Claims, Raw Provider Files, Raw Authorizations, Raw Documents</p>
+                            </div>
+                            <div class="card">
+                                <h3>🟢 Silver Layer</h3>
+                                <p style="font-size:12px;">Cleaned and validated data with standard schemas</p>
+                                <p style="font-size:12px;color:var(--muted);"><strong>Contains:</strong> Standardized Claims, Clean Provider Data, Validated Members, Clinical Data</p>
+                            </div>
+                            <div class="card">
+                                <h3>🟡 Gold Layer</h3>
+                                <p style="font-size:12px;">Business-ready curated datasets for analytics</p>
+                                <p style="font-size:12px;color:var(--muted);"><strong>Contains:</strong> Enterprise Claims, Payment Analytics, Member 360, Executive KPIs</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== CONTEXT LAYER ========== -->
+                <section class="page" id="context-layer">
+                    <div class="hero">
+                        <h1>🧠 Context Layer</h1>
+                        <p>Dynamic contextual intelligence that assembles enterprise relationships, business events, and semantic meaning for real-time AI decision support.</p>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <h3>Active Context Sessions</h3>
+                            <div class="value">482</div>
+                            <div class="trend">✓ Real-time contexts generated</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Contexts Generated (24h)</h3>
+                            <div class="value">18.4K</div>
+                            <div class="trend">✓ +2.3% increase</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Business Entities Connected</h3>
+                            <div class="value">2.1M</div>
+                            <div class="trend">✓ Enterprise-wide</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Relationships Traversed</h3>
+                            <div class="value">42M</div>
+                            <div class="trend">✓ Graph traversal healthy</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>AI Decisions Supported</h3>
+                            <div class="value">12.8K</div>
+                            <div class="trend">✓ 98.2% explainability</div>
+                        </div>
+                    </div>
+
+                    <div class="grid cols-1">
+                        <div class="card">
+                            <h3>Context Components</h3>
+                            <p><strong>Knowledge Graph:</strong> 18 business entities, 42M relationships, enterprise-wide semantic network</p>
+                            <p><strong>Ontology:</strong> Unified business vocabulary, 325 entity types, standardized definitions</p>
+                            <p><strong>Context Graph:</strong> Dynamic assembly of relevant relationships for current business scenario</p>
+                            <p><strong>AI Reasoning Trace:</strong> Transparent reasoning path showing how context was assembled for each decision</p>
+                        </div>
+
+                        <div class="card">
+                            <h3>Sample Business Entities Connected</h3>
+                            <p>Member → Policy → Claim → Provider → Payment → Clinical Review → LPI Score → Overpayment Propensity → Fraud Risk Score → AI Recommendation</p>
+                        </div>
+
+                        <div class="card">
+                            <h3>Example Context Query</h3>
+                            <p><strong>Question:</strong> "Why was this claim delayed?"</p>
+                            <p><strong>Context Assembly:</strong></p>
+                            <p style="font-size:12px;margin-left:20px;">→ Claim linked to Member & Policy</p>
+                            <p style="font-size:12px;margin-left:20px;">→ Clinical Review retrieved</p>
+                            <p style="font-size:12px;margin-left:20px;">→ Authorization history retrieved</p>
+                            <p style="font-size:12px;margin-left:20px;">→ Provider credentialing status checked</p>
+                            <p style="font-size:12px;margin-left:20px;">→ Payment hold reasons identified</p>
+                            <p style="font-size:12px;margin-left:20px;">→ Linked documents retrieved (EOBs, notes)</p>
+                            <p style="font-size:12px;margin-left:20px;">→ Reason: Clinical Review Hold - Medical Necessity Determination Pending</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== AI LAYER ========== -->
+                <section class="page" id="ai-layer">
+                    <div class="hero">
+                        <h1>🤖 AI Layer - Enterprise AI Agents & Observability</h1>
+                        <p>Agentic AI systems powered by enterprise knowledge, semantic context, and business rules for healthcare claims operations.</p>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <h3>Built AI Agents</h3>
+                            <div class="value">12</div>
+                            <div class="trend">✓ Enterprise-wide deployment</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Agent Runs (24h)</h3>
+                            <div class="value">34.1K</div>
+                            <div class="trend">✓ High throughput</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>AI Success Rate</h3>
+                            <div class="value">96.8%</div>
+                            <div class="trend">✓ Enterprise ready</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Avg Response Time</h3>
+                            <div class="value">3.4s</div>
+                            <div class="trend">✓ Production optimized</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>AI Operational Cost</h3>
+                            <div class="value">$0.18</div>
+                            <div class="trend">✓ Cost per execution</div>
+                        </div>
+                    </div>
+
+                    <div class="grid cols-1">
+                        <div class="card">
+                            <h3>Enterprise AI Agents</h3>
+                            <h4 style="margin-top:16px;">Claims Operations</h4>
+                            <p style="font-size:12px;">• <strong>Claims Adjudication Assistant:</strong> Automated adjudication decisions</p>
+                            <p style="font-size:12px;">• <strong>LPI Investigation Agent:</strong> Late Payment Interest prediction</p>
+                            <p style="font-size:12px;">• <strong>Overpayment Propensity Agent:</strong> Identifies duplicate claims & billing anomalies</p>
+                            <p style="font-size:12px;">• <strong>Payment Integrity Agent:</strong> Detects overpayments & anomalies</p>
+                            
+                            <h4 style="margin-top:16px;">Fraud & Risk Management</h4>
+                            <p style="font-size:12px;">• <strong>Fraud Investigation Agent:</strong> Detects suspicious provider/member activity</p>
+                            <p style="font-size:12px;">• <strong>SIU Investigation Agent:</strong> Special Investigation Unit support</p>
+                            <p style="font-size:12px;">• <strong>Provider Risk Agent:</strong> Identifies high-risk providers</p>
+                            
+                            <h4 style="margin-top:16px;">Clinical & Care Management</h4>
+                            <p style="font-size:12px;">• <strong>Prior Authorization Assistant:</strong> Reviews requests using clinical guidelines</p>
+                            <p style="font-size:12px;">• <strong>Clinical Review Agent:</strong> Supports utilization review & medical necessity</p>
+                        </div>
+
+                        <div class="card">
+                            <h3>AI Observability Metrics</h3>
+                            <div class="metric-row">
+                                <span>Token Consumption (24h)</span>
+                                <span><strong>2.4M tokens</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Knowledge Retrieval Success</span>
+                                <span><strong>94.2%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Hallucination Detection Rate</span>
+                                <span><strong>0.8%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Human Review Required</span>
+                                <span><strong>8.3%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Grounded Response Rate</span>
+                                <span><strong>98.4%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Recommendation Accuracy</span>
+                                <span><strong>97.1%</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== GOVERNANCE ========== -->
+                <section class="page" id="governance">
+                    <div class="hero">
+                        <h1>🛡️ Governance & Compliance</h1>
+                        <p>Enterprise governance, data stewardship, regulatory compliance, and business rules management.</p>
+                    </div>
+
+                    <div class="grid cols-1">
+                        <div class="card">
+                            <h3>Governance Framework</h3>
+                            <p><strong>Data Stewardship:</strong> Clear ownership and accountability for all enterprise data</p>
+                            <p><strong>Access Control:</strong> Role-based access with audit trails</p>
+                            <p><strong>Regulatory Compliance:</strong> HIPAA, GDPR, SOX compliance enforcement</p>
+                            <p><strong>Data Classification:</strong> Sensitive, confidential, internal, public</p>
+                            <p><strong>Retention Policies:</strong> Automated data lifecycle management</p>
+                            <p><strong>Audit & Monitoring:</strong> Complete lineage and impact analysis</p>
+                        </div>
+
+                        <div class="card">
+                            <h3>Business Rules Management</h3>
+                            <p>Every transformation, validation, and business decision is governed by configurable, version-controlled business rules:</p>
+                            <p style="font-size:12px;margin-left:20px;">• Claim validation rules (amount checks, date validation)</p>
+                            <p style="font-size:12px;margin-left:20px;">• Member eligibility rules (status, coverage dates)</p>
+                            <p style="font-size:12px;margin-left:20px;">• Provider credentialing rules (NPI validation, network participation)</p>
+                            <p style="font-size:12px;margin-left:20px;">• Payment rules (amount limits, override requirements)</p>
+                            <p style="font-size:12px;margin-left:20px;">• Clinical rules (procedure authorization, medical necessity)</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== OPERATIONS ========== -->
+                <section class="page" id="operate">
+                    <div class="hero">
+                        <h1>⚙️ Operations & Monitoring</h1>
+                        <p>Real-time operational monitoring, system health, performance metrics, and incident management.</p>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <h3>System Availability</h3>
+                            <div class="value">99.8%</div>
+                            <div class="trend">✓ Enterprise SLA met</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Avg Response Time</h3>
+                            <div class="value">245ms</div>
+                            <div class="trend">✓ Sub-second performance</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Active Alerts</h3>
+                            <div class="value">3</div>
+                            <div class="trend">⚠️ All non-critical</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Infrastructure Health</h3>
+                            <div class="value">98.4%</div>
+                            <div class="trend">✓ Optimal</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== USE CASES ========== -->
+                <!-- LPI -->
+                <section class="page" id="lpi">
+                    <div class="hero">
+                        <h1>📈 Late Payment Interest (LPI) Propensity</h1>
+                        <p>Identify claims at risk for delayed payment and associated late payment interest charges.</p>
+                    </div>
+
+                    <div class="grid cols-2">
+                        <div class="card">
+                            <h3>Model Performance</h3>
+                            <div class="metric-row">
+                                <span>Prediction Accuracy</span>
+                                <span><strong>94.2%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Precision</span>
+                                <span><strong>91.8%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Recall</span>
+                                <span><strong>89.7%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>AUC-ROC</span>
+                                <span><strong>0.962</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>24-Hour Metrics</h3>
+                            <div class="metric-row">
+                                <span>Claims Scored</span>
+                                <span><strong>245.8K</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>High-Risk Claims</span>
+                                <span><strong>18.2K</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Potential LPI Exposure</span>
+                                <span><strong>$2.4M</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Claims Actioned</span>
+                                <span><strong>14.3K</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- OVERPAYMENT -->
+                <section class="page" id="overpayment">
+                    <div class="hero">
+                        <h1>💰 Overpayment Propensity</h1>
+                        <p>Detect potential overpayments, duplicate claims, and billing anomalies before payment.</p>
+                    </div>
+
+                    <div class="grid cols-2">
+                        <div class="card">
+                            <h3>Detection Performance</h3>
+                            <div class="metric-row">
+                                <span>Detection Rate</span>
+                                <span><strong>96.1%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>False Positive Rate</span>
+                                <span><strong>2.1%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Precision</span>
+                                <span><strong>97.9%</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>24-Hour Impact</h3>
+                            <div class="metric-row">
+                                <span>Overpayments Detected</span>
+                                <span><strong>312</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Amount Prevented</span>
+                                <span><strong>$1.8M</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Duplicate Claims Found</span>
+                                <span><strong>47</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FRAUD -->
+                <section class="page" id="fraud">
+                    <div class="hero">
+                        <h1>🚨 Claims Fraud Risk Score</h1>
+                        <p>Identify suspicious claims and provider behavior indicative of fraud, waste, and abuse.</p>
+                    </div>
+
+                    <div class="grid cols-2">
+                        <div class="card">
+                            <h3>Risk Model Performance</h3>
+                            <div class="metric-row">
+                                <span>Detection Accuracy</span>
+                                <span><strong>93.8%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>True Positive Rate</span>
+                                <span><strong>89.2%</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Specificity</span>
+                                <span><strong>97.1%</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>24-Hour Risk Detection</h3>
+                            <div class="metric-row">
+                                <span>High-Risk Claims</span>
+                                <span><strong>128</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Suspected Fraud Cases</span>
+                                <span><strong>8</strong></span>
+                            </div>
+                            <div class="metric-row">
+                                <span>Referred to SIU</span>
+                                <span><strong>3</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // Show selected page
+            const selectedPage = document.getElementById(pageId);
+            if (selectedPage) {
+                selectedPage.classList.add('active');
+            }
+
+            // Update nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            // Find and activate the clicked nav item
+            const clickedNav = Array.from(navItems).find(item => {
+                return item.getAttribute('onclick').includes(pageId);
+            });
+            if (clickedNav) {
+                clickedNav.classList.add('active');
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchTab(event, tabId) {
+            // Hide all tab views
+            const tabViews = document.querySelectorAll('.tab-view');
+            tabViews.forEach(view => view.classList.remove('active'));
+
+            // Show selected tab
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+
+            // Update tab buttons
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
