@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data for AI Platform - End-to-End Demo</title>
+    <style>
+        :root {
+            --ink: #12202f;
+            --muted: #617186;
+            --soft: #eef3f7;
+            --line: #d9e2ea;
+            --panel: #ffffff;
+            --nav: #111923;
+            --nav-2: #172331;
+            --blue: #2f6fed;
+            --teal: #0f9f9a;
+            --green: #1a9b58;
+            --amber: #d89018;
+            --red: #d94a3f;
+            --purple: #7651d9;
+            --shadow: 0 12px 34px rgba(20, 39, 61, .11);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f4f7fa;
+            color: var(--ink);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--nav) 0%, var(--nav-2) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        /* Layer Navigation */
+        .layer-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .layer-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--line);
+            background: var(--panel);
+            color: var(--ink);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .layer-btn.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        .layer-btn:hover {
+            border-color: var(--blue);
+        }
+
+        /* KPI Cards */
+        .kpi-section {
+            margin-bottom: 40px;
+        }
+
+        .kpi-section h2 {
+            font-size: 20px;
+            margin: 0 0 20px 0;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .kpi-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: var(--panel);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--blue);
+            transition: transform 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .kpi-card.accent-teal {
+            border-left-color: var(--teal);
+        }
+
+        .kpi-card.accent-green {
+            border-left-color: var(--green);
+        }
+
+        .kpi-card.accent-amber {
+            border-left-color: var(--amber);
+        }
+
+        .kpi-card.accent-red {
+            border-left-color: var(--red);
+        }
+
+        .kpi-card.accent-purple {
+            border-left-color: var(--purple);
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .kpi-meta {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .kpi-trend {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .trend-up {
+            background: rgba(26, 155, 88, 0.1);
+            color: var(--green);
+        }
+
+        .trend-down {
+            background: rgba(217, 74, 63, 0.1);
+            color: var(--red);
+        }
+
+        /* Tabs */
+        .tab-section {
+            background: var(--panel);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--line);
+            background: var(--soft);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--blue);
+            border-bottom-color: var(--blue);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background: var(--soft);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--ink);
+            border-bottom: 2px solid var(--line);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--line);
+            color: var(--muted);
+        }
+
+        tr:hover {
+            background: var(--soft);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(26, 155, 88, 0.15);
+            color: var(--green);
+        }
+
+        .status-warning {
+            background: rgba(216, 144, 24, 0.15);
+            color: var(--amber);
+        }
+
+        .status-error {
+            background: rgba(217, 74, 63, 0.15);
+            color: var(--red);
+        }
+
+        .status-info {
+            background: rgba(47, 111, 237, 0.15);
+            color: var(--blue);
+        }
+
+        /* Detail Cards */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .detail-card {
+            background: var(--soft);
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 3px solid var(--blue);
+        }
+
+        .detail-card h4 {
+            margin: 0 0 10px 0;
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .detail-card p {
+            margin: 5px 0;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* Layer sections */
+        .layer-content {
+            display: none;
+        }
+
+        .layer-content.active {
+            display: block;
+        }
+
+        /* Diagram */
+        .architecture-diagram {
+            background: var(--soft);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .architecture-diagram svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .pipeline-stage {
+            display: inline-block;
+            padding: 15px 25px;
+            margin: 10px;
+            background: var(--blue);
+            color: white;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            padding: 30px;
+            background: var(--soft);
+            border-radius: 8px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .kpi-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-buttons {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Data for AI Platform - End-to-End Demo</h1>
+            <p>Comprehensive data management for LPI Propensity, Overpayment Propensity & Claims Fraud Risk Scoring</p>
+        </div>
+
+        <!-- Layer Navigation -->
+        <div class="layer-nav">
+            <button class="layer-btn active" onclick="switchLayer('data-layer')">Data Layer</button>
+            <button class="layer-btn" onclick="switchLayer('context-layer')">Context Layer</button>
+            <button class="layer-btn" onclick="switchLayer('ai-layer')">AI Layer</button>
+            <button class="layer-btn" onclick="switchLayer('operate-layer')">Operate</button>
+            <button class="layer-btn" onclick="switchLayer('governance-layer')">Governance</button>
+        </div>
+
+        <!-- DATA LAYER -->
+        <div id="data-layer" class="layer-content active">
+            <div class="kpi-section">
+                <h2>📈 Data Layer - Key Performance Indicators (24 Hours)</h2>
+                <div class="kpi-cards">
+                    <div class="kpi-card accent-teal">
+                        <div class="kpi-label">DQ Pass Rate</div>
+                        <div class="kpi-value">94.2%</div>
+                        <div class="kpi-meta">Data Quality Pass Rate</div>
+                        <div class="kpi-trend trend-up">↑ +2.1% from yesterday</div>
+                    </div>
+                    <div class="kpi-card accent-green">
+                        <div class="kpi-label">Records Ingested</div>
+                        <div class="kpi-value">2.4M</div>
+                        <div class="kpi-meta">Total records in 24 hours</div>
+                        <div class="kpi-trend trend-up">↑ +8.5% growth</div>
+                    </div>
+                    <div class="kpi-card accent-blue">
+                        <div class="kpi-label">Promoted Downstream</div>
+                        <div class="kpi-value">2.1M</div>
+                        <div class="kpi-meta">Records ready for processing</div>
+                        <div class="kpi-trend trend-up">↑ +3.2%</div>
+                    </div>
+                    <div class="kpi-card accent-amber">
+                        <div class="kpi-label">Quarantined</div>
+                        <div class="kpi-value">285K</div>
+                        <div class="kpi-meta">Records under review</div>
+                        <div class="kpi-trend trend-down">↓ -1.1% improvement</div>
+                    </div>
+                    <div class="kpi-card accent-purple">
+                        <div class="kpi-label">Pipelines Running</div>
+                        <div class="kpi-value">24</div>
+                        <div class="kpi-meta">Active data pipelines</div>
+                        <div class="kpi-trend trend-up">↑ All operational</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Layer Tabs -->
+            <div class="tab-section">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab(event, 'sources')">Sources</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'pipelines')">Pipelines</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'mappings')">Mappings</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'dq-rules')">DQ Rules</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'runs')">Runs</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'drift')">Drift</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'lineage')">Lineage</button>
+                </div>
+
+                <!-- Sources Tab -->
+                <div id="sources" class="tab-content active">
+                    <h3>Data Sources Management</h3>
+                    <p>Manage all data sources with comprehensive metrics and operational status</p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Source Name</th>
+                                    <th>Purpose/Facet</th>
+                                    <th>Last Refresh</th>
+                                    <th>Next Run</th>
+                                    <th>Replication Type</th>
+                                    <th>Tables/Rows</th>
+                                    <th>Custodian</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Facets</strong></td>
+                                    <td>Core Adjudication Platform</td>
+                                    <td>2024-01-13 14:30</td>
+                                    <td>2024-01-13 22:00</td>
+                                    <td>CDC (Change Data Capture)</td>
+                                    <td>156 / 4.2M</td>
+                                    <td>John Davis</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>AWS Redshift</strong></td>
+                                    <td>Claims Data Warehouse</td>
+                                    <td>2024-01-13 12:15</td>
+                                    <td>2024-01-14 02:00</td>
+                                    <td>Full Refresh</td>
+                                    <td>89 / 1.8M</td>
+                                    <td>Sarah Miller</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Snowflake</strong></td>
+                                    <td>Claims Data Warehouse (Alt)</td>
+                                    <td>2024-01-13 13:45</td>
+                                    <td>2024-01-13 18:00</td>
+                                    <td>Incremental</td>
+                                    <td>112 / 2.1M</td>
+                                    <td>Michael Chen</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>UM & Clinical CM</strong></td>
+                                    <td>Utilization Management</td>
+                                    <td>2024-01-13 11:20</td>
+                                    <td>2024-01-13 20:00</td>
+                                    <td>CDC</td>
+                                    <td>78 / 890K</td>
+                                    <td>Emma Rodriguez</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Provider Master</strong></td>
+                                    <td>Provider & Network Data</td>
+                                    <td>2024-01-13 10:00</td>
+                                    <td>2024-01-14 06:00</td>
+                                    <td>Incremental</td>
+                                    <td>34 / 450K</td>
+                                    <td>Robert Wilson</td>
+                                    <td><span class="status-badge status-warning">Warning</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Audit History</strong></td>
+                                    <td>Compliance & Audit Logs</td>
+                                    <td>2024-01-13 15:50</td>
+                                    <td>2024-01-13 23:00</td>
+                                    <td>Append Only</td>
+                                    <td>12 / 2.8M</td>
+                                    <td>Lisa Thompson</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Clearing House</strong></td>
+                                    <td>External Claims & Eligibility</td>
+                                    <td>2024-01-13 09:30</td>
+                                    <td>2024-01-13 17:00</td>
+                                    <td>Full Refresh</td>
+                                    <td>45 / 1.2M</td>
+                                    <td>David Kim</td>
+                                    <td><span class="status-badge status-info">Syncing</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Document Lake House</strong></td>
+                                    <td>Unstructured Document Storage</td>
+                                    <td>2024-01-13 14:15</td>
+                                    <td>2024-01-14 00:00</td>
+                                    <td>Object Storage</td>
+                                    <td>N/A / 890GB</td>
+                                    <td>Jennifer Lee</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Member Portal</strong></td>
+                                    <td>Member Self-Service Data</td>
+                                    <td>2024-01-13 16:00</td>
+                                    <td>2024-01-14 04:00</td>
+                                    <td>API Stream</td>
+                                    <td>23 / 340K</td>
+                                    <td>Patricia Brown</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card" style="border-left-color: var(--green);">
+                            <h4>✓ Active Sources</h4>
+                            <p><strong>7 out of 9</strong> sources are actively syncing. Provider Master is under review due to API rate limiting.</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--blue);">
+                            <h4>📊 Data Volume</h4>
+                            <p>Total ingested volume: <strong>14.7M records</strong> + <strong>890GB unstructured data</strong> across all sources.</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--amber);">
+                            <h4>⚙️ Replication Strategy</h4>
+                            <p>Mix of CDC (real-time), Incremental, and Full Refresh strategies optimized for data freshness and system load.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pipelines Tab -->
+                <div id="pipelines" class="tab-content">
+                    <h3>Data Pipeline Orchestration</h3>
+                    <p>Monitor and manage end-to-end data pipelines with stage-wise tracking</p>
+                    
+                    <h4 style="margin-top: 30px;">Pipeline Stages</h4>
+                    <div style="background: var(--soft); padding: 20px; border-radius: 6px; margin-bottom: 20px;">
+                        <div class="pipeline-stage" style="background: var(--green);">✓ Extract</div>
+                        <div class="pipeline-stage" style="background: var(--blue);">⟳ Transform</div>
+                        <div class="pipeline-stage" style="background: var(--teal);">📊 Validate</div>
+                        <div class="pipeline-stage" style="background: var(--purple);">✓ Load</div>
+                        <div class="pipeline-stage" style="background: var(--green);">📈 Promote</div>
+                    </div>
+
+                    <h4>Active Pipelines (24-Hour View)</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Pipeline Name</th>
+                                    <th>Source → Destination</th>
+                                    <th>Start Time</th>
+                                    <th>Duration</th>
+                                    <th>Records Processed</th>
+                                    <th>Extract</th>
+                                    <th>Transform</th>
+                                    <th>Validate</th>
+                                    <th>Load</th>
+                                    <th>Overall Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Facets-Core-Pipeline</strong></td>
+                                    <td>Facets → Staging</td>
+                                    <td>2024-01-13 14:30</td>
+                                    <td>12 min</td>
+                                    <td>542K</td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Claims-Aggregation</strong></td>
+                                    <td>Redshift+Snowflake → Lake</td>
+                                    <td>2024-01-13 12:15</td>
+                                    <td>35 min</td>
+                                    <td>1.8M</td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-warning">⚠</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-warning">Warnings</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Member-UM-Sync</strong></td>
+                                    <td>Portal+UM → Warehouse</td>
+                                    <td>2024-01-13 16:00</td>
+                                    <td>8 min</td>
+                                    <td>340K</td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Provider-Master-Update</strong></td>
+                                    <td>Provider Master → Cache</td>
+                                    <td>2024-01-13 10:00</td>
+                                    <td>22 min</td>
+                                    <td>450K</td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-warning">⚠</span></td>
+                                    <td><span class="status-badge status-warning">⚠</span></td>
+                                    <td><span class="status-badge status-info">In Progress</span></td>
+                                    <td><span class="status-badge status-warning">Delayed</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Document-Ingestion</strong></td>
+                                    <td>Document Lake → Vector DB</td>
+                                    <td>2024-01-13 14:15</td>
+                                    <td>45 min</td>
+                                    <td>2.3GB</td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-success">✓</span></td>
+                                    <td><span class="status-badge status-info">In Progress</span></td>
+                                    <td><span class="status-badge status-info">Running</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-card" style="border-left-color: var(--green);">
+                            <h4>Performance Summary</h4>
+                            <p><strong>Avg Duration:</strong> 24.4 minutes<br><strong>Success Rate:</strong> 96.8%<br><strong>Throughput:</strong> 450K records/min</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--blue);">
+                            <h4>Bottlenecks</h4>
+                            <p><strong>Transform Stage:</strong> 40% of time<br><strong>Provider Master:</strong> Rate limiting issue<br><strong>Action:</strong> Contact custodian</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mappings Tab -->
+                <div id="mappings" class="tab-content">
+                    <h3>Data Mappings & Schema Transformation</h3>
+                    <p>Define and manage field-level transformations and schema mappings</p>
+                    
+                    <div class="detail-grid">
+                        <div class="detail-card" style="border-left-color: var(--blue);">
+                            <h4>Claims Mapping (Facets → Staging)</h4>
+                            <p><strong>Status:</strong> Active<br><strong>Last Updated:</strong> 2024-01-10<br><strong>Fields Mapped:</strong> 87 / 87</p>
+                            <p><strong>Transformations:</strong> Date normalization, State code standardization, Amount rounding</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--teal);">
+                            <h4>Provider Mapping (Master → Cache)</h4>
+                            <p><strong>Status:</strong> Active<br><strong>Last Updated:</strong> 2024-01-12<br><strong>Fields Mapped:</strong> 54 / 54</p>
+                            <p><strong>Transformations:</strong> NPI validation, Address geocoding, Taxonomy rollup</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--purple);">
+                            <h4>Member Mapping (Portal → DW)</h4>
+                            <p><strong>Status:</strong> Active<br><strong>Last Updated:</strong> 2024-01-11<br><strong>Fields Mapped:</strong> 42 / 42</p>
+                            <p><strong>Transformations:</strong> DOB encryption, ZIP code masking, ID hashing</p>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px;">Field Transformation Rules</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Source Field</th>
+                                    <th>Target Field</th>
+                                    <th>Transformation Rule</th>
+                                    <th>Data Type</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>claim_date</td>
+                                    <td>claim_date_normalized</td>
+                                    <td>CONVERT_TO_DATE(YYYY-MM-DD)</td>
+                                    <td>DATE</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>service_provider_state</td>
+                                    <td>provider_state_cd</td>
+                                    <td>STANDARDIZE_STATE_CODE()</td>
+                                    <td>VARCHAR(2)</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>claim_amount</td>
+                                    <td>claim_amt_rounded</td>
+                                    <td>ROUND(amount, 2)</td>
+                                    <td>DECIMAL(12,2)</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>member_dob</td>
+                                    <td>member_age</td>
+                                    <td>YEAR(CURRENT_DATE) - YEAR(dob)</td>
+                                    <td>INTEGER</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>procedure_code</td>
+                                    <td>procedure_category</td>
+                                    <td>LOOKUP(proc_hierarchy_table)</td>
+                                    <td>VARCHAR(50)</td>
+                                    <td><span class="status-badge status-success">Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DQ Rules Tab -->
+                <div id="dq-rules" class="tab-content">
+                    <h3>Data Quality Rules & Validation</h3>
+                    <p>Monitor and enforce data quality standards across all ingested data</p>
+                    
+                    <div class="detail-grid">
+                        <div class="detail-card" style="border-left-color: var(--green);">
+                            <h4>Rule Categories</h4>
+                            <p><strong>Completeness:</strong> 18 rules<br><strong>Accuracy:</strong> 24 rules<br><strong>Consistency:</strong> 15 rules<br><strong>Uniqueness:</strong> 12 rules</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--teal);">
+                            <h4>Pass Rate Metrics</h4>
+                            <p><strong>Overall:</strong> 94.2%<br><strong>Critical Rules:</strong> 99.1%<br><strong>Warning Rules:</strong> 88.5%</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--amber);">
+                            <h4>Failures (24h)</h4>
+                            <p><strong>Total:</strong> 285K records<br><strong>Critical:</strong> 12K<br><strong>Non-Critical:</strong> 273K</p>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px;">Active DQ Rules</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rule Name</th>
+                                    <th>Type</th>
+                                    <th>Condition</th>
+                                    <th>Severity</th>
+                                    <th>Pass Rate</th>
+                                    <th>Failed Records</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>NOT_NULL_CLAIM_ID</td>
+                                    <td>Completeness</td>
+                                    <td>claim_id IS NOT NULL</td>
+                                    <td><span class="status-badge status-error">Critical</span></td>
+                                    <td>99.98%</td>
+                                    <td>485</td>
+                                    <td><span class="status-badge status-success">Pass</span></td>
+                                </tr>
+                                <tr>
+                                    <td>VALID_DATE_RANGE</td>
+                                    <td>Accuracy</td>
+                                    <td>claim_date BETWEEN '2020-01-01' AND CURRENT_DATE</td>
+                                    <td><span class="status-badge status-error">Critical</span></td>
+                                    <td>99.94%</td>
+                                    <td>1,542</td>
+                                    <td><span class="status-badge status-success">Pass</span></td>
+                                </tr>
+                                <tr>
+                                    <td>AMOUNT_POSITIVE</td>
+                                    <td>Accuracy</td>
+                                    <td>claim_amount > 0</td>
+                                    <td><span class="status-badge status-error">Critical</span></td>
+                                    <td>99.89%</td>
+                                    <td>2,650</td>
+                                    <td><span class="status-badge status-success">Pass</span></td>
+                                </tr>
+                                <tr>
+                                    <td>VALID_STATE_CODE</td>
+                                    <td>Accuracy</td>
+                                    <td>state_code IN (valid_states_list)</td>
+                                    <td><span class="status-badge status-warning">Warning</span></td>
+                                    <td>96.45%</td>
+                                    <td>95,800</td>
+                                    <td><span class="status-badge status-warning">Review</span></td>
+                                </tr>
+                                <tr>
+                                    <td>DUPLICATE_CHECK</td>
+                                    <td>Uniqueness</td>
+                                    <td>COUNT(*) = 1 for (claim_id + member_id + date)</td>
+                                    <td><span class="status-badge status-warning">Warning</span></td>
+                                    <td>92.10%</td>
+                                    <td>185,200</td>
+                                    <td><span class="status-badge status-warning">Monitor</span></td>
+                                </tr>
+                                <tr>
+                                    <td>PROVIDER_EXISTS</td>
+                                    <td>Consistency</td>
+                                    <td>provider_id EXISTS IN provider_master</td>
+                                    <td><span class="status-badge status-warning">Warning</span></td>
+                                    <td>91.85%</td>
+                                    <td>198,150</td>
+                                    <td><span class="status-badge status-warning">Monitor</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 style="margin-top: 20px;">DQ Trend Analysis</h4>
+                    <p style="color: var(--muted);">DQ performance has improved by 2.1% over the last 7 days. Critical rules maintain 99%+ pass rate. Non-critical rules show 91-96% pass rate range with focus on provider validation and duplicate detection.</p>
+                </div>
+
+                <!-- Runs Tab -->
+                <div id="runs" class="tab-content">
+                    <h3>Pipeline Execution History & Runs</h3>
+                    <p>Track all pipeline runs with detailed execution metrics and logs</p>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Run ID</th>
+                                    <th>Pipeline Name</th>
+                                    <th>Triggered By</th>
+                                    <th>Start Time</th>
+                                    <th>Duration</th>
+                                    <th>Records</th>
+                                    <th>Success Rate</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>RUN-2024-0142</td>
+                                    <td>Facets-Core-Pipeline</td>
+                                    <td>Scheduler</td>
+                                    <td>2024-01-13 22:00</td>
+                                    <td>12 min 34 sec</td>
+                                    <td>542,150</td>
+                                    <td>99.95%</td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td>RUN-2024-0141</td>
+                                    <td>Claims-Aggregation</td>
+                                    <td>Scheduler</td>
+                                    <td>2024-01-13 20:00</td>
+                                    <td>35 min 12 sec</td>
+                                    <td>1,847,920</td>
+                                    <td>98.20%</td>
+                                    <td><span class="status-badge status-warning">Warnings</span></td>
+                                </tr>
+                                <tr>
+                                    <td>RUN-2024-0140</td>
+                                    <td>Member-UM-Sync</td>
+                                    <td>Scheduler</td>
+                                    <td>2024-01-13 18:00</td>
+                                    <td>8 min 45 sec</td>
+                                    <td>340,200</td>
+                                    <td>99.99%</td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td>RUN-2024-0139</td>
+                                    <td>Provider-Master-Update</td>
+                                    <td>Manual</td>
+                                    <td>2024-01-13 16:00</td>
+                                    <td>22 min 08 sec</td>
+                                    <td>450,180</td>
+                                    <td>94.50%</td>
+                                    <td><span class="status-badge status-warning">Delayed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>RUN-2024-0138</td>
+                                    <td>Document-Ingestion</td>
+                                    <td>Scheduler</td>
+                                    <td>2024-01-13 14:00</td>
+                                    <td>45 min 22 sec</td>
+                                    <td>2.3GB</td>
+                                    <td>96.80%</td>
+                                    <td><span class="status-badge status-info">Running</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-card" style="border-left-color: var(--green);">
+                            <h4>Execution Performance</h4>
+                            <p><strong>Avg Duration:</strong> 24.8 minutes<br><strong>Success Rate:</strong> 96.8%<br><strong>Failed Runs (7d):</strong> 2</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--blue);">
+                            <h4>Reliability Metrics</h4>
+                            <p><strong>Uptime:</strong> 99.7%<br><strong>Retry Success:</strong> 98.5%<br><strong>Incidents (30d):</strong> 1</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drift Tab -->
+                <div id="drift" class="tab-content">
+                    <h3>Data Drift & Distribution Monitoring</h3>
+                    <p>Track statistical drift and anomalies in data distributions</p>
+                    
+                    <div class="detail-grid">
+                        <div class="detail-card" style="border-left-color: var(--green);">
+                            <h4>Overall Drift Score</h4>
+                            <p style="font-size: 24px; color: var(--green); font-weight: 700; margin: 10px 0;">LOW (3.2%)</p>
+                            <p>No significant drift detected. All distributions within acceptable thresholds.</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--amber);">
+                            <h4>⚠️ Monitored Fields</h4>
+                            <p><strong>Critical:</strong> 15 fields<br><strong>Warning:</strong> 8 fields<br><strong>Normal:</strong> 64 fields</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--blue);">
+                            <h4>Drift Calculation</h4>
+                            <p><strong>Method:</strong> KL Divergence + Chi-Square<br><strong>Baseline:</strong> Last 30 days<br><strong>Frequency:</strong> Hourly</p>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px;">Field Drift Metrics</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field Name</th>
+                                    <th>Data Type</th>
+                                    <th>Drift Score</th>
+                                    <th>Baseline Mean</th>
+                                    <th>Current Mean</th>
+                                    <th>Trend</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>claim_amount</td>
+                                    <td>DECIMAL</td>
+                                    <td>2.1%</td>
+                                    <td>$5,420.50</td>
+                                    <td>$5,389.20</td>
+                                    <td>↓ Decreasing</td>
+                                    <td><span class="status-badge status-success">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>days_to_process</td>
+                                    <td>INTEGER</td>
+                                    <td>4.5%</td>
+                                    <td>7.2 days</td>
+                                    <td>7.8 days</td>
+                                    <td>↑ Increasing</td>
+                                    <td><span class="status-badge status-warning">Monitor</span></td>
+                                </tr>
+                                <tr>
+                                    <td>member_age</td>
+                                    <td>INTEGER</td>
+                                    <td>0.8%</td>
+                                    <td>45.3 yrs</td>
+                                    <td>45.4 yrs</td>
+                                    <td>→ Stable</td>
+                                    <td><span class="status-badge status-success">Normal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>procedure_code_distribution</td>
+                                    <td>CATEGORICAL</td>
+                                    <td>8.2%</td>
+                                    <td>Historical Mix</td>
+                                    <td>Current Mix</td>
+                                    <td>↑ Changing</td>
+                                    <td><span class="status-badge status-warning">Review</span></td>
+                                </tr>
+                                <tr>
+                                    <td>denial_rate</td>
+                                    <td>DECIMAL</td>
+                                    <td>1.3%</td>
+                                    <td>12.1%</td>
+                                    <td>12.3%</td>
+                                    <td>↑ Increasing</td>
+                                    <td><span class="status-badge status-success">Normal</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Lineage Tab -->
+                <div id="lineage" class="tab-content">
+                    <h3>Data Lineage & Provenance Tracking</h3>
+                    <p>End-to-end tracking of data flow from sources to AI models</p>
+                    
+                    <h4>Complete Data Lineage for AI Models</h4>
+                    <div style="background: var(--soft); padding: 20px; border-radius: 6px; margin: 20px 0; overflow-x: auto;">
+                        <div style="font-family: monospace; font-size: 12px; line-height: 1.8; color: var(--ink);">
+                            <div>📊 <strong>DATA SOURCES</strong></div>
+                            <div style="margin-left: 20px;">
+                                ├─ Facets (Core Adjudication) → 542K records/day<br>
+                                ├─ Claims DW (Redshift/Snowflake) → 1.8M records/day<br>
+                                ├─ UM & Clinical → 890K records/day<br>
+                                ├─ Provider Master → 450K records/day<br>
+                                └─ Member Portal → 340K records/day
+                            </div>
+                            <br>
+                            <div>⟳ <strong>TRANSFORMATION LAYERS</strong></div>
+                            <div style="margin-left: 20px;">
+                                ├─ Stage 1: Data Extraction & CDC<br>
+                                ├─ Stage 2: Schema Normalization & Mapping<br>
+                                ├─ Stage 3: Data Quality Validation<br>
+                                ├─ Stage 4: Enrichment & Join Operations<br>
+                                └─ Stage 5: Feature Engineering
+                            </div>
+                            <br>
+                            <div>📈 <strong>FEATURE STORES</strong></div>
+                            <div style="margin-left: 20px;">
+                                ├─ Claim Features (87 features)<br>
+                                ├─ Member Features (54 features)<br>
+                                ├─ Provider Features (42 features)<br>
+                                ├─ Temporal Features (28 features)<br>
+                                └─ Behavioral Features (35 features)
+                            </div>
+                            <br>
+                            <div>🤖 <strong>ML MODELS</strong></div>
+                            <div style="margin-left: 20px;">
+                                ├─ LPI Propensity Model (v2.1)<br>
+                                ├─ Overpayment Propensity Model (v1.8)<br>
+                                └─ Claims Fraud Risk Score (v3.2)
+                            </div>
+                            <br>
+                            <div>🎯 <strong>DOWNSTREAM APPLICATIONS</strong></div>
+                            <div style="margin-left: 20px;">
+                                ├─ Decision Engine<br>
+                                ├─ Claims Management System<br>
+                                ├─ Fraud Detection Platform<br>
+                                └─ Analytics Dashboard
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px;">Impact Analysis</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Source/Transformation</th>
+                                    <th>Downstream Dependencies</th>
+                                    <th>Records Affected</th>
+                                    <th>Criticality</th>
+                                    <th>Last Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Facets Extract</td>
+                                    <td>LPI Model, Fraud Model, Decision Engine</td>
+                                    <td>542K/day</td>
+                                    <td><span class="status-badge status-error">Critical</span></td>
+                                    <td>2024-01-05</td>
+                                </tr>
+                                <tr>
+                                    <td>Schema Normalization</td>
+                                    <td>All downstream models</td>
+                                    <td>4.1M/day</td>
+                                    <td><span class="status-badge status-error">Critical</span></td>
+                                    <td>2024-01-08</td>
+                                </tr>
+                                <tr>
+                                    <td>DQ Validation</td>
+                                    <td>Feature Store, All Models</td>
+                                    <td>3.8M/day (94% pass)</td>
+                                    <td><span class="status-badge status-warning">High</span></td>
+                                    <td>2024-01-10</td>
+                                </tr>
+                                <tr>
+                                    <td>Feature Engineering</td>
+                                    <td>LPI, Overpayment, Fraud Models</td>
+                                    <td>246 features</td>
+                                    <td><span class="status-badge status-warning">High</span></td>
+                                    <td>2024-01-12</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-card" style="border-left-color: var(--blue);">
+                            <h4>Data Governance</h4>
+                            <p><strong>Version Control:</strong> Git-based lineage tracking<br><strong>Change Log:</strong> 47 changes (30 days)<br><strong>Audit Trail:</strong> Complete immutable log</p>
+                        </div>
+                        <div class="detail-card" style="border-left-color: var(--purple);">
+                            <h4>Compliance Tracking</h4>
+                            <p><strong>PII Fields:</strong> 8 (masked/encrypted)<br><strong>Retention Policy:</strong> 7 years<br><strong>HIPAA Compliant:</strong> Yes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTEXT LAYER -->
+        <div id="context-layer" class="layer-content">
+            <div class="kpi-section">
+                <h2>🔗 Context Layer - Integration Hub</h2>
+                <div class="detail-grid">
+                    <div class="detail-card" style="border-left-color: var(--blue);">
+                        <h4>Business Context</h4>
+                        <p>Integrates business rules, domain knowledge, and regulatory requirements with data flowing from the Data Layer. Provides contextual enrichment for LPI, Overpayment, and Fraud scoring.</p>
+                    </div>
+                    <div class="detail-card" style="border-left-color: var(--teal);">
+                        <h4>Capabilities</h4>
+                        <p>• Business Rule Engine<br>• Master Data Management<br>• Reference Data Integration<br>• Domain Knowledge Base<br>• Regulatory Mappings</p>
+                    </div>
+                    <div class="detail-card" style="border-left-color: var(--green);">
+                        <h4>Connected Systems</h4>
+                        <p>Connects to Policy Management, Clinical Guidelines, Provider Networks, and Compliance Frameworks to provide complete business context.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI LAYER -->
+        <div id="ai-layer" class="layer-content">
+            <div class="kpi-section">
+                <h2>🤖 AI Layer - Model Orchestration</h2>
+                <div class="kpi-cards">
+                    <div class="kpi-card accent-blue">
+                        <div class="kpi-label">LPI Propensity Model</div>
+                        <div class="kpi-value">94.2%</div>
+                        <div class="kpi-meta">Model Accuracy</div>
+                        <div class="kpi-trend trend-up">↑ +1.2% this week</div>
+                    </div>
+                    <div class="kpi-card accent-teal">
+                        <div class="kpi-label">Overpayment Model</div>
+                        <div class="kpi-value">91.8%</div>
+                        <div class="kpi-meta">Precision Score</div>
+                        <div class="kpi-trend trend-up">↑ +0.8%</div>
+                    </div>
+                    <div class="kpi-card accent-purple">
+                        <div class="kpi-label">Fraud Risk Score</div>
+                        <div class="kpi-value">96.5%</div>
+                        <div class="kpi-meta">AUC-ROC</div>
+                        <div class="kpi-trend trend-up">↑ +2.1%</div>
+                    </div>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card" style="border-left-color: var(--blue);">
+                        <h4>Model Management</h4>
+                        <p>• 3 production models deployed<br>• Daily batch predictions: 2.4M<br>• Real-time inference: <1ms p99<br>• Model versioning: Git-based<br>• A/B Testing: Enabled</p>
+                    </div>
+                    <div class="detail-card" style="border-left-color: var(--green);">
+                        <h4>Performance Monitoring</h4>
+                        <p>• Data drift detection: Active<br>• Model performance tracking: Hourly<br>• Feature importance analysis: Weekly<br>• Fairness metrics: Monitored<br>• Retraining cadence: Monthly</p>
+                    </div>
+                    <div class="detail-card" style="border-left-color: var(--amber);">
+                        <h4>Inference Pipeline</h4>
+                        <p>• Batch processing: 500K records/hour<br>• Real-time API: 1000 req/sec<br>• Fallback strategy: Rule-based<br>• SLA: 99.5% uptime<br>• Latency: <100ms average</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OPERATE LAYER -->
+        <div id="operate-layer" class="layer-content">
+            <div class="kpi-section">
+                <h2>⚙️ Operate Layer - Execution & Workflow</h2>
+                <div class="detail-grid">
+                    <div class="detail-card" style="border-left-color: var(--blue);">
+                        <h4>Orchestration</h4>
+                        <p>• Workflow scheduler: Apache Airflow<br>• Pipeline coordination: Automated<br>• Alerting: Real-time alerts<br>• SLA monitoring: 99.7% uptime<br>• Auto-remediation: Enabled</p>
+                    </div>
+                    <div class="detail-card" style="border-left-color: var(--teal);">
+                        <h4>Integration Points</h4>
+                        <p>• Claims Management System<br>• Fraud Detection Platform<br>• Decision Engine<br>• Analytics Dashboard<br>• Third-party APIs</p>
+                    </div>
+                    <div class="detail-card" style="border-left-color: var(--green);">
+                        <h4>Incident Management</h4>
+                        <p>• MTTR: <30 minutes<br>• On-call rotation: 24/7<br>• Runbooks: Documented<br>• Incident tracking: Jira<br>• Post-mortems: Weekly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GOVERNANCE LAYER -->
+        <div id="governance-layer" class="layer-content">
+            <div class="kpi-section">
+                <h2>📋 Governance Layer - Compliance & Control</h2>
+                <div class="kpi-cards">
+                    <div class="kpi-card accent-purple">
+                        <div class="kpi-label">Compliance Score</div>
+                        <div class="kpi-value">98.5%</div>
+                        <div class="kpi-meta">Governance Compliance</div>
+                        <div class="kpi-trend trend-up">↑ Excellent</div>
+                    </div>
+                    <div class="kpi-card accent-green">
+                        <div class="kpi-label">Audit Status</div>
+                        <div class="kpi-value">100%</div>
+                        <div class="kpi-meta">Controls Tested</div>
+                        <div class="kpi-trend trend-up">✓ Pass Rate</div>
+                    </div>
+                    <div class="kpi-card accent-teal">
+                        <div class="kpi-label">Data Security</div>
+                        <div class="kpi-value">AAA</div>
+                        <div class="kpi-meta">Security Rating</div>
+                        <div class="kpi-trend trend-up">No Vulnerabilities</div>
+                    </div>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card" style="border-left-color: var(--purple);">
+                        <h4>Compliance Frameworks</h4>
+                        <p>• HIPAA: Certified<br>• SOC 2 Type II: Attested<br>• GDPR: Compliant<br>• State Privacy Laws: Compliant<br>• Claims Regulations: Compliant</p>
+                    </div>
+                    <div class="detail-card" style="border-left-color: var(--blue);">
+                        <h4>Access Control</h4>
+                        <p>• RBAC: Implemented<br>• Data masking: PII protected<br>• Encryption: AES-256<br>• Key management: AWS KMS<br>• Audit logging: Complete</p>
+                    </div>
+                    <div class="detail-card" style="border-left-color: var(--red);">
+                        <h4>Risk Management</h4>
+                        <p>• Risk assessments: Quarterly<br>• Model explainability: SHAP values<br>• Bias monitoring: Active<br>• Fairness testing: Implemented<br>• Model governance: MLOps</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Data for AI Platform v1.0 | Last Updated: 2024-01-13 | © 2024 All Rights Reserved</p>
+            <p>For support, contact: dataplatform@company.com</p>
+        </div>
+    </div>
+
+    <script>
+        function switchLayer(layerId) {
+            // Hide all layers
+            const layers = document.querySelectorAll('.layer-content');
+            layers.forEach(layer => layer.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.layer-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected layer
+            document.getElementById(layerId).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function switchTab(event, tabId) {
+            const tabButtons = event.target.parentElement.querySelectorAll('.tab-btn');
+            const tabSection = event.target.parentElement.parentElement;
+            const tabs = tabSection.querySelectorAll('.tab-content');
+
+            // Hide all tabs
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all buttons
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Data for AI Platform Demo loaded successfully');
+        });
+    </script>
+</body>
+</html>
