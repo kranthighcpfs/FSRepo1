@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data for AI Platform - End-to-End Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <h1>🚀 Data for AI Platform</h1>
+                <span class="subtitle">End-to-End Demo</span>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn active" data-layer="data">Data Layer</button>
+                <button class="nav-btn" data-layer="context">Context Layer</button>
+                <button class="nav-btn" data-layer="ai">AI Layer</button>
+                <button class="nav-btn" data-layer="operate">Operate</button>
+                <button class="nav-btn" data-layer="governance">Governance</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+            <span id="breadcrumb-text">Data Layer</span>
+        </div>
+
+        <!-- Data Layer -->
+        <section id="data-layer" class="layer-section active">
+            <!-- KPI Cards -->
+            <div class="kpi-section">
+                <h2>KPI Dashboard (24 Hours)</h2>
+                <div class="kpi-cards">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">✅</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">DQ Pass Rate</div>
+                            <div class="kpi-value">98.6%</div>
+                            <div class="kpi-trend">↑ 2.1% from yesterday</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📥</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Records Ingested</div>
+                            <div class="kpi-value">1.24M</div>
+                            <div class="kpi-trend">↑ 340K from yesterday</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">✈️</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Promoted Downstream</div>
+                            <div class="kpi-value">1.22M</div>
+                            <div class="kpi-trend">↑ 98.4% success rate</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">⚠️</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Quarantined</div>
+                            <div class="kpi-value">20K</div>
+                            <div class="kpi-trend">↓ 1.6% failure rate</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">⚙️</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Pipelines Running</div>
+                            <div class="kpi-value">12/12</div>
+                            <div class="kpi-trend">All systems operational</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Section -->
+            <div class="tabs-section">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="sources">📊 Sources</button>
+                    <button class="tab-btn" data-tab="pipeline">🔄 Pipeline</button>
+                    <button class="tab-btn" data-tab="mappings">🗺️ Mappings</button>
+                    <button class="tab-btn" data-tab="dq-rules">✔️ DQ Rules</button>
+                    <button class="tab-btn" data-tab="runs">▶️ Runs</button>
+                    <button class="tab-btn" data-tab="drift">📈 Drift</button>
+                    <button class="tab-btn" data-tab="lineage">🔗 Lineage</button>
+                </div>
+
+                <!-- Sources Tab -->
+                <div id="sources" class="tab-content active">
+                    <h3>Connected Data Sources</h3>
+                    <div class="sources-grid">
+                        <div class="source-card">
+                            <div class="source-header">
+                                <h4>Core Adjudication Platform</h4>
+                                <span class="source-status online">●  Online</span>
+                            </div>
+                            <div class="source-detail">
+                                <p><strong>Purpose:</strong> Facets Claims Administration</p>
+                                <p><strong>Last Refresh:</strong> 2 minutes ago</p>
+                                <p><strong>Next Run:</strong> In 28 minutes</p>
+                                <p><strong>Replication:</strong> CDC (Change Data Capture)</p>
+                                <p><strong>Tables:</strong> 24 | <strong>Rows:</strong> 8.5M</p>
+                                <p><strong>Custodian:</strong> Data Engineering Team</p>
+                            </div>
+                        </div>
+                        <div class="source-card">
+                            <div class="source-header">
+                                <h4>Claims Data Warehouse</h4>
+                                <span class="source-status online">●  Online</span>
+                            </div>
+                            <div class="source-detail">
+                                <p><strong>Purpose:</strong> AWS Redshift / Snowflake</p>
+                                <p><strong>Last Refresh:</strong> 5 minutes ago</p>
+                                <p><strong>Next Run:</strong> In 55 minutes</p>
+                                <p><strong>Replication:</strong> Batch (Incremental)</p>
+                                <p><strong>Tables:</strong> 42 | <strong>Rows:</strong> 125M</p>
+                                <p><strong>Custodian:</strong> Analytics Team</p>
+                            </div>
+                        </div>
+                        <div class="source-card">
+                            <div class="source-header">
+                                <h4>UM & Clinical Case Mgmt</h4>
+                                <span class="source-status online">●  Online</span>
+                            </div>
+                            <div class="source-detail">
+                                <p><strong>Purpose:</strong> Clinical Reviews & Authorizations</p>
+                                <p><strong>Last Refresh:</strong> 1 minute ago</p>
+                                <p><strong>Next Run:</strong> In 59 minutes</p>
+                                <p><strong>Replication:</strong> API Streaming</p>
+                                <p><strong>Tables:</strong> 18 | <strong>Rows:</strong> 3.2M</p>
+                                <p><strong>Custodian:</strong> Clinical Operations</p>
+                            </div>
+                        </div>
+                        <div class="source-card">
+                            <div class="source-header">
+                                <h4>Provider Master</h4>
+                                <span class="source-status online">●  Online</span>
+                            </div>
+                            <div class="source-detail">
+                                <p><strong>Purpose:</strong> Provider Repository & Credentialing</p>
+                                <p><strong>Last Refresh:</strong> 12 minutes ago</p>
+                                <p><strong>Next Run:</strong> In 48 minutes</p>
+                                <p><strong>Replication:</strong> Batch (Daily)</p>
+                                <p><strong>Tables:</strong> 15 | <strong>Rows:</strong> 450K</p>
+                                <p><strong>Custodian:</strong> Provider Management</p>
+                            </div>
+                        </div>
+                        <div class="source-card">
+                            <div class="source-header">
+                                <h4>Clearinghouse</h4>
+                                <span class="source-status online">●  Online</span>
+                            </div>
+                            <div class="source-detail">
+                                <p><strong>Purpose:</strong> EDI Claims & Remittance</p>
+                                <p><strong>Last Refresh:</strong> 3 minutes ago</p>
+                                <p><strong>Next Run:</strong> In 27 minutes</p>
+                                <p><strong>Replication:</strong> Event-Driven (SFTP)</p>
+                                <p><strong>Tables:</strong> 8 | <strong>Rows:</strong> 2.1M</p>
+                                <p><strong>Custodian:</strong> EDI Operations</p>
+                            </div>
+                        </div>
+                        <div class="source-card">
+                            <div class="source-header">
+                                <h4>Document Lakehouse</h4>
+                                <span class="source-status online">●  Online</span>
+                            </div>
+                            <div class="source-detail">
+                                <p><strong>Purpose:</strong> Medical Records & Documents</p>
+                                <p><strong>Last Refresh:</strong> 7 minutes ago</p>
+                                <p><strong>Next Run:</strong> In 53 minutes</p>
+                                <p><strong>Replication:</strong> S3 Sync</p>
+                                <p><strong>Tables:</strong> 12 | <strong>Rows:</strong> 15M</p>
+                                <p><strong>Custodian:</strong> Records Management</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pipeline Tab -->
+                <div id="pipeline" class="tab-content">
+                    <h3>Data Processing Pipeline</h3>
+                    <div class="pipeline-stages">
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <h4>Stage 1: Ingest</h4>
+                                <span class="stage-status success">✓ Running</span>
+                            </div>
+                            <div class="stage-content">
+                                <p><strong>Owner:</strong> Data Engineering Team</p>
+                                <p><strong>Description:</strong> Receive structured and unstructured data streams</p>
+                                <div class="metrics-grid">
+                                    <div class="metric">
+                                        <div class="metric-label">Throughput</div>
+                                        <div class="metric-value">4,096 rec/sec</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">Success Rate</div>
+                                        <div class="metric-value">100%</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">Records (24h)</div>
+                                        <div class="metric-value">1.24M</div>
+                                    </div>
+                                </div>
+                                <div class="stage-actions">
+                                    <button class="action-btn">⏸️ Pause</button>
+                                    <button class="action-btn">📋 Logs</button>
+                                    <button class="action-btn">📂 Details</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <h4>Stage 2: Parse</h4>
+                                <span class="stage-status success">✓ Running</span>
+                            </div>
+                            <div class="stage-content">
+                                <p><strong>Owner:</strong> Data Engineering Team</p>
+                                <p><strong>Description:</strong> Convert raw files into standardized internal structure</p>
+                                <p><strong>Supported Formats:</strong> JSON, XML, CSV, Excel, Parquet, PDF</p>
+                                <div class="metrics-grid">
+                                    <div class="metric">
+                                        <div class="metric-label">Throughput</div>
+                                        <div class="metric-value">4,878 rec/sec</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">Success Rate</div>
+                                        <div class="metric-value">99.2%</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">Drift Events</div>
+                                        <div class="metric-value">38</div>
+                                    </div>
+                                </div>
+                                <div class="stage-actions">
+                                    <button class="action-btn">⏸️ Pause</button>
+                                    <button class="action-btn">📋 Logs</button>
+                                    <button class="action-btn">📂 Details</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <h4>Stage 3: Validate (Data Quality)</h4>
+                                <span class="stage-status warning">⚠️ Warning</span>
+                            </div>
+                            <div class="stage-content">
+                                <p><strong>Owner:</strong> Data Quality Team</p>
+                                <p><strong>Description:</strong> Ensures all records comply with business and technical rules</p>
+                                <div class="metrics-grid">
+                                    <div class="metric">
+                                        <div class="metric-label">Throughput</div>
+                                        <div class="metric-value">4,791 rec/sec</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">Pass Rate</div>
+                                        <div class="metric-value">97.1%</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">DQ Score</div>
+                                        <div class="metric-value">97.1%</div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-warning">
+                                    <strong>Current Issue:</strong> VIN Validation Failed (4 records affected)
+                                </div>
+                                <div class="stage-actions">
+                                    <button class="action-btn">⏸️ Pause</button>
+                                    <button class="action-btn">🔄 Retry</button>
+                                    <button class="action-btn">🛑 Quarantine</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <h4>Stage 4: Transform</h4>
+                                <span class="stage-status success">✓ Running</span>
+                            </div>
+                            <div class="stage-content">
+                                <p><strong>Owner:</strong> Data Modeling Team</p>
+                                <p><strong>Description:</strong> Convert into enterprise canonical model</p>
+                                <div class="metrics-grid">
+                                    <div class="metric">
+                                        <div class="metric-label">Throughput</div>
+                                        <div class="metric-value">4,724 rec/sec</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">Success Rate</div>
+                                        <div class="metric-value">99.8%</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">Active Mappings</div>
+                                        <div class="metric-value">312</div>
+                                    </div>
+                                </div>
+                                <div class="stage-actions">
+                                    <button class="action-btn">⏸️ Pause</button>
+                                    <button class="action-btn">🔄 Retry</button>
+                                    <button class="action-btn">📂 Details</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-stage">
+                            <div class="stage-header">
+                                <h4>Stage 5: Semantic Validation</h4>
+                                <span class="stage-status success">✓ Running</span>
+                            </div>
+                            <div class="stage-content">
+                                <p><strong>Owner:</strong> Data Governance Team</p>
+                                <p><strong>Description:</strong> Validate business relationships using enterprise ontology</p>
+                                <div class="metrics-grid">
+                                    <div class="metric">
+                                        <div class="metric-label">Throughput</div>
+                                        <div class="metric-value">4,624 rec/sec</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">Success Rate</div>
+                                        <div class="metric-value">99.7%</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-label">Relationships</div>
+                                        <div class="metric-value">1.18M</div>
+                                    </div>
+                                </div>
+                                <div class="stage-actions">
+                                    <button class="action-btn">⏸️ Pause</button>
+                                    <button class="action-btn">📋 Logs</button>
+                                    <button class="action-btn">📂 Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Activity Log -->
+                    <div class="activity-log">
+                        <h4>Live Activity Log</h4>
+                        <div class="log-entries">
+                            <div class="log-entry">
+                                <span class="log-time">09:41:37</span>
+                                <span class="log-msg">✅ Data successfully published downstream</span>
+                            </div>
+                            <div class="log-entry">
+                                <span class="log-time">09:41:34</span>
+                                <span class="log-msg">⏳ Pipeline processing resumed</span>
+                            </div>
+                            <div class="log-entry">
+                                <span class="log-time">09:41:29</span>
+                                <span class="log-msg">⚠️ Failed records moved to quarantine (4 records)</span>
+                            </div>
+                            <div class="log-entry">
+                                <span class="log-time">09:41:25</span>
+                                <span class="log-msg">🔍 Four VIN validation failures detected</span>
+                            </div>
+                            <div class="log-entry">
+                                <span class="log-time">09:41:22</span>
+                                <span class="log-msg">⏳ Validation started</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mappings Tab -->
+                <div id="mappings" class="tab-content">
+                    <h3>Field Mappings Configuration</h3>
+                    <div class="mappings-summary">
+                        <div class="summary-item">
+                            <div class="summary-value">524</div>
+                            <div class="summary-label">Active Mappings</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value">8</div>
+                            <div class="summary-label">Connected Sources</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value">18</div>
+                            <div class="summary-label">Business Entities</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value">99.4%</div>
+                            <div class="summary-label">Validation Success</div>
+                        </div>
+                    </div>
+                    <div class="mappings-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Source System</th>
+                                    <th>Source Field</th>
+                                    <th>Enterprise Entity</th>
+                                    <th>Enterprise Field</th>
+                                    <th>Mapping Type</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Facets</td>
+                                    <td>CLAIM_ID</td>
+                                    <td>Claim</td>
+                                    <td>Claim_ID</td>
+                                    <td>Direct</td>
+                                    <td><span class="status-badge success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Facets</td>
+                                    <td>PAID_AMOUNT</td>
+                                    <td>Payment</td>
+                                    <td>Paid_Amount</td>
+                                    <td>Currency</td>
+                                    <td><span class="status-badge success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Facets</td>
+                                    <td>CLAIM_STATUS</td>
+                                    <td>Claim</td>
+                                    <td>Status</td>
+                                    <td>Lookup</td>
+                                    <td><span class="status-badge success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Provider Master</td>
+                                    <td>NPI</td>
+                                    <td>Provider</td>
+                                    <td>National_Provider_ID</td>
+                                    <td>Direct</td>
+                                    <td><span class="status-badge success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Clearinghouse</td>
+                                    <td>BILL_TYPE</td>
+                                    <td>Claim</td>
+                                    <td>Bill_Type</td>
+                                    <td>Lookup</td>
+                                    <td><span class="status-badge success">Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DQ Rules Tab -->
+                <div id="dq-rules" class="tab-content">
+                    <h3>Data Quality Rules</h3>
+                    <div class="dq-summary">
+                        <div class="dq-stat">
+                            <div class="dq-value">325</div>
+                            <div class="dq-label">Total Active Rules</div>
+                        </div>
+                        <div class="dq-stat">
+                            <div class="dq-value">4,250</div>
+                            <div class="dq-label">Executions Today</div>
+                        </div>
+                        <div class="dq-stat">
+                            <div class="dq-value">98.6%</div>
+                            <div class="dq-label">Overall DQ Score</div>
+                        </div>
+                        <div class="dq-stat">
+                            <div class="dq-value">3,677</div>
+                            <div class="dq-label">Failed Records</div>
+                        </div>
+                    </div>
+                    <div class="dq-scorecard">
+                        <h4>Data Quality Scorecard</h4>
+                        <div class="scorecard-row">
+                            <div class="scorecard-label">Completeness</div>
+                            <div class="scorecard-bar">
+                                <div class="scorecard-fill" style="width: 99.1%"></div>
+                            </div>
+                            <div class="scorecard-value">99.1%</div>
+                        </div>
+                        <div class="scorecard-row">
+                            <div class="scorecard-label">Accuracy</div>
+                            <div class="scorecard-bar">
+                                <div class="scorecard-fill" style="width: 98.4%"></div>
+                            </div>
+                            <div class="scorecard-value">98.4%</div>
+                        </div>
+                        <div class="scorecard-row">
+                            <div class="scorecard-label">Consistency</div>
+                            <div class="scorecard-bar">
+                                <div class="scorecard-fill" style="width: 97.8%"></div>
+                            </div>
+                            <div class="scorecard-value">97.8%</div>
+                        </div>
+                        <div class="scorecard-row">
+                            <div class="scorecard-label">Timeliness</div>
+                            <div class="scorecard-bar">
+                                <div class="scorecard-fill" style="width: 99.7%"></div>
+                            </div>
+                            <div class="scorecard-value">99.7%</div>
+                        </div>
+                        <div class="scorecard-row">
+                            <div class="scorecard-label">Integrity</div>
+                            <div class="scorecard-bar">
+                                <div class="scorecard-fill" style="width: 98.9%"></div>
+                            </div>
+                            <div class="scorecard-value">98.9%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Runs Tab -->
+                <div id="runs" class="tab-content">
+                    <h3>Pipeline Runs Workbench</h3>
+                    <div class="runs-summary">
+                        <div class="run-stat">
+                            <div class="run-value">528</div>
+                            <div class="run-label">Executed Today</div>
+                        </div>
+                        <div class="run-stat">
+                            <div class="run-value">516</div>
+                            <div class="run-label">Successful</div>
+                        </div>
+                        <div class="run-stat">
+                            <div class="run-value">7</div>
+                            <div class="run-label">Failed</div>
+                        </div>
+                        <div class="run-stat">
+                            <div class="run-value">99.2%</div>
+                            <div class="run-label">SLA Compliance</div>
+                        </div>
+                    </div>
+                    <div class="active-runs">
+                        <h4>Active Runs</h4>
+                        <div class="runs-list">
+                            <div class="run-item">
+                                <div class="run-name">Claims Ingestion (Facets)</div>
+                                <div class="run-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%"></div>
+                                    </div>
+                                    <span class="progress-text">75%</span>
+                                </div>
+                                <div class="run-stats">Ingest Stage | 892,450 records processed | ETA: 2m 15s</div>
+                            </div>
+                            <div class="run-item">
+                                <div class="run-name">Provider Data Sync</div>
+                                <div class="run-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 45%"></div>
+                                    </div>
+                                    <span class="progress-text">45%</span>
+                                </div>
+                                <div class="run-stats">Parse Stage | 180,250 records processed | ETA: 3m 40s</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drift Tab -->
+                <div id="drift" class="tab-content">
+                    <h3>Data Drift Monitoring</h3>
+                    <div class="drift-summary">
+                        <div class="drift-item">
+                            <div class="drift-value">6</div>
+                            <div class="drift-label">Active Alerts</div>
+                        </div>
+                        <div class="drift-item">
+                            <div class="drift-value">48</div>
+                            <div class="drift-label">Datasets Monitored</div>
+                        </div>
+                        <div class="drift-item">
+                            <div class="drift-value">1,250</div>
+                            <div class="drift-label">Features Monitored</div>
+                        </div>
+                        <div class="drift-item">
+                            <div class="drift-value">3</div>
+                            <div class="drift-label">Models Impacted</div>
+                        </div>
+                    </div>
+                    <div class="drift-alerts">
+                        <h4>Drift Alerts</h4>
+                        <div class="alert alert-critical">
+                            <strong>Volume Drift - Critical:</strong> Daily claims volume increased from 25,000 to 62,000 (148% above baseline)
+                        </div>
+                        <div class="alert alert-warning">
+                            <strong>Schema Drift - Warning:</strong> Facets added new column 'Telehealth_Flag' (requires mapping update)
+                        </div>
+                        <div class="alert alert-info">
+                            <strong>Statistical Drift - Info:</strong> Paid Amount distribution shows 12% shift in median value
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lineage Tab -->
+                <div id="lineage" class="tab-content">
+                    <h3>Enterprise Data Lineage</h3>
+                    <div class="lineage-content">
+                        <h4>Lineage Example: Claim Paid Amount</h4>
+                        <div class="lineage-flow">
+                            <div class="lineage-step">
+                                <div class="step-label">Source</div>
+                                <div class="step-content">Facets → CLAIM_HEADER.PAID_AMOUNT</div>
+                            </div>
+                            <div class="lineage-arrow">↓</div>
+                            <div class="lineage-step">
+                                <div class="step-label">Ingestion</div>
+                                <div class="step-content">Data Ingestion Pipeline</div>
+                            </div>
+                            <div class="lineage-arrow">↓</div>
+                            <div class="lineage-step">
+                                <div class="step-label">Validation</div>
+                                <div class="step-content">Data Quality Validation</div>
+                            </div>
+                            <div class="lineage-arrow">↓</div>
+                            <div class="lineage-step">
+                                <div class="step-label">Transform</div>
+                                <div class="step-content">Currency Standardization</div>
+                            </div>
+                            <div class="lineage-arrow">↓</div>
+                            <div class="lineage-step">
+                                <div class="step-label">Mapping</div>
+                                <div class="step-content">Enterprise Mapping</div>
+                            </div>
+                            <div class="lineage-arrow">↓</div>
+                            <div class="lineage-step">
+                                <div class="step-label">Storage</div>
+                                <div class="step-content">Silver Claims Dataset → Gold Payment Analytics</div>
+                            </div>
+                            <div class="lineage-arrow">↓</div>
+                            <div class="lineage-step">
+                                <div class="step-label">Consumption</div>
+                                <div class="step-content">Payment Integrity Model → Claims Workbench → Dashboard</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Context Layer -->
+        <section id="context-layer" class="layer-section">
+            <div class="layer-content">
+                <h2>📊 Context Layer - Context & Knowledge Graphs</h2>
+                <div class="context-grid">
+                    <div class="context-card">
+                        <h3>Context Graph</h3>
+                        <p>Real-time visualization of how enterprise entities, business events, and AI reasoning paths are connected for specific business scenarios.</p>
+                        <div class="context-metrics">
+                            <div class="metric-item">
+                                <span>Active Contexts:</span>
+                                <strong>1,247</strong>
+                            </div>
+                            <div class="metric-item">
+                                <span>Connected Entities:</span>
+                                <strong>18</strong>
+                            </div>
+                            <div class="metric-item">
+                                <span>Avg Assembly Time:</span>
+                                <strong>245ms</strong>
+                            </div>
+                        </div>
+                        <button class="btn-primary">Explore Context Graph</button>
+                    </div>
+
+                    <div class="context-card">
+                        <h3>Knowledge Graph</h3>
+                        <p>Unified, enterprise-wide representation of business entities and relationships connecting data across operational systems into a persistent semantic network.</p>
+                        <div class="context-metrics">
+                            <div class="metric-item">
+                                <span>Entity Types:</span>
+                                <strong>24</strong>
+                            </div>
+                            <div class="metric-item">
+                                <span>Total Instances:</span>
+                                <strong>185M+</strong>
+                            </div>
+                            <div class="metric-item">
+                                <span>Relationships:</span>
+                                <strong>2.4B+</strong>
+                            </div>
+                        </div>
+                        <button class="btn-primary">Explore Knowledge Graph</button>
+                    </div>
+
+                    <div class="context-card">
+                        <h3>Enterprise Ontology</h3>
+                        <p>Establishes common business vocabulary enabling every application and AI system to interpret enterprise data with the same meaning and context.</p>
+                        <div class="context-metrics">
+                            <div class="metric-item">
+                                <span>Business Entities:</span>
+                                <strong>32</strong>
+                            </div>
+                            <div class="metric-item">
+                                <span>Business Rules:</span>
+                                <strong>287</strong>
+                            </div>
+                            <div class="metric-item">
+                                <span>Coverage:</span>
+                                <strong>100%</strong>
+                            </div>
+                        </div>
+                        <button class="btn-primary">Explore Ontology</button>
+                    </div>
+                </div>
+
+                <div class="reasoning-example">
+                    <h3>AI Reasoning Trace Example</h3>
+                    <div class="reasoning-path">
+                        <div class="reasoning-step">Member Profile</div>
+                        <span class="arrow">→</span>
+                        <div class="reasoning-step">Policy Details</div>
+                        <span class="arrow">→</span>
+                        <div class="reasoning-step">Claim History</div>
+                        <span class="arrow">→</span>
+                        <div class="reasoning-step">Provider Profile</div>
+                        <span class="arrow">→</span>
+                        <div class="reasoning-step">LPI Signals</div>
+                        <span class="arrow">→</span>
+                        <div class="reasoning-step">AI Recommendation</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Layer -->
+        <section id="ai-layer" class="layer-section">
+            <div class="layer-content">
+                <h2>🤖 AI Layer - Agent Studio & Observability</h2>
+                <div class="ai-grid">
+                    <div class="ai-card">
+                        <h3>Enterprise AI Agents</h3>
+                        <div class="agents-list">
+                            <div class="agent-item">
+                                <span class="agent-icon">📋</span>
+                                <div class="agent-info">
+                                    <div class="agent-name">Claims Adjuster</div>
+                                    <div class="agent-status">Active • 12,450 runs today</div>
+                                </div>
+                            </div>
+                            <div class="agent-item">
+                                <span class="agent-icon">💰</span>
+                                <div class="agent-info">
+                                    <div class="agent-name">Payment Integrity Agent</div>
+                                    <div class="agent-status">Active • 8,230 runs today</div>
+                                </div>
+                            </div>
+                            <div class="agent-item">
+                                <span class="agent-icon">🚨</span>
+                                <div class="agent-info">
+                                    <div class="agent-name">Fraud Detection Agent</div>
+                                    <div class="agent-status">Active • 6,180 runs today</div>
+                                </div>
+                            </div>
+                            <div class="agent-item">
+                                <span class="agent-icon">🏥</span>
+                                <div class="agent-info">
+                                    <div class="agent-name">Prior Authorization Assistant</div>
+                                    <div class="agent-status">Active • 4,920 runs today</div>
+                                </div>
+                            </div>
+                            <div class="agent-item">
+                                <span class="agent-icon">⭐</span>
+                                <div class="agent-info">
+                                    <div class="agent-name">Member Service Agent</div>
+                                    <div class="agent-status">Active • 3,640 runs today</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ai-card">
+                        <h3>AI Performance Metrics</h3>
+                        <div class="performance-metrics">
+                            <div class="perf-metric">
+                                <div class="perf-label">Success Rate</div>
+                                <div class="perf-bar">
+                                    <div class="perf-fill" style="width: 96.8%"></div>
+                                </div>
+                                <div class="perf-value">96.8%</div>
+                            </div>
+                            <div class="perf-metric">
+                                <div class="perf-label">Avg Latency</div>
+                                <div class="perf-value">3.4s</div>
+                            </div>
+                            <div class="perf-metric">
+                                <div class="perf-label">Cost/Run</div>
+                                <div class="perf-value">$0.18</div>
+                            </div>
+                            <div class="perf-metric">
+                                <div class="perf-label">Hallucination Risk</div>
+                                <div class="perf-value">0.3%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ai-card">
+                        <h3>Use Cases Targeting</h3>
+                        <div class="use-cases">
+                            <div class="use-case">
+                                <div class="uc-icon">⏳</div>
+                                <div class="uc-title">LPI Propensity</div>
+                                <div class="uc-desc">Late Payment Interest risk prediction</div>
+                            </div>
+                            <div class="use-case">
+                                <div class="uc-icon">💵</div>
+                                <div class="uc-title">Overpayment Detection</div>
+                                <div class="uc-desc">Identify duplicate/excess payments</div>
+                            </div>
+                            <div class="use-case">
+                                <div class="uc-icon">🎯</div>
+                                <div class="uc-title">Fraud Risk Score</div>
+                                <div class="uc-desc">Detect suspicious claims</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Operate Layer -->
+        <section id="operate-layer" class="layer-section">
+            <div class="layer-content">
+                <h2>⚙️ Operate Layer - Operations & Monitoring</h2>
+                <div class="operate-grid">
+                    <div class="operate-card">
+                        <h3>System Health</h3>
+                        <div class="health-status">
+                            <div class="health-item success">
+                                <div class="health-circle">✓</div>
+                                <div class="health-label">All Pipelines Online</div>
+                            </div>
+                            <div class="health-item success">
+                                <div class="health-circle">✓</div>
+                                <div class="health-label">Data Quality: 98.6%</div>
+                            </div>
+                            <div class="health-item warning">
+                                <div class="health-circle">!</div>
+                                <div class="health-label">VIN Validation Issue (4 records)</div>
+                            </div>
+                            <div class="health-item success">
+                                <div class="health-circle">✓</div>
+                                <div class="health-label">SLA Compliance: 99.2%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="operate-card">
+                        <h3>Real-time Alerts</h3>
+                        <div class="alerts-list">
+                            <div class="alert-item critical">
+                                <span class="alert-icon">🔴</span>
+                                <span>VIN validation failures detected (4 records)</span>
+                            </div>
+                            <div class="alert-item info">
+                                <span class="alert-icon">ℹ️</span>
+                                <span>New Core Adjudication stream connected</span>
+                            </div>
+                            <div class="alert-item success">
+                                <span class="alert-icon">✅</span>
+                                <span>Transformation completed successfully</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Governance Layer -->
+        <section id="governance-layer" class="layer-section">
+            <div class="layer-content">
+                <h2>🛡️ Governance Layer - Compliance & Control</h2>
+                <div class="governance-grid">
+                    <div class="governance-card">
+                        <h3>Data Governance</h3>
+                        <ul class="governance-list">
+                            <li>✓ Data Lineage Tracking: 100%</li>
+                            <li>✓ Data Classification: Complete</li>
+                            <li>✓ Data Cataloging: 12,450 assets</li>
+                            <li>✓ Access Controls: Enforced</li>
+                            <li>✓ Audit Trail: 2.5M events</li>
+                        </ul>
+                    </div>
+
+                    <div class="governance-card">
+                        <h3>Compliance Status</h3>
+                        <ul class="governance-list">
+                            <li>✓ HIPAA Compliance: Verified</li>
+                            <li>✓ SOC 2 Type II: Compliant</li>
+                            <li>✓ Data Encryption: AES-256</li>
+                            <li>✓ GDPR Requirements: Met</li>
+                            <li>✓ Data Retention: Enforced</li>
+                        </ul>
+                    </div>
+
+                    <div class="governance-card">
+                        <h3>Quality & Performance</h3>
+                        <ul class="governance-list">
+                            <li>✓ Validation Success: 99.4%</li>
+                            <li>✓ Security Scanning: Daily</li>
+                            <li>✓ Performance SLA: 99.2%</li>
+                            <li>✓ Data Freshness: < 5 min</li>
+                            <li>✓ Business Continuity: Active</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Data for AI Platform - End-to-End Demo. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
