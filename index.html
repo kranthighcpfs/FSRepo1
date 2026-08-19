@@ -3,917 +3,1773 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data for AI Platform - End-to-End Demo</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Proposal Studio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Neue Haas Grotesk Display', 'Franklin Gothic Medium', Arial, sans-serif;
+            background: linear-gradient(to bottom right, #f8fafc, #f1f5f9);
+            color: #1e293b;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(90deg, #1E2247 0%, #113190 68%, #2844C4 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1E2247;
+            font-size: 14px;
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255,255,255,0.2);
+            margin: 0 0.5rem;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-breadcrumb {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            background: #DF6014;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            margin-left: 1rem;
+            font-size: 12px;
+        }
+
+        /* MAIN LAYOUT */
+        .main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .sidebar-left {
+            width: 320px;
+        }
+
+        .sidebar-right {
+            width: 320px;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .content-inner {
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        /* SECTIONS */
+        .section-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            color: #64748b;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 1.5rem 0;
+        }
+
+        /* MENU ITEMS */
+        .menu-item {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.15s;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item:hover {
+            background: #f1f5f9;
+        }
+
+        .menu-item.active {
+            background: #1E2247;
+            color: white;
+        }
+
+        .submenu-item {
+            padding: 0.5rem 0.75rem 0.5rem 1.5rem;
+            font-size: 13px;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            margin-top: 0.25rem;
+            color: #475569;
+        }
+
+        .submenu-item:hover {
+            background: #f1f5f9;
+        }
+
+        .submenu-item.active {
+            background: #fff5ed;
+            color: #B25400;
+            font-weight: 700;
+        }
+
+        /* CHIP/BUTTONS */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 1rem;
+            background: #f0f4f9;
+            color: #41506a;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #e4ebf3;
+            transition: all 0.15s;
+            margin-bottom: 0.75rem;
+        }
+
+        .chip:hover {
+            border-color: #6CB1DB;
+        }
+
+        .chip.active {
+            background: #1E2247;
+            color: white;
+            border-color: #1E2247;
+        }
+
+        /* TEXTAREA */
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #334155;
+            resize: none;
+            transition: all 0.15s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        /* PACKS GRID */
+        .packs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .pack-card {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: white;
+            position: relative;
+        }
+
+        .pack-card:hover {
+            border-color: #cbd5e1;
+        }
+
+        .pack-card.active {
+            border-color: #DF6014;
+            background: #fff5ed;
+        }
+
+        .pack-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .pack-icon {
+            font-size: 24px;
+        }
+
+        .toggle-switch {
+            width: 28px;
+            height: 16px;
+            border-radius: 8px;
+            background: #cbd5e1;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .toggle-switch.on {
+            background: #DF6014;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            transition: left 0.15s;
+        }
+
+        .toggle-switch.on .toggle-slider {
+            left: 14px;
+        }
+
+        .pack-name {
+            font-weight: 700;
+            font-size: 13px;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .pack-desc {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* FORMAT BUTTONS */
+        .format-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .format-btn {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .format-btn:hover {
+            border-color: #cbd5e1;
+        }
+
+        .format-btn.active {
+            border-color: #1E2247;
+            background: #1E2247;
+            color: white;
+        }
+
+        .format-sub {
+            font-size: 11px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        /* BUTTONS */
+        button {
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, #DF6014, #c4530e);
+            color: white;
+            padding: 1rem;
+            font-size: 16px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(223, 96, 20, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #c4530e, #a84509);
+            box-shadow: 0 6px 20px rgba(223, 96, 20, 0.4);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: white;
+            color: #1e293b;
+            border: 2px solid #cbd5e1;
+            padding: 1rem;
+            font-size: 16px;
+        }
+
+        .btn-secondary:hover {
+            border-color: #1e293b;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #1E7A3F, #17632f);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 1rem;
+            font-size: 16px;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #17632f, #124b25);
+        }
+
+        .btn-back {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #475569;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            background: none;
+            padding: 0;
+        }
+
+        .btn-back:hover {
+            color: #1e293b;
+        }
+
+        /* VIEWS */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: flex;
+        }
+
+        .generating-view {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        }
+
+        .generating-view.active {
+            display: flex;
+        }
+
+        .generating-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 3rem;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e2e8f0;
+            border-top-color: #DF6014;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .generating-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: left;
+            margin-top: 2rem;
+        }
+
+        .gen-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            font-size: 14px;
+            color: #94a3b8;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .gen-step.done {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .gen-step.active {
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .gen-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #cbd5e1;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .gen-step.done .gen-dot {
+            background: #1E7A3F;
+            color: white;
+        }
+
+        .gen-step.active .gen-dot {
+            background: #DF6014;
+            color: white;
+        }
+
+        /* RESULT VIEW */
+        .result-view {
+            display: none;
+            flex: 1;
+        }
+
+        .result-view.active {
+            display: flex;
+        }
+
+        .result-main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 3rem;
+            background: #f1f5f9;
+        }
+
+        .result-inner {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .doc-hero {
+            background: linear-gradient(120deg, #1E2247 0%, #113190 70%, #2844C4 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 1rem 1rem 0 0;
+            margin-bottom: 0;
+        }
+
+        .doc-hero-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 1rem;
+        }
+
+        .doc-hero h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-hero p {
+            color: rgba(255,255,255,0.9);
+            margin: 0;
+        }
+
+        .doc-section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .doc-section.regen {
+            opacity: 0.5;
+        }
+
+        .section-key {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title-large {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E2247;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-underline {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #DF6014, #c4530e);
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-para {
+            color: #475569;
+            font-size: 16px;
+            line-height: 1.65;
+            margin-bottom: 1.25rem;
+        }
+
+        .refine-box {
+            border-top: 1px solid #e2e8f0;
+            margin-top: 2rem;
+            padding-top: 2rem;
+        }
+
+        .refine-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 0.75rem;
+        }
+
+        .refine-textarea {
+            margin-bottom: 1rem;
+            height: 120px;
+        }
+
+        .btn-regen {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #113190;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 14px;
+        }
+
+        .btn-regen:hover {
+            background: #0c2568;
+        }
+
+        /* OUTLINE */
+        .outline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .outline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 13px;
+        }
+
+        .outline-item:hover {
+            background: #f1f5f9;
+        }
+
+        .outline-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #eef3fb;
+            color: #113190;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+
+        .outline-text {
+            color: #475569;
+            font-weight: 500;
+            padding-top: 0.25rem;
+        }
+
+        /* RIGHT PANEL */
+        .result-right {
+            width: 320px;
+            border-left: 1px solid #e2e8f0;
+            background: white;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .format-box {
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .format-box-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+
+        .format-box-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .format-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .format-option {
+            text-align: left;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .format-option:hover {
+            border-color: #cbd5e1;
+        }
+
+        .format-option.active {
+            border-color: #DF6014;
+            background: #fff5ed;
+        }
+
+        .format-option-sub {
+            font-size: 11px;
+            opacity: 0.7;
+            font-weight: normal;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            font-size: 14px;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1E7A3F;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="logo">
-                <h1>🚀 Data for AI Platform</h1>
-                <span class="subtitle">End-to-End Demo</span>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">FS</div>
+                <div class="logo-divider"></div>
+                <div class="header-title">Proposal Studio</div>
             </div>
-            <div class="nav-menu">
-                <button class="nav-btn active" data-layer="data">Data Layer</button>
-                <button class="nav-btn" data-layer="context">Context Layer</button>
-                <button class="nav-btn" data-layer="ai">AI Layer</button>
-                <button class="nav-btn" data-layer="operate">Operate</button>
-                <button class="nav-btn" data-layer="governance">Governance</button>
+            <div class="header-breadcrumb">
+                <span id="domainLabel">Banking & Financial Services</span>
+                <span style="opacity: 0.5;">▸</span>
+                <span id="processLabel" style="font-weight: 700;">KYC/AML Transformation</span>
+                <div class="header-avatar" id="avatar">KS</div>
             </div>
         </div>
-    </nav>
 
-    <!-- Main Container -->
-    <main class="main-container">
-        <!-- Breadcrumb Navigation -->
-        <div class="breadcrumb">
-            <span id="breadcrumb-text">Data Layer</span>
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <!-- LEFT SIDEBAR - Build View -->
+            <div id="buildLeftPanel" class="sidebar sidebar-left view active">
+                <div>
+                    <!-- Client Management -->
+                    <p class="section-title">Client</p>
+                    <button class="chip" style="width: 100%; justify-content: center;" onclick="app.showClientModal()" id="clientChip">
+                        ＋ Add client
+                    </button>
+
+                    <div class="section-divider"></div>
+
+                    <!-- Domains -->
+                    <p class="section-title">Domain</p>
+                    <div id="domainList"></div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- Tone & Length -->
+                    <p class="section-title">Style</p>
+                    <div style="margin-bottom: 0.75rem;">
+                        <label style="font-size: 12px; color: #64748b; display: block; margin-bottom: 0.5rem;">Tone</label>
+                        <button class="chip" style="width: 100%;" onclick="app.cycleTone()" id="toneBtn">Professional</button>
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; color: #64748b; display: block; margin-bottom: 0.5rem;">Length</label>
+                        <button class="chip" style="width: 100%;" onclick="app.cycleLength()" id="lengthBtn">Medium</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTER - Build View -->
+            <div id="buildCenter" class="content view active">
+                <div class="content-inner">
+                    <!-- Content Packs -->
+                    <div style="margin-bottom: 2rem;">
+                        <p class="section-title">Content Packs & Options</p>
+                        <div id="packGroups"></div>
+                    </div>
+
+                    <!-- Prompt -->
+                    <div style="margin-bottom: 2rem;">
+                        <p class="section-title">Proposal Brief</p>
+                        <textarea id="promptText" rows="6" placeholder="Enter your proposal brief..."></textarea>
+                    </div>
+
+                    <!-- Format Selection -->
+                    <div style="margin-bottom: 2rem;">
+                        <p class="section-title">Output Format</p>
+                        <div class="format-grid" id="formatGrid"></div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button class="btn-primary" onclick="app.generate()">Generate Proposal</button>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDEBAR - Build View -->
+            <div id="buildRightPanel" class="sidebar sidebar-right view active">
+                <div>
+                    <p class="section-title">Proposal Outline</p>
+                    <div class="outline-list" id="outlineList"></div>
+                </div>
+            </div>
+
+            <!-- GENERATING VIEW -->
+            <div id="generatingView" class="generating-view">
+                <div class="generating-card">
+                    <div class="spinner"></div>
+                    <h2 style="font-size: 20px; font-weight: 700; color: #1E2247; margin-bottom: 2rem;">Generating Your Proposal</h2>
+                    <div class="generating-steps" id="genSteps"></div>
+                </div>
+            </div>
+
+            <!-- RESULT VIEW LEFT -->
+            <div id="resultLeftPanel" class="sidebar sidebar-left result-view">
+                <div>
+                    <button class="btn-back" onclick="app.backToBuild()">← Back to Build</button>
+                    <p class="section-title">Proposal Sections</p>
+                    <div class="outline-list" id="resultOutlineList"></div>
+                </div>
+            </div>
+
+            <!-- RESULT VIEW CENTER -->
+            <div id="resultCenter" class="result-main result-view">
+                <div class="result-inner">
+                    <div class="doc-hero">
+                        <p class="doc-hero-label">Proposal for</p>
+                        <h1 id="resultTitle">Proposal Title</h1>
+                        <p id="resultSubtitle">Subtitle goes here</p>
+                    </div>
+                    <div id="resultContent"></div>
+                </div>
+            </div>
+
+            <!-- RESULT VIEW RIGHT -->
+            <div id="resultRightPanel" class="result-right result-view">
+                <div>
+                    <p class="section-title">Export Options</p>
+                    <div class="format-box">
+                        <p class="format-box-title">Current Format</p>
+                        <p class="format-box-value" id="currentFormat">PowerPoint</p>
+                    </div>
+                    <div class="format-options" id="resultFormats"></div>
+                    <button class="btn-success" onclick="app.download()" id="downloadBtn">⬇ Download Proposal</button>
+                    <button class="btn-secondary" style="margin-top: 1rem;" onclick="app.backToBuild()">Edit & Regenerate</button>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Data Layer -->
-        <section id="data-layer" class="layer-section active">
-            <!-- KPI Cards -->
-            <div class="kpi-section">
-                <h2>KPI Dashboard (24 Hours)</h2>
-                <div class="kpi-cards">
-                    <div class="kpi-card">
-                        <div class="kpi-icon">✅</div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">DQ Pass Rate</div>
-                            <div class="kpi-value">98.6%</div>
-                            <div class="kpi-trend">↑ 2.1% from yesterday</div>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon">📥</div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">Records Ingested</div>
-                            <div class="kpi-value">1.24M</div>
-                            <div class="kpi-trend">↑ 340K from yesterday</div>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon">✈️</div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">Promoted Downstream</div>
-                            <div class="kpi-value">1.22M</div>
-                            <div class="kpi-trend">↑ 98.4% success rate</div>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon">⚠️</div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">Quarantined</div>
-                            <div class="kpi-value">20K</div>
-                            <div class="kpi-trend">↓ 1.6% failure rate</div>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon">⚙️</div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">Pipelines Running</div>
-                            <div class="kpi-value">12/12</div>
-                            <div class="kpi-trend">All systems operational</div>
-                        </div>
-                    </div>
-                </div>
+    <!-- CLIENT MODAL -->
+    <div id="clientModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-title">Add Client Name</div>
+            <input type="text" id="clientInput" class="modal-input" placeholder="e.g., Meridian Retail Bank" />
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="app.closeClientModal()">Cancel</button>
+                <button class="btn-primary" onclick="app.saveClient()">Save</button>
             </div>
+        </div>
+    </div>
 
-            <!-- Tabs Section -->
-            <div class="tabs-section">
-                <div class="tabs-header">
-                    <button class="tab-btn active" data-tab="sources">📊 Sources</button>
-                    <button class="tab-btn" data-tab="pipeline">🔄 Pipeline</button>
-                    <button class="tab-btn" data-tab="mappings">🗺️ Mappings</button>
-                    <button class="tab-btn" data-tab="dq-rules">✔️ DQ Rules</button>
-                    <button class="tab-btn" data-tab="runs">▶️ Runs</button>
-                    <button class="tab-btn" data-tab="drift">📈 Drift</button>
-                    <button class="tab-btn" data-tab="lineage">🔗 Lineage</button>
-                </div>
+    <div id="toast" class="toast"></div>
 
-                <!-- Sources Tab -->
-                <div id="sources" class="tab-content active">
-                    <h3>Connected Data Sources</h3>
-                    <div class="sources-grid">
-                        <div class="source-card">
-                            <div class="source-header">
-                                <h4>Core Adjudication Platform</h4>
-                                <span class="source-status online">●  Online</span>
-                            </div>
-                            <div class="source-detail">
-                                <p><strong>Purpose:</strong> Facets Claims Administration</p>
-                                <p><strong>Last Refresh:</strong> 2 minutes ago</p>
-                                <p><strong>Next Run:</strong> In 28 minutes</p>
-                                <p><strong>Replication:</strong> CDC (Change Data Capture)</p>
-                                <p><strong>Tables:</strong> 24 | <strong>Rows:</strong> 8.5M</p>
-                                <p><strong>Custodian:</strong> Data Engineering Team</p>
-                            </div>
+    <script>
+        const app = {
+            DOMAINS: [
+                {
+                    id: 'banking',
+                    label: 'Banking & Financial Services',
+                    procs: ['KYC/AML Transformation', 'Core Banking Modernization', 'Payment Systems'],
+                },
+                {
+                    id: 'genai',
+                    label: 'Gen-AI Solutions',
+                    procs: ['Document Processing', 'Customer Intelligence', 'Process Automation'],
+                },
+                {
+                    id: 'healthcare',
+                    label: 'Healthcare & Life Sciences',
+                    procs: ['Claims Processing', 'Patient Data Management', 'Clinical Operations'],
+                },
+            ],
+
+            DOCS: [
+                { name: 'Meridian Case Study 2024', type: 'pdf' },
+                { name: 'Technical Requirements Doc', type: 'doc' },
+                { name: 'KYC Process Flow', type: 'xls' },
+                { name: 'Compliance Checklist', type: 'pdf' },
+            ],
+
+            PLUGINS: [
+                {
+                    group: 'Content Packs',
+                    items: [
+                        { id: 'pack_banking', name: 'Banking Pack', desc: 'Industry-specific templates', icon: '📊' },
+                        { id: 'pack_genai', name: 'Gen-AI Pack', desc: 'AI & automation frameworks', icon: '🤖' },
+                    ],
+                },
+                {
+                    group: 'Generation Modes',
+                    items: [
+                        { id: 'gen_exec', name: 'Executive Summary', desc: 'High-level overview', icon: '👔' },
+                        { id: 'gen_pricing', name: 'Pricing Models', desc: 'Cost & value analysis', icon: '💰' },
+                        { id: 'gen_transition', name: 'Transition Plan', desc: '12-week roadmap', icon: '🗂️' },
+                    ],
+                },
+                {
+                    group: 'Compliance',
+                    items: [
+                        { id: 'con_sharepoint', name: 'SharePoint Links', desc: 'Reference documents', icon: '📁' },
+                        { id: 'comp_kyc', name: 'KYC/AML Rules', desc: 'Regulatory compliance', icon: '⚖️' },
+                    ],
+                },
+            ],
+
+            FORMATS: [
+                { id: 'ppt', name: 'PowerPoint', sub: 'Presentation' },
+                { id: 'word', name: 'Word', sub: 'Document' },
+                { id: 'html', name: 'HTML', sub: 'Web View' },
+            ],
+
+            TONES: ['Professional', 'Executive', 'Consultative', 'Technical'],
+            LENGTHS: ['Brief', 'Medium', 'Comprehensive'],
+
+            CLIENTS: {
+                banking: 'Meridian Retail Bank',
+                genai: 'Nimbus Data Holdings',
+                healthcare: 'Sentinel Health Plan',
+            },
+
+            BRIEFS: {
+                'banking-0': 'Draft a proposal for {{client}} to transform their KYC/AML onboarding — cut manual review time, lift straight-through processing, and stay audit-ready. Lead with our Gen-AI document-extraction accelerator, target a 40% cost-to-serve reduction, and lay out a phased 12-week transition.',
+                'banking-1': 'Create a proposal for {{client}} to modernize their core banking systems — consolidate legacy platforms, enable real-time processing, improve customer experience, and reduce operational costs. Outline a phased migration strategy with minimal downtime.',
+                'banking-2': 'Develop a proposal for {{client}} to transform their payment systems infrastructure — improve settlement times, reduce fraud, enhance security, and enable real-time payments. Detail API-first architecture and compliance enhancements.',
+                'genai-0': 'Create a proposal for {{client}} to deploy Gen-AI document processing solutions — automatically extract, classify, and validate documents at scale. Highlight accuracy improvements, cost reductions of 50%+, and 90-day time-to-value.',
+                'genai-1': 'Develop a proposal for {{client}} to implement Gen-AI customer intelligence platform — leverage behavioral analytics, predictive modeling, and personalization. Show revenue impact and customer satisfaction gains.',
+                'genai-2': 'Draft a proposal for {{client}} to automate {{process}} using Gen-AI and RPA — eliminate manual work, reduce errors, improve compliance, and enable staff to focus on high-value activities. Target 60% effort reduction.',
+                'healthcare-0': 'Develop a proposal for {{client}} to optimize claims processing through intelligent automation — reduce processing time from days to hours, minimize denials, improve accuracy, and enhance compliance. Show ROI within 6 months.',
+                'healthcare-1': 'Create a proposal for {{client}} to implement patient data management platform — centralize records, ensure HIPAA compliance, enable real-time access, and improve clinical outcomes through better data utilization.',
+                'healthcare-2': 'Draft a proposal for {{client}} to streamline clinical operations — optimize scheduling, resource allocation, and staffing. Improve patient throughput, reduce wait times, and enhance clinical staff productivity.',
+            },
+
+            LIBS: {
+                banking: {
+                    exec: {
+                        title: 'Executive Summary',
+                        gate: 'gen_exec',
+                        paras: [
+                            "{{client}}'s KYC/AML onboarding is constrained by manual document review, inconsistent turnaround, and rising regulatory scrutiny. We propose an AI-led operating model that pairs domain specialists with our Gen-AI document-extraction accelerator.",
+                            'The result: a targeted 40% reduction in cost-to-serve, materially higher straight-through processing, and an audit-ready control environment — delivered within a 12-week timeline with no disruption to live onboarding.',
+                        ],
+                    },
+                    challenge: {
+                        title: 'Current Challenges',
+                        paras: [
+                            'Onboarding volumes have outpaced capacity at {{client}}. Analysts re-key data from identity documents, proofs of address, and corporate filings, creating variable handle times and backlog at peak.',
+                            'Legacy systems lack integration, creating fragmented audit trails and increasing remediation effort and regulator exposure across KYC and AML checks.',
+                        ],
+                    },
+                    solution: {
+                        title: 'Proposed Solution',
+                        paras: [
+                            'We deploy a hybrid model for {{client}}: Gen-AI extraction reads and classifies onboarding documents, auto-populates the case, and flags exceptions, while specialists focus on judgement-led review.',
+                            'Built-in guardrails enforce sanctions screening, PEP checks, and evidencing standards, giving your risk team real-time visibility and cutting cost-to-serve by 40%.',
+                        ],
+                    },
+                    diff: {
+                        title: 'Why Choose Firstsource',
+                        paras: [
+                            'Firstsource brings 350+ financial-services clients and proven onboarding and fraud operations at scale, with pre-built workflows and control libraries you can stand behind.',
+                            'Our managed services model ensures accountability through defined SLAs and continuous performance optimization.',
+                        ],
+                    },
+                    caseStudy: {
+                        title: 'Case Study: Retail Bank Onboarding',
+                        paras: [
+                            'A comparable retail bank reduced KYC onboarding time from 5 days to 4 hours through our automation framework.',
+                            'Year-over-year cost savings reached $2.3M with zero material audit findings across two regulatory cycles.',
+                        ],
+                    },
+                    pricing: {
+                        title: 'Pricing & Commercial Terms',
+                        gate: 'gen_pricing',
+                        paras: [
+                            'Our pricing model for {{client}} blends a transparent transition fee with a per-case run rate that steps down as automation matures.',
+                            'Multi-year engagement discounts and a shared-savings option are available for qualified opportunities.',
+                        ],
+                    },
+                    transition: {
+                        title: 'Transition & Implementation',
+                        gate: 'gen_transition',
+                        paras: [
+                            'Phase 1 (Weeks 1-4): discovery and knowledge capture. Phase 2 (Weeks 5-8): parallel run and tuning. Phase 3 (Weeks 9-12): full cutover with hypercare.',
+                            'On sign-off, we mobilise the transition team within five business days.',
+                        ],
+                    },
+                    sow: {
+                        title: 'Scope of Work',
+                        paras: [
+                            'Deliverables include onboarding case-processing documentation, control architecture, training materials, and a post-launch support plan for {{client}}.',
+                            'All work adheres to our quality assurance framework with defined checkpoints and stakeholder sign-offs.',
+                        ],
+                    },
+                    risk: {
+                        title: 'Risk Management',
+                        paras: [
+                            'Key assumptions: timely access to systems and reference data, stable regulatory scope during transition, and availability of client SMEs for knowledge capture.',
+                            'Risks for {{client}} are managed through parallel running, staged cutover, and continuous compliance monitoring.',
+                        ],
+                    },
+                    next: {
+                        title: 'Next Steps',
+                        paras: [
+                            'We propose an executive workshop with {{client}} to align on scope, success metrics, and the commercial model.',
+                            'Following approval, contract execution will be followed by immediate project initiation and team mobilization.',
+                        ],
+                    },
+                },
+                genai: {
+                    exec: {
+                        title: 'Executive Summary',
+                        gate: 'gen_exec',
+                        paras: [
+                            "{{client}}'s manual document workflows are slow, inconsistent, and hard to scale. We propose an AI-led operating model that pairs a Gen-AI document-processing accelerator with domain specialists to extract, classify, and validate at scale.",
+                            'The result: 50%+ cost reduction and 90-day time-to-value, delivered through a phased rollout with no disruption to live operations.',
+                        ],
+                    },
+                    challenge: {
+                        title: 'Current Challenges',
+                        paras: [
+                            'Manual data entry and document handling at {{client}} consume significant resources, creating backlogs and inconsistent quality.',
+                            'Disconnected systems create data silos, limiting real-time visibility into document status and processing performance.',
+                        ],
+                    },
+                    solution: {
+                        title: 'Proposed Solution',
+                        paras: [
+                            'We deploy a hybrid model for {{client}}: Gen-AI automatically extracts, classifies, and validates documents, flags low-confidence items, and routes them to specialists for judgement calls.',
+                            'Built-in guardrails enforce accuracy thresholds and audit logging, giving your operations team real-time visibility and cutting processing cost by 50%+.',
+                        ],
+                    },
+                    diff: {
+                        title: 'Why Choose Firstsource',
+                        paras: [
+                            'Firstsource brings deep Gen-AI and automation expertise across 200+ transformation engagements, with pre-built accelerators ready to deploy.',
+                            'Our managed services model ensures accountability through defined SLAs and continuous performance optimization.',
+                        ],
+                    },
+                    caseStudy: {
+                        title: 'Case Study: Enterprise Document Automation',
+                        paras: [
+                            'A comparable enterprise reduced document-processing time by 65% and cut error rates in half using our Gen-AI extraction framework.',
+                            'Time-to-value was 90 days, with accuracy gains sustained across two full quarters.',
+                        ],
+                    },
+                    pricing: {
+                        title: 'Pricing & Commercial Terms',
+                        gate: 'gen_pricing',
+                        paras: [
+                            'Our pricing model for {{client}} blends a transparent transition fee with a per-document run rate that steps down as automation matures.',
+                            'Multi-year engagement discounts and a shared-savings option are available for qualified opportunities.',
+                        ],
+                    },
+                    transition: {
+                        title: 'Transition & Implementation',
+                        gate: 'gen_transition',
+                        paras: [
+                            'Phase 1 (Weeks 1-4): discovery and model tuning. Phase 2 (Weeks 5-8): pilot and parallel run. Phase 3 (Weeks 9-12): full rollout with hypercare.',
+                            'On sign-off, we mobilise the transition team within five business days.',
+                        ],
+                    },
+                    sow: {
+                        title: 'Scope of Work',
+                        paras: [
+                            'Deliverables include document-workflow documentation, model architecture, training materials, and a post-launch support plan for {{client}}.',
+                            'All work adheres to our quality assurance framework with defined checkpoints and stakeholder sign-offs.',
+                        ],
+                    },
+                    risk: {
+                        title: 'Risk Management',
+                        paras: [
+                            'Key assumptions: timely access to representative document samples, stable scope during transition, and availability of client SMEs for knowledge capture.',
+                            'Risks for {{client}} are managed through parallel running, staged cutover, and continuous accuracy monitoring.',
+                        ],
+                    },
+                    next: {
+                        title: 'Next Steps',
+                        paras: [
+                            'We propose an executive workshop with {{client}} to align on scope, success metrics, and the commercial model.',
+                            'Following approval, contract execution will be followed by immediate project initiation and team mobilization.',
+                        ],
+                    },
+                },
+                healthcare: {
+                    exec: {
+                        title: 'Executive Summary',
+                        gate: 'gen_exec',
+                        paras: [
+                            "{{client}}'s claims and clinical operations are constrained by manual review, inconsistent turnaround, and compliance risk. We propose an AI-led operating model that pairs domain specialists with intelligent automation to speed processing and improve accuracy.",
+                            'The result: ROI within 6 months, delivered through a phased rollout with no disruption to live patient-care operations.',
+                        ],
+                    },
+                    challenge: {
+                        title: 'Current Challenges',
+                        paras: [
+                            'Manual claims and records processing at {{client}} creates extended turnaround times and elevated denial and error rates.',
+                            'Legacy systems lack integration, limiting real-time visibility and complicating HIPAA-compliant data access.',
+                        ],
+                    },
+                    solution: {
+                        title: 'Proposed Solution',
+                        paras: [
+                            'We deploy a hybrid model for {{client}}: intelligent automation triages claims and records, flags exceptions, and routes complex cases to specialists for review.',
+                            'Built-in guardrails enforce HIPAA compliance and audit logging, giving your compliance team real-time visibility and cutting processing time from days to hours.',
+                        ],
+                    },
+                    diff: {
+                        title: 'Why Choose Firstsource',
+                        paras: [
+                            'Firstsource brings deep healthcare payer and provider operations expertise across 200+ transformation engagements.',
+                            'Our managed services model ensures accountability through defined SLAs and continuous performance optimization.',
+                        ],
+                    },
+                    caseStudy: {
+                        title: 'Case Study: Regional Health Plan',
+                        paras: [
+                            'A comparable health plan reduced claims processing time from days to hours and cut denial rates through our automation framework.',
+                            'ROI was realized within 6 months, with improved compliance standing and patient satisfaction.',
+                        ],
+                    },
+                    pricing: {
+                        title: 'Pricing & Commercial Terms',
+                        gate: 'gen_pricing',
+                        paras: [
+                            'Our pricing model for {{client}} blends a transparent transition fee with a per-case run rate that steps down as automation matures.',
+                            'Multi-year engagement discounts and a shared-savings option are available for qualified opportunities.',
+                        ],
+                    },
+                    transition: {
+                        title: 'Transition & Implementation',
+                        gate: 'gen_transition',
+                        paras: [
+                            'Phase 1 (Weeks 1-4): discovery and knowledge capture. Phase 2 (Weeks 5-8): parallel run and tuning. Phase 3 (Weeks 9-12): full cutover with hypercare.',
+                            'On sign-off, we mobilise the transition team within five business days.',
+                        ],
+                    },
+                    sow: {
+                        title: 'Scope of Work',
+                        paras: [
+                            'Deliverables include case-processing documentation, compliance architecture, training materials, and a post-launch support plan for {{client}}.',
+                            'All work adheres to our quality assurance framework with defined checkpoints and stakeholder sign-offs.',
+                        ],
+                    },
+                    risk: {
+                        title: 'Risk Management',
+                        paras: [
+                            'Key assumptions: timely access to systems and reference data, stable regulatory scope during transition, and availability of client SMEs for knowledge capture.',
+                            'Risks for {{client}} are managed through parallel running, staged cutover, and continuous compliance monitoring.',
+                        ],
+                    },
+                    next: {
+                        title: 'Next Steps',
+                        paras: [
+                            'We propose an executive workshop with {{client}} to align on scope, success metrics, and the commercial model.',
+                            'Following approval, contract execution will be followed by immediate project initiation and team mobilization.',
+                        ],
+                    },
+                },
+            },
+
+            ORDER: ['exec', 'challenge', 'solution', 'diff', 'caseStudy', 'pricing', 'transition', 'sow', 'risk', 'next'],
+
+            state: {
+                view: 'build',
+                domainId: 'banking',
+                expandedId: 'banking',
+                procIdx: 0,
+                active: { pack_banking: true, pack_genai: true, gen_exec: true, gen_pricing: true, gen_transition: true, con_sharepoint: true, comp_kyc: true },
+                format: 'ppt',
+                genStep: 0,
+                activeSectionKey: null,
+                regenKey: null,
+                toast: '',
+                overrides: {},
+                clientName: null,
+                tone: 0,
+                length: 1,
+                promptOverride: null,
+            },
+
+            domain() {
+                return this.DOMAINS.find(d => d.id === this.state.domainId) || this.DOMAINS[0];
+            },
+
+            procLabel() {
+                const d = this.domain();
+                return d.procs[this.state.procIdx] || d.procs[0];
+            },
+
+            effectiveClient() {
+                return this.state.clientName || this.CLIENTS[this.state.domainId] || 'The Client';
+            },
+
+            fillText(text) {
+                if (!text) return text;
+                let result = text;
+                result = result.replace(/{{client}}/gi, this.effectiveClient());
+                result = result.replace(/{{process}}/gi, this.procLabel());
+                result = result.replace(/{{domain}}/gi, this.domain().label);
+                return result;
+            },
+
+            lib() {
+                return this.LIBS[this.state.domainId] || this.LIBS.banking;
+            },
+
+            activeSections() {
+                const lib = this.lib();
+                return this.ORDER.map(k => lib[k] ? { key: k, def: lib[k] } : null)
+                    .filter(x => x && (!x.def.gate || this.state.active[x.def.gate]));
+            },
+
+            toggle(id) {
+                this.state.active[id] = !this.state.active[id];
+                this.render();
+            },
+
+            cycleTone() {
+                this.state.tone = (this.state.tone + 1) % this.TONES.length;
+                this.render();
+            },
+
+            cycleLength() {
+                this.state.length = (this.state.length + 1) % this.LENGTHS.length;
+                this.render();
+            },
+
+            showClientModal() {
+                document.getElementById('clientModal').classList.add('show');
+                document.getElementById('clientInput').value = this.state.clientName;
+                document.getElementById('clientInput').focus();
+            },
+
+            closeClientModal() {
+                document.getElementById('clientModal').classList.remove('show');
+            },
+
+            saveClient() {
+                const name = document.getElementById('clientInput').value.trim();
+                if (name) {
+                    this.state.clientName = name;
+                    this.render();
+                }
+                this.closeClientModal();
+            },
+
+            flash(msg) {
+                const toast = document.getElementById('toast');
+                toast.textContent = msg;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2400);
+            },
+
+            generate() {
+                this.state.view = 'generating';
+                this.state.genStep = 0;
+                this.render();
+
+                let step = 0;
+                const interval = setInterval(() => {
+                    step++;
+                    if (step >= 4) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            this.state.view = 'result';
+                            this.state.activeSectionKey = this.activeSections()[0]?.key || null;
+                            this.render();
+                        }, 450);
+                    } else {
+                        this.state.genStep = step;
+                        this.render();
+                    }
+                }, 650);
+            },
+
+            backToBuild() {
+                this.state.view = 'build';
+                this.render();
+            },
+
+            async downloadWord(title, subtitle, sections) {
+                try {
+                    const docContent = [
+                        new docx.Paragraph({
+                            text: title,
+                            heading: docx.HeadingLevel.HEADING_1,
+                            style: "Heading1",
+                        }),
+                        new docx.Paragraph({
+                            text: subtitle,
+                            style: "Normal",
+                        }),
+                        new docx.Paragraph({ text: "" }),
+                    ];
+
+                    sections.forEach(sec => {
+                        docContent.push(
+                            new docx.Paragraph({
+                                text: sec.title,
+                                heading: docx.HeadingLevel.HEADING_2,
+                                style: "Heading2",
+                            })
+                        );
+                        sec.paras.forEach(para => {
+                            docContent.push(
+                                new docx.Paragraph({
+                                    text: para,
+                                    style: "Normal",
+                                })
+                            );
+                        });
+                        docContent.push(new docx.Paragraph({ text: "" }));
+                    });
+
+                    const doc = new docx.Document({
+                        sections: [{
+                            properties: {},
+                            children: docContent,
+                        }],
+                    });
+
+                    const blob = await docx.Packer.toBlob(doc);
+                    const slug = this.effectiveClient().replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = slug + '-Proposal.docx';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                } catch (e) {
+                    console.error('Word export error:', e);
+                    this.flash('Word export failed — downloaded HTML instead');
+                    this.downloadHtml(title, subtitle, sections);
+                }
+            },
+
+            async downloadPowerPoint(title, subtitle, sections) {
+                try {
+                    const pres = new PptxGenJS();
+                    pres.defineLayout({ name: 'LAYOUT1', width: 10, height: 7.5 });
+                    pres.layout = 'LAYOUT1';
+
+                    // Title slide
+                    const slide1 = pres.addSlide();
+                    slide1.background = { color: "1E2247" };
+                    slide1.addText(title, { x: 0.5, y: 2.5, w: 9, h: 1, fontSize: 44, bold: true, color: "FFFFFF" });
+                    slide1.addText(subtitle, { x: 0.5, y: 3.7, w: 9, h: 0.8, fontSize: 18, color: "DDDDDD" });
+
+                    // Content slides
+                    sections.forEach(sec => {
+                        const slide = pres.addSlide();
+                        slide.background = { color: "FFFFFF" };
+                        slide.addText(sec.title, { x: 0.5, y: 0.4, w: 9, h: 0.6, fontSize: 32, bold: true, color: "1E2247" });
+                        slide.addShape(pres.ShapeType.rect, { x: 0.5, y: 1.0, w: 0.5, h: 0.05, fill: { color: "DF6014" } });
+
+                        let yPos = 1.3;
+                        sec.paras.forEach(para => {
+                            const lines = para.split('\n');
+                            lines.forEach(line => {
+                                slide.addText(line, { x: 0.7, y: yPos, w: 8.6, h: 0.4, fontSize: 14, color: "334155" });
+                                yPos += 0.45;
+                            });
+                        });
+                    });
+
+                    const slug = this.effectiveClient().replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+                    await pres.writeFile({ fileName: slug + '-Proposal.pptx' });
+                } catch (e) {
+                    console.error('PowerPoint export error:', e);
+                    this.flash('PowerPoint export failed — downloaded HTML instead');
+                    this.downloadHtml(title, subtitle, sections);
+                }
+            },
+
+            downloadHtml(title, subtitle, sections) {
+                const html = '<!doctype html><html><head><meta charset="utf-8"><title>Firstsource Proposal</title><style>body{font-family:Arial,sans-serif;color:#1E2247;max-width:760px;margin:40px auto;padding:0 24px;line-height:1.6}h1{font-size:30px}h2{color:#1E2247;border-bottom:2px solid #DF6014;padding-bottom:4px;margin-top:34px}p{color:#33405a}</style></head><body><h1>' + this.escHtml(title) + '</h1><p><b>' + this.escHtml(subtitle) + '</b></p>' +
+                    sections.map(x => '<h2>' + this.escHtml(x.title) + '</h2>' + x.paras.map(p => '<p>' + this.escHtml(p) + '</p>').join('')).join('') + '</body></html>';
+                const blob = new Blob([html], { type: 'text/html' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                const slug = this.effectiveClient().replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+                a.download = slug + '-Proposal.html';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            },
+
+            escHtml(str) {
+                return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            },
+
+            download() {
+                const secs = this.activeSections();
+                const fmt = this.FORMATS.find(f => f.id === this.state.format);
+                const title = this.procLabel() + ' Transformation';
+                const subtitle = 'Prepared for ' + this.effectiveClient() + ' · ' + this.domain().label;
+
+                const sections = secs.map(x => {
+                    const o = this.state.overrides[x.key];
+                    const paras = o ? [o] : x.def.paras.map(p => this.fillText(p));
+                    return {
+                        title: this.fillText(x.def.title),
+                        paras
+                    };
+                });
+
+                if (this.state.format === 'word') {
+                    this.downloadWord(title, subtitle, sections);
+                } else if (this.state.format === 'ppt') {
+                    this.downloadPowerPoint(title, subtitle, sections);
+                } else {
+                    this.downloadHtml(title, subtitle, sections);
+                }
+                this.flash('Proposal downloaded (' + fmt.name + ')');
+            },
+
+            render() {
+                this.renderBuildView();
+                this.renderGeneratingView();
+                this.renderResultView();
+                this.updateViewVisibility();
+            },
+
+            updateViewVisibility() {
+                const isBuild = this.state.view === 'build';
+                const isGenerating = this.state.view === 'generating';
+                const isResult = this.state.view === 'result';
+
+                document.getElementById('buildLeftPanel').classList.toggle('active', isBuild);
+                document.getElementById('buildCenter').classList.toggle('active', isBuild);
+                document.getElementById('buildRightPanel').classList.toggle('active', isBuild);
+                document.getElementById('generatingView').classList.toggle('active', isGenerating);
+                document.getElementById('resultLeftPanel').classList.toggle('active', isResult);
+                document.getElementById('resultCenter').classList.toggle('active', isResult);
+                document.getElementById('resultRightPanel').classList.toggle('active', isResult);
+            },
+
+            renderBuildView() {
+                // Update header
+                document.getElementById('domainLabel').textContent = this.domain().label;
+                document.getElementById('processLabel').textContent = this.procLabel();
+                
+                // Client chip
+                const clientChip = document.getElementById('clientChip');
+                if (this.state.clientName) {
+                    clientChip.textContent = '✓ Client: ' + this.state.clientName;
+                } else {
+                    clientChip.textContent = '＋ Add client';
+                }
+
+                // Tone & Length
+                document.getElementById('toneBtn').textContent = this.TONES[this.state.tone];
+                document.getElementById('lengthBtn').textContent = this.LENGTHS[this.state.length];
+
+                // Update prompt text: keep the user's own edit if they've typed one,
+                // otherwise show the process-specific default brief.
+                if (this.state.promptOverride !== null) {
+                    document.getElementById('promptText').value = this.state.promptOverride;
+                } else {
+                    const briefKey = this.state.domainId + '-' + this.state.procIdx;
+                    const defaultBrief = this.BRIEFS[briefKey] || this.BRIEFS['banking-0'];
+                    document.getElementById('promptText').value = this.fillText(defaultBrief);
+                }
+
+                // Domains
+                const domainList = document.getElementById('domainList');
+                domainList.innerHTML = this.DOMAINS.map(d => `
+                    <div>
+                        <div class="menu-item ${d.id === this.state.domainId ? 'active' : ''}" 
+                             onclick="app.state.expandedId = app.state.expandedId === '${d.id}' ? null : '${d.id}'; app.render();">
+                            ${d.label}
+                            <span style="font-size: 11px; opacity: 0.7;">${this.state.expandedId === d.id ? '▾' : '▸'}</span>
                         </div>
-                        <div class="source-card">
-                            <div class="source-header">
-                                <h4>Claims Data Warehouse</h4>
-                                <span class="source-status online">●  Online</span>
+                        ${this.state.expandedId === d.id ? d.procs.map((p, i) => `
+                            <div class="submenu-item ${d.id === this.state.domainId && i === this.state.procIdx ? 'active' : ''}"
+                                 onclick="app.state.domainId = '${d.id}'; app.state.procIdx = ${i}; app.render();">
+                                ${p}
                             </div>
-                            <div class="source-detail">
-                                <p><strong>Purpose:</strong> AWS Redshift / Snowflake</p>
-                                <p><strong>Last Refresh:</strong> 5 minutes ago</p>
-                                <p><strong>Next Run:</strong> In 55 minutes</p>
-                                <p><strong>Replication:</strong> Batch (Incremental)</p>
-                                <p><strong>Tables:</strong> 42 | <strong>Rows:</strong> 125M</p>
-                                <p><strong>Custodian:</strong> Analytics Team</p>
-                            </div>
-                        </div>
-                        <div class="source-card">
-                            <div class="source-header">
-                                <h4>UM & Clinical Case Mgmt</h4>
-                                <span class="source-status online">●  Online</span>
-                            </div>
-                            <div class="source-detail">
-                                <p><strong>Purpose:</strong> Clinical Reviews & Authorizations</p>
-                                <p><strong>Last Refresh:</strong> 1 minute ago</p>
-                                <p><strong>Next Run:</strong> In 59 minutes</p>
-                                <p><strong>Replication:</strong> API Streaming</p>
-                                <p><strong>Tables:</strong> 18 | <strong>Rows:</strong> 3.2M</p>
-                                <p><strong>Custodian:</strong> Clinical Operations</p>
-                            </div>
-                        </div>
-                        <div class="source-card">
-                            <div class="source-header">
-                                <h4>Provider Master</h4>
-                                <span class="source-status online">●  Online</span>
-                            </div>
-                            <div class="source-detail">
-                                <p><strong>Purpose:</strong> Provider Repository & Credentialing</p>
-                                <p><strong>Last Refresh:</strong> 12 minutes ago</p>
-                                <p><strong>Next Run:</strong> In 48 minutes</p>
-                                <p><strong>Replication:</strong> Batch (Daily)</p>
-                                <p><strong>Tables:</strong> 15 | <strong>Rows:</strong> 450K</p>
-                                <p><strong>Custodian:</strong> Provider Management</p>
-                            </div>
-                        </div>
-                        <div class="source-card">
-                            <div class="source-header">
-                                <h4>Clearinghouse</h4>
-                                <span class="source-status online">●  Online</span>
-                            </div>
-                            <div class="source-detail">
-                                <p><strong>Purpose:</strong> EDI Claims & Remittance</p>
-                                <p><strong>Last Refresh:</strong> 3 minutes ago</p>
-                                <p><strong>Next Run:</strong> In 27 minutes</p>
-                                <p><strong>Replication:</strong> Event-Driven (SFTP)</p>
-                                <p><strong>Tables:</strong> 8 | <strong>Rows:</strong> 2.1M</p>
-                                <p><strong>Custodian:</strong> EDI Operations</p>
-                            </div>
-                        </div>
-                        <div class="source-card">
-                            <div class="source-header">
-                                <h4>Document Lakehouse</h4>
-                                <span class="source-status online">●  Online</span>
-                            </div>
-                            <div class="source-detail">
-                                <p><strong>Purpose:</strong> Medical Records & Documents</p>
-                                <p><strong>Last Refresh:</strong> 7 minutes ago</p>
-                                <p><strong>Next Run:</strong> In 53 minutes</p>
-                                <p><strong>Replication:</strong> S3 Sync</p>
-                                <p><strong>Tables:</strong> 12 | <strong>Rows:</strong> 15M</p>
-                                <p><strong>Custodian:</strong> Records Management</p>
-                            </div>
-                        </div>
+                        `).join('') : ''}
                     </div>
-                </div>
+                `).join('');
 
-                <!-- Pipeline Tab -->
-                <div id="pipeline" class="tab-content">
-                    <h3>Data Processing Pipeline</h3>
-                    <div class="pipeline-stages">
-                        <div class="pipeline-stage">
-                            <div class="stage-header">
-                                <h4>Stage 1: Ingest</h4>
-                                <span class="stage-status success">✓ Running</span>
-                            </div>
-                            <div class="stage-content">
-                                <p><strong>Owner:</strong> Data Engineering Team</p>
-                                <p><strong>Description:</strong> Receive structured and unstructured data streams</p>
-                                <div class="metrics-grid">
-                                    <div class="metric">
-                                        <div class="metric-label">Throughput</div>
-                                        <div class="metric-value">4,096 rec/sec</div>
+                // Packs
+                const packGroups = document.getElementById('packGroups');
+                packGroups.innerHTML = this.PLUGINS.map(group => `
+                    <div style="margin-bottom: 1.5rem;">
+                        <p class="section-title" style="margin-top: 0;">${group.group}</p>
+                        <div class="packs-grid">
+                            ${group.items.map(item => `
+                                <div class="pack-card ${this.state.active[item.id] ? 'active' : ''}" 
+                                     onclick="app.toggle('${item.id}')">
+                                    <div class="pack-header">
+                                        <span class="pack-icon">${item.icon}</span>
+                                        <div class="toggle-switch ${this.state.active[item.id] ? 'on' : ''}">
+                                            <div class="toggle-slider"></div>
+                                        </div>
                                     </div>
-                                    <div class="metric">
-                                        <div class="metric-label">Success Rate</div>
-                                        <div class="metric-value">100%</div>
-                                    </div>
-                                    <div class="metric">
-                                        <div class="metric-label">Records (24h)</div>
-                                        <div class="metric-value">1.24M</div>
-                                    </div>
+                                    <p class="pack-name">${item.name}</p>
+                                    <p class="pack-desc">${item.desc}</p>
                                 </div>
-                                <div class="stage-actions">
-                                    <button class="action-btn">⏸️ Pause</button>
-                                    <button class="action-btn">📋 Logs</button>
-                                    <button class="action-btn">📂 Details</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pipeline-stage">
-                            <div class="stage-header">
-                                <h4>Stage 2: Parse</h4>
-                                <span class="stage-status success">✓ Running</span>
-                            </div>
-                            <div class="stage-content">
-                                <p><strong>Owner:</strong> Data Engineering Team</p>
-                                <p><strong>Description:</strong> Convert raw files into standardized internal structure</p>
-                                <p><strong>Supported Formats:</strong> JSON, XML, CSV, Excel, Parquet, PDF</p>
-                                <div class="metrics-grid">
-                                    <div class="metric">
-                                        <div class="metric-label">Throughput</div>
-                                        <div class="metric-value">4,878 rec/sec</div>
-                                    </div>
-                                    <div class="metric">
-                                        <div class="metric-label">Success Rate</div>
-                                        <div class="metric-value">99.2%</div>
-                                    </div>
-                                    <div class="metric">
-                                        <div class="metric-label">Drift Events</div>
-                                        <div class="metric-value">38</div>
-                                    </div>
-                                </div>
-                                <div class="stage-actions">
-                                    <button class="action-btn">⏸️ Pause</button>
-                                    <button class="action-btn">📋 Logs</button>
-                                    <button class="action-btn">📂 Details</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pipeline-stage">
-                            <div class="stage-header">
-                                <h4>Stage 3: Validate (Data Quality)</h4>
-                                <span class="stage-status warning">⚠️ Warning</span>
-                            </div>
-                            <div class="stage-content">
-                                <p><strong>Owner:</strong> Data Quality Team</p>
-                                <p><strong>Description:</strong> Ensures all records comply with business and technical rules</p>
-                                <div class="metrics-grid">
-                                    <div class="metric">
-                                        <div class="metric-label">Throughput</div>
-                                        <div class="metric-value">4,791 rec/sec</div>
-                                    </div>
-                                    <div class="metric">
-                                        <div class="metric-label">Pass Rate</div>
-                                        <div class="metric-value">97.1%</div>
-                                    </div>
-                                    <div class="metric">
-                                        <div class="metric-label">DQ Score</div>
-                                        <div class="metric-value">97.1%</div>
-                                    </div>
-                                </div>
-                                <div class="alert alert-warning">
-                                    <strong>Current Issue:</strong> VIN Validation Failed (4 records affected)
-                                </div>
-                                <div class="stage-actions">
-                                    <button class="action-btn">⏸️ Pause</button>
-                                    <button class="action-btn">🔄 Retry</button>
-                                    <button class="action-btn">🛑 Quarantine</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pipeline-stage">
-                            <div class="stage-header">
-                                <h4>Stage 4: Transform</h4>
-                                <span class="stage-status success">✓ Running</span>
-                            </div>
-                            <div class="stage-content">
-                                <p><strong>Owner:</strong> Data Modeling Team</p>
-                                <p><strong>Description:</strong> Convert into enterprise canonical model</p>
-                                <div class="metrics-grid">
-                                    <div class="metric">
-                                        <div class="metric-label">Throughput</div>
-                                        <div class="metric-value">4,724 rec/sec</div>
-                                    </div>
-                                    <div class="metric">
-                                        <div class="metric-label">Success Rate</div>
-                                        <div class="metric-value">99.8%</div>
-                                    </div>
-                                    <div class="metric">
-                                        <div class="metric-label">Active Mappings</div>
-                                        <div class="metric-value">312</div>
-                                    </div>
-                                </div>
-                                <div class="stage-actions">
-                                    <button class="action-btn">⏸️ Pause</button>
-                                    <button class="action-btn">🔄 Retry</button>
-                                    <button class="action-btn">📂 Details</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pipeline-stage">
-                            <div class="stage-header">
-                                <h4>Stage 5: Semantic Validation</h4>
-                                <span class="stage-status success">✓ Running</span>
-                            </div>
-                            <div class="stage-content">
-                                <p><strong>Owner:</strong> Data Governance Team</p>
-                                <p><strong>Description:</strong> Validate business relationships using enterprise ontology</p>
-                                <div class="metrics-grid">
-                                    <div class="metric">
-                                        <div class="metric-label">Throughput</div>
-                                        <div class="metric-value">4,624 rec/sec</div>
-                                    </div>
-                                    <div class="metric">
-                                        <div class="metric-label">Success Rate</div>
-                                        <div class="metric-value">99.7%</div>
-                                    </div>
-                                    <div class="metric">
-                                        <div class="metric-label">Relationships</div>
-                                        <div class="metric-value">1.18M</div>
-                                    </div>
-                                </div>
-                                <div class="stage-actions">
-                                    <button class="action-btn">⏸️ Pause</button>
-                                    <button class="action-btn">📋 Logs</button>
-                                    <button class="action-btn">📂 Details</button>
-                                </div>
-                            </div>
+                            `).join('')}
                         </div>
                     </div>
+                `).join('');
 
-                    <!-- Live Activity Log -->
-                    <div class="activity-log">
-                        <h4>Live Activity Log</h4>
-                        <div class="log-entries">
-                            <div class="log-entry">
-                                <span class="log-time">09:41:37</span>
-                                <span class="log-msg">✅ Data successfully published downstream</span>
-                            </div>
-                            <div class="log-entry">
-                                <span class="log-time">09:41:34</span>
-                                <span class="log-msg">⏳ Pipeline processing resumed</span>
-                            </div>
-                            <div class="log-entry">
-                                <span class="log-time">09:41:29</span>
-                                <span class="log-msg">⚠️ Failed records moved to quarantine (4 records)</span>
-                            </div>
-                            <div class="log-entry">
-                                <span class="log-time">09:41:25</span>
-                                <span class="log-msg">🔍 Four VIN validation failures detected</span>
-                            </div>
-                            <div class="log-entry">
-                                <span class="log-time">09:41:22</span>
-                                <span class="log-msg">⏳ Validation started</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                // Format
+                const formatGrid = document.getElementById('formatGrid');
+                formatGrid.innerHTML = this.FORMATS.map(f => `
+                    <button class="format-btn ${f.id === this.state.format ? 'active' : ''}" 
+                            onclick="app.state.format = '${f.id}'; app.render();">
+                        <div class="format-sub">${f.sub}</div>
+                        <div>${f.name}</div>
+                    </button>
+                `).join('');
 
-                <!-- Mappings Tab -->
-                <div id="mappings" class="tab-content">
-                    <h3>Field Mappings Configuration</h3>
-                    <div class="mappings-summary">
-                        <div class="summary-item">
-                            <div class="summary-value">524</div>
-                            <div class="summary-label">Active Mappings</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-value">8</div>
-                            <div class="summary-label">Connected Sources</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-value">18</div>
-                            <div class="summary-label">Business Entities</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-value">99.4%</div>
-                            <div class="summary-label">Validation Success</div>
-                        </div>
+                // Outline
+                const outlineList = document.getElementById('outlineList');
+                outlineList.innerHTML = this.activeSections().map((sec, i) => `
+                    <div class="outline-item">
+                        <div class="outline-dot">${i + 1}</div>
+                        <div class="outline-text">${this.fillText(sec.def.title)}</div>
                     </div>
-                    <div class="mappings-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Source System</th>
-                                    <th>Source Field</th>
-                                    <th>Enterprise Entity</th>
-                                    <th>Enterprise Field</th>
-                                    <th>Mapping Type</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Facets</td>
-                                    <td>CLAIM_ID</td>
-                                    <td>Claim</td>
-                                    <td>Claim_ID</td>
-                                    <td>Direct</td>
-                                    <td><span class="status-badge success">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Facets</td>
-                                    <td>PAID_AMOUNT</td>
-                                    <td>Payment</td>
-                                    <td>Paid_Amount</td>
-                                    <td>Currency</td>
-                                    <td><span class="status-badge success">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Facets</td>
-                                    <td>CLAIM_STATUS</td>
-                                    <td>Claim</td>
-                                    <td>Status</td>
-                                    <td>Lookup</td>
-                                    <td><span class="status-badge success">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Provider Master</td>
-                                    <td>NPI</td>
-                                    <td>Provider</td>
-                                    <td>National_Provider_ID</td>
-                                    <td>Direct</td>
-                                    <td><span class="status-badge success">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Clearinghouse</td>
-                                    <td>BILL_TYPE</td>
-                                    <td>Claim</td>
-                                    <td>Bill_Type</td>
-                                    <td>Lookup</td>
-                                    <td><span class="status-badge success">Active</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                `).join('');
+            },
 
-                <!-- DQ Rules Tab -->
-                <div id="dq-rules" class="tab-content">
-                    <h3>Data Quality Rules</h3>
-                    <div class="dq-summary">
-                        <div class="dq-stat">
-                            <div class="dq-value">325</div>
-                            <div class="dq-label">Total Active Rules</div>
-                        </div>
-                        <div class="dq-stat">
-                            <div class="dq-value">4,250</div>
-                            <div class="dq-label">Executions Today</div>
-                        </div>
-                        <div class="dq-stat">
-                            <div class="dq-value">98.6%</div>
-                            <div class="dq-label">Overall DQ Score</div>
-                        </div>
-                        <div class="dq-stat">
-                            <div class="dq-value">3,677</div>
-                            <div class="dq-label">Failed Records</div>
-                        </div>
-                    </div>
-                    <div class="dq-scorecard">
-                        <h4>Data Quality Scorecard</h4>
-                        <div class="scorecard-row">
-                            <div class="scorecard-label">Completeness</div>
-                            <div class="scorecard-bar">
-                                <div class="scorecard-fill" style="width: 99.1%"></div>
-                            </div>
-                            <div class="scorecard-value">99.1%</div>
-                        </div>
-                        <div class="scorecard-row">
-                            <div class="scorecard-label">Accuracy</div>
-                            <div class="scorecard-bar">
-                                <div class="scorecard-fill" style="width: 98.4%"></div>
-                            </div>
-                            <div class="scorecard-value">98.4%</div>
-                        </div>
-                        <div class="scorecard-row">
-                            <div class="scorecard-label">Consistency</div>
-                            <div class="scorecard-bar">
-                                <div class="scorecard-fill" style="width: 97.8%"></div>
-                            </div>
-                            <div class="scorecard-value">97.8%</div>
-                        </div>
-                        <div class="scorecard-row">
-                            <div class="scorecard-label">Timeliness</div>
-                            <div class="scorecard-bar">
-                                <div class="scorecard-fill" style="width: 99.7%"></div>
-                            </div>
-                            <div class="scorecard-value">99.7%</div>
-                        </div>
-                        <div class="scorecard-row">
-                            <div class="scorecard-label">Integrity</div>
-                            <div class="scorecard-bar">
-                                <div class="scorecard-fill" style="width: 98.9%"></div>
-                            </div>
-                            <div class="scorecard-value">98.9%</div>
-                        </div>
-                    </div>
-                </div>
+            complianceLabel() {
+                return ({
+                    banking: 'Running KYC/AML compliance check',
+                    genai: 'Running model & data-quality compliance check',
+                    healthcare: 'Running HIPAA & clinical compliance check',
+                })[this.state.domainId] || 'Running compliance check';
+            },
 
-                <!-- Runs Tab -->
-                <div id="runs" class="tab-content">
-                    <h3>Pipeline Runs Workbench</h3>
-                    <div class="runs-summary">
-                        <div class="run-stat">
-                            <div class="run-value">528</div>
-                            <div class="run-label">Executed Today</div>
-                        </div>
-                        <div class="run-stat">
-                            <div class="run-value">516</div>
-                            <div class="run-label">Successful</div>
-                        </div>
-                        <div class="run-stat">
-                            <div class="run-value">7</div>
-                            <div class="run-label">Failed</div>
-                        </div>
-                        <div class="run-stat">
-                            <div class="run-value">99.2%</div>
-                            <div class="run-label">SLA Compliance</div>
-                        </div>
-                    </div>
-                    <div class="active-runs">
-                        <h4>Active Runs</h4>
-                        <div class="runs-list">
-                            <div class="run-item">
-                                <div class="run-name">Claims Ingestion (Facets)</div>
-                                <div class="run-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 75%"></div>
-                                    </div>
-                                    <span class="progress-text">75%</span>
-                                </div>
-                                <div class="run-stats">Ingest Stage | 892,450 records processed | ETA: 2m 15s</div>
-                            </div>
-                            <div class="run-item">
-                                <div class="run-name">Provider Data Sync</div>
-                                <div class="run-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 45%"></div>
-                                    </div>
-                                    <span class="progress-text">45%</span>
-                                </div>
-                                <div class="run-stats">Parse Stage | 180,250 records processed | ETA: 3m 40s</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            renderGeneratingView() {
+                const genSteps = document.getElementById('genSteps');
+                const steps = [
+                    { label: `Reading ${this.DOCS.length} SharePoint references`, done: this.state.genStep > 0 },
+                    { label: 'Applying ' + this.domain().label + ' & Gen-AI packs', done: this.state.genStep > 1 },
+                    { label: `Drafting ${this.activeSections().length} proposal sections`, done: this.state.genStep > 2 },
+                    { label: this.complianceLabel(), done: this.state.genStep > 3 },
+                ];
 
-                <!-- Drift Tab -->
-                <div id="drift" class="tab-content">
-                    <h3>Data Drift Monitoring</h3>
-                    <div class="drift-summary">
-                        <div class="drift-item">
-                            <div class="drift-value">6</div>
-                            <div class="drift-label">Active Alerts</div>
-                        </div>
-                        <div class="drift-item">
-                            <div class="drift-value">48</div>
-                            <div class="drift-label">Datasets Monitored</div>
-                        </div>
-                        <div class="drift-item">
-                            <div class="drift-value">1,250</div>
-                            <div class="drift-label">Features Monitored</div>
-                        </div>
-                        <div class="drift-item">
-                            <div class="drift-value">3</div>
-                            <div class="drift-label">Models Impacted</div>
-                        </div>
+                genSteps.innerHTML = steps.map((step, i) => `
+                    <div class="gen-step ${step.done ? 'done' : this.state.genStep === i ? 'active' : ''}">
+                        <div class="gen-dot">${step.done ? '✓' : i + 1}</div>
+                        <span>${step.label}</span>
                     </div>
-                    <div class="drift-alerts">
-                        <h4>Drift Alerts</h4>
-                        <div class="alert alert-critical">
-                            <strong>Volume Drift - Critical:</strong> Daily claims volume increased from 25,000 to 62,000 (148% above baseline)
-                        </div>
-                        <div class="alert alert-warning">
-                            <strong>Schema Drift - Warning:</strong> Facets added new column 'Telehealth_Flag' (requires mapping update)
-                        </div>
-                        <div class="alert alert-info">
-                            <strong>Statistical Drift - Info:</strong> Paid Amount distribution shows 12% shift in median value
-                        </div>
-                    </div>
-                </div>
+                `).join('');
+            },
 
-                <!-- Lineage Tab -->
-                <div id="lineage" class="tab-content">
-                    <h3>Enterprise Data Lineage</h3>
-                    <div class="lineage-content">
-                        <h4>Lineage Example: Claim Paid Amount</h4>
-                        <div class="lineage-flow">
-                            <div class="lineage-step">
-                                <div class="step-label">Source</div>
-                                <div class="step-content">Facets → CLAIM_HEADER.PAID_AMOUNT</div>
-                            </div>
-                            <div class="lineage-arrow">↓</div>
-                            <div class="lineage-step">
-                                <div class="step-label">Ingestion</div>
-                                <div class="step-content">Data Ingestion Pipeline</div>
-                            </div>
-                            <div class="lineage-arrow">↓</div>
-                            <div class="lineage-step">
-                                <div class="step-label">Validation</div>
-                                <div class="step-content">Data Quality Validation</div>
-                            </div>
-                            <div class="lineage-arrow">↓</div>
-                            <div class="lineage-step">
-                                <div class="step-label">Transform</div>
-                                <div class="step-content">Currency Standardization</div>
-                            </div>
-                            <div class="lineage-arrow">↓</div>
-                            <div class="lineage-step">
-                                <div class="step-label">Mapping</div>
-                                <div class="step-content">Enterprise Mapping</div>
-                            </div>
-                            <div class="lineage-arrow">↓</div>
-                            <div class="lineage-step">
-                                <div class="step-label">Storage</div>
-                                <div class="step-content">Silver Claims Dataset → Gold Payment Analytics</div>
-                            </div>
-                            <div class="lineage-arrow">↓</div>
-                            <div class="lineage-step">
-                                <div class="step-label">Consumption</div>
-                                <div class="step-content">Payment Integrity Model → Claims Workbench → Dashboard</div>
+            renderResultView() {
+                const secs = this.activeSections();
+                const act = secs.find(x => x.key === this.state.activeSectionKey);
+
+                // Left outline
+                const resultOutlineList = document.getElementById('resultOutlineList');
+                resultOutlineList.innerHTML = secs.map((sec, i) => `
+                    <div class="outline-item ${this.state.activeSectionKey === sec.key ? 'active' : ''} 
+                         style="cursor: pointer; ${this.state.regenKey === sec.key ? 'opacity: 0.5' : ''}"
+                         onclick="app.state.activeSectionKey = '${sec.key}'; app.render();">
+                        <div class="outline-dot">${i + 1}</div>
+                        <div class="outline-text">${this.fillText(sec.def.title)}</div>
+                    </div>
+                `).join('');
+
+                // Center content
+                const resultContent = document.getElementById('resultContent');
+                if (act) {
+                    const override = this.state.overrides[act.key];
+                    const paras = override ? [override] : act.def.paras.map(p => this.fillText(p));
+                    resultContent.innerHTML = `
+                        <div class="doc-section ${this.state.regenKey === act.key ? 'regen' : ''}">
+                            <p class="section-key">0${secs.indexOf(act) + 1} · Section</p>
+                            <h2 class="section-title-large">${this.fillText(act.def.title)}</h2>
+                            <div class="section-underline"></div>
+                            ${paras.map(para => `
+                                <p class="section-para">${this.escHtml(para)}</p>
+                            `).join('')}
+                            <div class="refine-box">
+                                <p class="refine-label">Refine this section:</p>
+                                <textarea class="refine-textarea" placeholder="Add your feedback or refinements here..."></textarea>
+                                <button class="btn-regen" onclick="app.regenerate()">🔄 Regenerate Section</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+                    `;
+                } else {
+                    resultContent.innerHTML = '<p style="text-align: center; color: #94a3b8;">No section selected</p>';
+                }
 
-        <!-- Context Layer -->
-        <section id="context-layer" class="layer-section">
-            <div class="layer-content">
-                <h2>📊 Context Layer - Context & Knowledge Graphs</h2>
-                <div class="context-grid">
-                    <div class="context-card">
-                        <h3>Context Graph</h3>
-                        <p>Real-time visualization of how enterprise entities, business events, and AI reasoning paths are connected for specific business scenarios.</p>
-                        <div class="context-metrics">
-                            <div class="metric-item">
-                                <span>Active Contexts:</span>
-                                <strong>1,247</strong>
-                            </div>
-                            <div class="metric-item">
-                                <span>Connected Entities:</span>
-                                <strong>18</strong>
-                            </div>
-                            <div class="metric-item">
-                                <span>Avg Assembly Time:</span>
-                                <strong>245ms</strong>
-                            </div>
-                        </div>
-                        <button class="btn-primary">Explore Context Graph</button>
-                    </div>
+                // Right panel formats
+                const resultFormats = document.getElementById('resultFormats');
+                const currentFmt = this.FORMATS.find(f => f.id === this.state.format);
+                document.getElementById('currentFormat').textContent = currentFmt.name;
+                
+                resultFormats.innerHTML = this.FORMATS.map(fmt => `
+                    <button class="format-option ${fmt.id === this.state.format ? 'active' : ''}" 
+                            onclick="app.state.format = '${fmt.id}'; app.render();">
+                        <div>${fmt.name}</div>
+                        <div class="format-option-sub">${fmt.sub}</div>
+                    </button>
+                `).join('');
 
-                    <div class="context-card">
-                        <h3>Knowledge Graph</h3>
-                        <p>Unified, enterprise-wide representation of business entities and relationships connecting data across operational systems into a persistent semantic network.</p>
-                        <div class="context-metrics">
-                            <div class="metric-item">
-                                <span>Entity Types:</span>
-                                <strong>24</strong>
-                            </div>
-                            <div class="metric-item">
-                                <span>Total Instances:</span>
-                                <strong>185M+</strong>
-                            </div>
-                            <div class="metric-item">
-                                <span>Relationships:</span>
-                                <strong>2.4B+</strong>
-                            </div>
-                        </div>
-                        <button class="btn-primary">Explore Knowledge Graph</button>
-                    </div>
+                // Title
+                document.getElementById('resultTitle').textContent = this.procLabel() + ' Transformation';
+                document.getElementById('resultSubtitle').textContent = 'Prepared for ' + this.effectiveClient() + ' · ' + this.domain().label;
+            },
 
-                    <div class="context-card">
-                        <h3>Enterprise Ontology</h3>
-                        <p>Establishes common business vocabulary enabling every application and AI system to interpret enterprise data with the same meaning and context.</p>
-                        <div class="context-metrics">
-                            <div class="metric-item">
-                                <span>Business Entities:</span>
-                                <strong>32</strong>
-                            </div>
-                            <div class="metric-item">
-                                <span>Business Rules:</span>
-                                <strong>287</strong>
-                            </div>
-                            <div class="metric-item">
-                                <span>Coverage:</span>
-                                <strong>100%</strong>
-                            </div>
-                        </div>
-                        <button class="btn-primary">Explore Ontology</button>
-                    </div>
-                </div>
+            regenerate() {
+                const k = this.state.activeSectionKey;
+                if (!k) return;
+                const textarea = document.querySelector('.refine-textarea');
+                const v = textarea ? textarea.value.trim() : '';
+                
+                this.state.regenKey = k;
+                this.render();
+                setTimeout(() => {
+                    if (v) {
+                        this.state.overrides[k] = v;
+                    }
+                    this.state.regenKey = null;
+                    this.flash('Section regenerated');
+                    this.render();
+                }, 1100);
+            },
 
-                <div class="reasoning-example">
-                    <h3>AI Reasoning Trace Example</h3>
-                    <div class="reasoning-path">
-                        <div class="reasoning-step">Member Profile</div>
-                        <span class="arrow">→</span>
-                        <div class="reasoning-step">Policy Details</div>
-                        <span class="arrow">→</span>
-                        <div class="reasoning-step">Claim History</div>
-                        <span class="arrow">→</span>
-                        <div class="reasoning-step">Provider Profile</div>
-                        <span class="arrow">→</span>
-                        <div class="reasoning-step">LPI Signals</div>
-                        <span class="arrow">→</span>
-                        <div class="reasoning-step">AI Recommendation</div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            init() {
+                document.getElementById('clientInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.saveClient();
+                });
+                document.getElementById('promptText').addEventListener('input', (e) => {
+                    this.state.promptOverride = e.target.value;
+                });
+                this.render();
+            }
+        };
 
-        <!-- AI Layer -->
-        <section id="ai-layer" class="layer-section">
-            <div class="layer-content">
-                <h2>🤖 AI Layer - Agent Studio & Observability</h2>
-                <div class="ai-grid">
-                    <div class="ai-card">
-                        <h3>Enterprise AI Agents</h3>
-                        <div class="agents-list">
-                            <div class="agent-item">
-                                <span class="agent-icon">📋</span>
-                                <div class="agent-info">
-                                    <div class="agent-name">Claims Adjuster</div>
-                                    <div class="agent-status">Active • 12,450 runs today</div>
-                                </div>
-                            </div>
-                            <div class="agent-item">
-                                <span class="agent-icon">💰</span>
-                                <div class="agent-info">
-                                    <div class="agent-name">Payment Integrity Agent</div>
-                                    <div class="agent-status">Active • 8,230 runs today</div>
-                                </div>
-                            </div>
-                            <div class="agent-item">
-                                <span class="agent-icon">🚨</span>
-                                <div class="agent-info">
-                                    <div class="agent-name">Fraud Detection Agent</div>
-                                    <div class="agent-status">Active • 6,180 runs today</div>
-                                </div>
-                            </div>
-                            <div class="agent-item">
-                                <span class="agent-icon">🏥</span>
-                                <div class="agent-info">
-                                    <div class="agent-name">Prior Authorization Assistant</div>
-                                    <div class="agent-status">Active • 4,920 runs today</div>
-                                </div>
-                            </div>
-                            <div class="agent-item">
-                                <span class="agent-icon">⭐</span>
-                                <div class="agent-info">
-                                    <div class="agent-name">Member Service Agent</div>
-                                    <div class="agent-status">Active • 3,640 runs today</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ai-card">
-                        <h3>AI Performance Metrics</h3>
-                        <div class="performance-metrics">
-                            <div class="perf-metric">
-                                <div class="perf-label">Success Rate</div>
-                                <div class="perf-bar">
-                                    <div class="perf-fill" style="width: 96.8%"></div>
-                                </div>
-                                <div class="perf-value">96.8%</div>
-                            </div>
-                            <div class="perf-metric">
-                                <div class="perf-label">Avg Latency</div>
-                                <div class="perf-value">3.4s</div>
-                            </div>
-                            <div class="perf-metric">
-                                <div class="perf-label">Cost/Run</div>
-                                <div class="perf-value">$0.18</div>
-                            </div>
-                            <div class="perf-metric">
-                                <div class="perf-label">Hallucination Risk</div>
-                                <div class="perf-value">0.3%</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ai-card">
-                        <h3>Use Cases Targeting</h3>
-                        <div class="use-cases">
-                            <div class="use-case">
-                                <div class="uc-icon">⏳</div>
-                                <div class="uc-title">LPI Propensity</div>
-                                <div class="uc-desc">Late Payment Interest risk prediction</div>
-                            </div>
-                            <div class="use-case">
-                                <div class="uc-icon">💵</div>
-                                <div class="uc-title">Overpayment Detection</div>
-                                <div class="uc-desc">Identify duplicate/excess payments</div>
-                            </div>
-                            <div class="use-case">
-                                <div class="uc-icon">🎯</div>
-                                <div class="uc-title">Fraud Risk Score</div>
-                                <div class="uc-desc">Detect suspicious claims</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Operate Layer -->
-        <section id="operate-layer" class="layer-section">
-            <div class="layer-content">
-                <h2>⚙️ Operate Layer - Operations & Monitoring</h2>
-                <div class="operate-grid">
-                    <div class="operate-card">
-                        <h3>System Health</h3>
-                        <div class="health-status">
-                            <div class="health-item success">
-                                <div class="health-circle">✓</div>
-                                <div class="health-label">All Pipelines Online</div>
-                            </div>
-                            <div class="health-item success">
-                                <div class="health-circle">✓</div>
-                                <div class="health-label">Data Quality: 98.6%</div>
-                            </div>
-                            <div class="health-item warning">
-                                <div class="health-circle">!</div>
-                                <div class="health-label">VIN Validation Issue (4 records)</div>
-                            </div>
-                            <div class="health-item success">
-                                <div class="health-circle">✓</div>
-                                <div class="health-label">SLA Compliance: 99.2%</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="operate-card">
-                        <h3>Real-time Alerts</h3>
-                        <div class="alerts-list">
-                            <div class="alert-item critical">
-                                <span class="alert-icon">🔴</span>
-                                <span>VIN validation failures detected (4 records)</span>
-                            </div>
-                            <div class="alert-item info">
-                                <span class="alert-icon">ℹ️</span>
-                                <span>New Core Adjudication stream connected</span>
-                            </div>
-                            <div class="alert-item success">
-                                <span class="alert-icon">✅</span>
-                                <span>Transformation completed successfully</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Governance Layer -->
-        <section id="governance-layer" class="layer-section">
-            <div class="layer-content">
-                <h2>🛡️ Governance Layer - Compliance & Control</h2>
-                <div class="governance-grid">
-                    <div class="governance-card">
-                        <h3>Data Governance</h3>
-                        <ul class="governance-list">
-                            <li>✓ Data Lineage Tracking: 100%</li>
-                            <li>✓ Data Classification: Complete</li>
-                            <li>✓ Data Cataloging: 12,450 assets</li>
-                            <li>✓ Access Controls: Enforced</li>
-                            <li>✓ Audit Trail: 2.5M events</li>
-                        </ul>
-                    </div>
-
-                    <div class="governance-card">
-                        <h3>Compliance Status</h3>
-                        <ul class="governance-list">
-                            <li>✓ HIPAA Compliance: Verified</li>
-                            <li>✓ SOC 2 Type II: Compliant</li>
-                            <li>✓ Data Encryption: AES-256</li>
-                            <li>✓ GDPR Requirements: Met</li>
-                            <li>✓ Data Retention: Enforced</li>
-                        </ul>
-                    </div>
-
-                    <div class="governance-card">
-                        <h3>Quality & Performance</h3>
-                        <ul class="governance-list">
-                            <li>✓ Validation Success: 99.4%</li>
-                            <li>✓ Security Scanning: Daily</li>
-                            <li>✓ Performance SLA: 99.2%</li>
-                            <li>✓ Data Freshness: < 5 min</li>
-                            <li>✓ Business Continuity: Active</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; 2024 Data for AI Platform - End-to-End Demo. All rights reserved.</p>
-    </footer>
-
-    <script src="script.js"></script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
 </body>
 </html>
