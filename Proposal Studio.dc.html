@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#eef2f6;font-family:Arial,Helvetica,sans-serif;color:#1E2247}
+a{color:#13338E}a:hover{color:#DF6014}
+.fghead{font-family:'Franklin Gothic Medium Cond','Oswald','Franklin Gothic Medium',Arial,sans-serif;letter-spacing:.3px}
+/* option scaffold */
+.dv-turn{padding:44px 48px 40px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 26px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:4px 8px;background:#1E2247;color:#fff;border-radius:5px;text-decoration:none}
+.dv-tname{font:600 14px system-ui,sans-serif;color:#1E2247}
+.dv-opts{display:flex;flex-wrap:wrap;gap:38px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:12px;scroll-margin-top:20px}
+.dv-olabel{display:flex;align-items:baseline;gap:9px;font:13px system-ui,sans-serif;color:#5a6a80}
+.dv-oid{font:600 11px ui-monospace,Menlo,monospace;padding:3px 8px;background:#dde5ee;color:#1E2247;border-radius:6px;text-decoration:none}
+.dv-opt:target .dv-oid{background:#DF6014;color:#fff}
+.dv-next{margin:30px 0 0;font:13px/1.6 system-ui,sans-serif;color:#5a6a80}
+/* app shell */
+.app{width:1380px;background:#F7F9FC;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(30,34,71,.18);border:1px solid #d7e0ea}
+.tbar{background:linear-gradient(90deg,#1E2247 0%,#13338E 68%,#2746C4 100%);color:#fff;padding:0 24px;height:60px;display:flex;align-items:center;gap:18px}
+.tlogo{height:24px}
+.tdiv{width:1px;height:26px;background:rgba(255,255,255,.25)}
+.ttitle{font-size:19px;font-weight:600}
+.tsub{font-size:12px;opacity:.8}
+.tcrumb{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;opacity:.9}
+.tav{width:32px;height:32px;border-radius:50%;background:#DF6014;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;margin-left:6px}
+.body{display:flex;height:824px}
+.rail{width:274px;background:#fff;border-right:1px solid #e6ecf3;padding:18px 16px;overflow:auto}
+.center{flex:1;padding:24px 28px;overflow:auto}
+.rrail{width:318px;background:#fff;border-left:1px solid #e6ecf3;padding:20px 18px;overflow:auto}
+.secl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:#8794a6;margin:0}
+/* domains */
+.dm{padding:10px 12px;border-radius:9px;font-weight:600;font-size:14px;color:#1E2247;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.dm:hover{background:#f2f6fa}
+.dm.on{background:#1E2247;color:#fff}
+.sub{padding:8px 12px 8px 24px;font-size:13px;color:#41506a;border-radius:8px;cursor:pointer}
+.sub:hover{background:#f2f6fa}
+.sub.on{background:#fff5ed;color:#B25400;font-weight:700}
+.dmcount{font-size:11px;font-weight:400;opacity:.6}
+/* sharepoint docs */
+.spbtn{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;background:#eef3fb;color:#13338E;font-weight:700;font-size:13px;cursor:pointer;border:1px solid #dae5f5}
+.spbtn:hover{background:#e2ecfa}
+.doc{display:flex;align-items:center;gap:10px;padding:8px 9px;border-radius:9px;background:#fff;border:1px solid #e9eef4}
+.doc:hover{border-color:#cdd8e5}
+.ft{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;flex:none}
+.ft.ppt{background:#DF6014}.ft.doc{background:#2746C4}.ft.xls{background:#1E7A3F}.ft.htm{background:#1E2247}.ft.img{background:#6CB1DB}
+.docn{font-size:12.5px;font-weight:600;color:#28324a;line-height:1.25}
+.docm{font-size:10.5px;color:#93a0b3}
+.addref{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border:1.5px dashed #c3d0e0;border-radius:9px;color:#5a6a80;font-size:12.5px;font-weight:600;cursor:pointer}
+.addref:hover{border-color:#DF6014;color:#DF6014}
+/* prompt */
+.prompt{background:#fff;border:1px solid #dbe3ec;border-radius:14px;padding:18px 20px}
+.pta{width:100%;border:none;resize:none;font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#28324a;outline:none;background:transparent}
+.pchip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:20px;background:#f0f4f9;color:#41506a;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #e4ebf3}
+.pchip:hover{border-color:#6CB1DB}
+.pchip.on{background:#1E2247;color:#fff;border-color:#1E2247}
+/* plugin cards */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.pcard{background:#fff;border:1px solid #e2e9f1;border-radius:11px;padding:13px 14px;display:flex;flex-direction:column;gap:6px;cursor:pointer;position:relative}
+.pcard:hover{border-color:#6CB1DB}
+.pcard.on{border-color:#DF6014;background:#fff8f3;box-shadow:inset 0 0 0 1px #DF6014}
+.picon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;font-family:'Oswald',Arial}
+.pname{font-size:13.5px;font-weight:700;color:#28324a}
+.pdesc{font-size:11.5px;color:#7a879a;line-height:1.35}
+.tg{position:absolute;top:12px;right:12px;width:34px;height:19px;border-radius:11px;background:#d7dee7}
+.tg.on{background:#DF6014}
+.tg:after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.15s}
+.tg.on:after{left:17px}
+/* output right rail */
+.fmt{flex:1;border:1.5px solid #d8e0ea;border-radius:11px;padding:13px 6px;text-align:center;background:#fff;cursor:pointer}
+.fmt:hover{border-color:#6CB1DB}
+.fmt.on{border-color:#1E2247;background:#1E2247;color:#fff}
+.fmt .fl{font-size:9px;letter-spacing:.6px;opacity:.7;text-transform:uppercase}
+.fmt .fn{font-size:15px;font-weight:700;font-family:'Oswald',Arial;margin-top:2px}
+.olrow{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px dashed #eef2f7;font-size:12.5px;color:#3a465c}
+.oldot{width:20px;height:20px;border-radius:50%;background:#eef3fb;color:#13338E;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+.btn{border:none;border-radius:10px;padding:13px 16px;font-weight:700;cursor:pointer;font-family:Arial;font-size:14px}
+.btn.pri{background:#DF6014;color:#fff}.btn.pri:hover{background:#c4530e}
+.btn.sec{background:#fff;color:#1E2247;border:1px solid #cdd8e5}.btn.sec:hover{border-color:#1E2247}
+.btn.dark{background:#1E2247;color:#fff}
+.card{background:#fff;border:1px solid #e6ecf3;border-radius:12px;padding:16px}
+/* opt B tabs */
+.dtab{padding:9px 16px;border-radius:9px 9px 0 0;font-weight:600;font-size:13.5px;color:#5a6a80;cursor:pointer;border-bottom:2px solid transparent}
+.dtab.on{color:#1E2247;border-bottom-color:#DF6014}
+.spill{padding:6px 13px;border-radius:20px;font-size:12.5px;font-weight:600;color:#41506a;background:#fff;border:1px solid #dde5ee;cursor:pointer}
+.spill.on{background:#DF6014;color:#fff;border-color:#DF6014}
+.tree{font-size:13px}
+.trow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;color:#3a465c;cursor:pointer}
+.trow:hover{background:#f2f6fa}
+.trow.fold{font-weight:700;color:#1E2247}
+.spsearch{width:100%;padding:9px 11px;border:1px solid #dbe3ec;border-radius:9px;font-family:Arial;font-size:13px;outline:none}
+.prev{background:#fff;border:1px solid #e0e7ef;border-radius:8px;padding:16px 15px;box-shadow:0 3px 10px rgba(30,34,71,.06)}
+.prevband{height:6px;border-radius:3px;background:linear-gradient(90deg,#1E2247,#2746C4);margin-bottom:12px}
+.plh{height:8px;border-radius:4px;background:#e7edf4}
+/* opt C wizard */
+.step{display:flex;align-items:center;gap:10px}
+.snum{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:'Oswald',Arial;background:#e5ebf2;color:#8794a6;flex:none}
+.step.done .snum{background:#1E7A3F;color:#fff}
+.step.on .snum{background:#DF6014;color:#fff}
+.sname{font-size:12px;font-weight:700;color:#8794a6}
+.step.on .sname,.step.done .sname{color:#1E2247}
+.sline{flex:1;height:2px;background:#e0e7ef}
+.tile{border:1.5px solid #dbe3ec;border-radius:12px;padding:16px;background:#fff;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.tile:hover{border-color:#6CB1DB}
+.tile.on{border-color:#DF6014;background:#fff8f3;box-shadow:inset 0 0 0 1px #DF6014}
+.chk{width:22px;height:22px;border-radius:6px;border:1.5px solid #cdd8e5;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px}
+.chk.on{background:#DF6014;border-color:#DF6014}
+</style></helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Firstsource Proposal Studio — plugin-based launcher · 3 directions</span></div>
+<div class="dv-opts">
+
+<!-- ============ OPTION 1a — COMMAND CONSOLE ============ -->
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a><b>Command Console</b> — three-pane: domains + SharePoint left, prompt & plugins center, output right</div>
+<div class="app">
+<div class="tbar"><img class="tlogo" src="assets/Firstsource-logo-white.png" alt="Firstsource"><div class="tdiv"></div><div><div class="ttitle fghead">Proposal Studio</div></div><div class="tcrumb"><span>Banking &amp; FS</span><span style="opacity:.5">▸</span><span style="font-weight:700">KYC / AML Onboarding</span><div class="tav">KS</div></div></div>
+<div class="body">
+<!-- left rail -->
+<div class="rail">
+<p class="secl">Domain</p>
+<div class="dm on" style="margin:8px 0 2px">Banking &amp; Financial Services<span>▾</span></div>
+<div class="sub on">KYC / AML Onboarding</div><div class="sub">Card Collections</div><div class="sub">Mortgage Origination</div><div class="sub">Lending Operations</div><div class="sub">Payments &amp; Disputes</div>
+<div class="dm" style="margin-top:6px">Healthcare Payer<span class="dmcount">4 ▸</span></div>
+<div class="dm">Collections<span class="dmcount">3 ▸</span></div>
+<div class="dm">Customer Experience<span class="dmcount">5 ▸</span></div>
+<div class="dm">Gen-AI &amp; Data Services<span class="dmcount">3 ▸</span></div>
+<div style="height:1px;background:#eaeff4;margin:16px 0"></div>
+<div class="fx ac jb" style="margin-bottom:10px"><p class="secl" style="margin:0">Reference documents</p><span style="font-size:10px;color:#93a0b3">5</span></div>
+<div class="spbtn"><span style="font-size:15px">◱</span>Browse SharePoint</div>
+<div class="col gap8" style="margin-top:10px">
+<div class="doc"><div class="ft ppt">PPT</div><div><div class="docn">Retail-Bank-Fraud-Ops.pptx</div><div class="docm">Shared › Banking › Case Studies</div></div></div>
+<div class="doc"><div class="ft doc">DOC</div><div><div class="docn">KYC-AML-Capability.docx</div><div class="docm">Shared › Banking › Capability</div></div></div>
+<div class="doc"><div class="ft xls">XLS</div><div><div class="docn">Pricing-Model-2026.xlsx</div><div class="docm">Shared › Commercials</div></div></div>
+<div class="doc"><div class="ft htm">HTM</div><div><div class="docn">RFP-Response-Template.html</div><div class="docm">Shared › Templates</div></div></div>
+<div class="doc"><div class="ft img">IMG</div><div><div class="docn">Delivery-Model.png</div><div class="docm">Shared › Diagrams</div></div></div>
+</div>
+<div class="addref" style="margin-top:10px">＋ Add reference document</div>
+</div>
+<!-- center -->
+<div class="center">
+<div class="fx ac gap8" style="margin-bottom:14px"><span class="pchip on">Banking &amp; FS</span><span style="color:#c3d0e0">▸</span><span class="pchip on">KYC / AML Onboarding</span></div>
+<p class="secl">Describe your proposal</p>
+<div class="prompt" style="margin:8px 0 6px">
+<textarea class="pta" rows="4">Draft a proposal for Meridian Retail Bank to transform their KYC/AML onboarding — cut manual review time, lift straight-through processing, and stay audit-ready. Lead with our Gen-AI document-extraction accelerator, target a 40% cost-to-serve reduction, and lay out a phased 12-week transition.</textarea>
+<div class="fx ac jb wrap gap8" style="margin-top:12px;border-top:1px solid #eef2f7;padding-top:12px">
+<div class="fx ac gap8"><span class="pchip">Tone: Executive</span><span class="pchip">Length: Standard</span><span class="pchip">＋ Add client</span></div>
+<span style="font-size:12px;color:#93a0b3">Edit anytime — regenerates from the prompt</span>
+</div>
+</div>
+<div class="fx ac jb" style="margin:22px 0 12px"><p class="secl" style="margin:0">Plugins</p><span style="font-size:12px;color:#93a0b3">6 active</span></div>
+<p class="secl" style="color:#B25400;margin-bottom:9px">Domain &amp; capability packs</p>
+<div class="pgrid">
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#1E2247">B</div><div class="pname">Banking &amp; FS Pack</div><div class="pdesc">Vertical language, offerings, proof points</div></div>
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#13338E">AI</div><div class="pname">Gen-AI &amp; Data Services</div><div class="pdesc">Doc extraction, model accelerators</div></div>
+</div>
+<p class="secl" style="color:#B25400;margin:18px 0 9px">Content generators</p>
+<div class="pgrid">
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#DF6014">§</div><div class="pname">Executive Summary</div><div class="pdesc">One-page framing for decision makers</div></div>
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#DF6014">$</div><div class="pname">Pricing &amp; Commercials</div><div class="pdesc">Pulls from pricing DB + Excel model</div></div>
+<div class="pcard"><div class="tg"></div><div class="picon" style="background:#6CB1DB">◆</div><div class="pname">Case Studies</div><div class="pdesc">Matched proof points from library</div></div>
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#DF6014">⟶</div><div class="pname">Transition Plan</div><div class="pdesc">Phased timeline &amp; governance</div></div>
+</div>
+<p class="secl" style="color:#B25400;margin:18px 0 9px">Connectors &amp; compliance</p>
+<div class="pgrid">
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#13338E">◱</div><div class="pname">SharePoint</div><div class="pdesc">5 reference docs attached</div></div>
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#1E7A3F">✓</div><div class="pname">KYC/AML Guardrails</div><div class="pdesc">Regulatory &amp; brand compliance check</div></div>
+</div>
+</div>
+<!-- right rail -->
+<div class="rrail">
+<p class="secl">Output format</p>
+<div class="fx gap8" style="margin:10px 0 22px">
+<div class="fmt on"><div class="fl">Slides</div><div class="fn">PPT</div></div>
+<div class="fmt"><div class="fl">Document</div><div class="fn">Word</div></div>
+<div class="fmt"><div class="fl">Web</div><div class="fn">HTML</div></div>
+</div>
+<p class="secl">Proposal outline</p>
+<div style="margin:8px 0 20px">
+<div class="olrow"><div class="oldot">1</div>Executive Summary</div>
+<div class="olrow"><div class="oldot">2</div>Understanding Your Challenge</div>
+<div class="olrow"><div class="oldot">3</div>Solution — KYC/AML Transformation</div>
+<div class="olrow"><div class="oldot">4</div>Firstsource Differentiators</div>
+<div class="olrow"><div class="oldot">5</div>Case Study — Fraud Ops</div>
+<div class="olrow"><div class="oldot">6</div>Commercial Model</div>
+<div class="olrow"><div class="oldot">7</div>Transition &amp; Governance</div>
+<div class="olrow" style="border:none"><div class="oldot">8</div>Next Steps</div>
+</div>
+<button class="btn pri w100" style="width:100%">✦ Generate draft proposal</button>
+<div class="fx gap8" style="margin-top:10px"><button class="btn sec f1">Save</button><button class="btn dark f1">Download</button></div>
+<p style="font-size:11px;color:#93a0b3;text-align:center;margin:12px 0 0">Draft generates in ~30s · edit prompts to regenerate any section</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ============ OPTION 1b — DOC-CENTRIC WORKBENCH ============ -->
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a><b>Document Workbench</b> — SharePoint browser is the hero pane, live preview on the right</div>
+<div class="app">
+<div class="tbar"><img class="tlogo" src="assets/Firstsource-logo-white.png" alt="Firstsource"><div class="tdiv"></div><div class="ttitle fghead">Proposal Studio</div><div class="tcrumb"><span class="tsub">New proposal · Meridian Retail Bank</span><div class="tav">KS</div></div></div>
+<!-- domain tab bar -->
+<div style="background:#fff;border-bottom:1px solid #e6ecf3;padding:6px 24px 0;display:flex;gap:4px;align-items:flex-end">
+<div class="dtab on">Banking &amp; FS</div><div class="dtab">Healthcare Payer</div><div class="dtab">Collections</div><div class="dtab">Customer Experience</div><div class="dtab">Gen-AI &amp; Data</div>
+</div>
+<div style="background:#f4f8fc;border-bottom:1px solid #e6ecf3;padding:11px 24px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span style="font-size:11px;font-weight:700;color:#8794a6;text-transform:uppercase;letter-spacing:.6px;margin-right:4px">Sub-process</span><span class="spill on">KYC / AML</span><span class="spill">Card Collections</span><span class="spill">Mortgage Origination</span><span class="spill">Lending Ops</span><span class="spill">Payments</span></div>
+<div class="body" style="height:724px">
+<!-- left: sharepoint browser hero -->
+<div class="rail" style="width:340px">
+<div class="fx ac jb" style="margin-bottom:10px"><p class="secl" style="margin:0">SharePoint</p><span class="spbtn" style="padding:5px 9px;font-size:11px">Open in SharePoint ↗</span></div>
+<input class="spsearch" placeholder="Search reference documents…" style="margin-bottom:12px">
+<div class="tree">
+<div class="trow fold">▾ Banking &amp; FS</div>
+<div class="trow" style="padding-left:22px"><div class="ft ppt" style="width:24px;height:24px;font-size:7px">PPT</div>Retail-Bank-Fraud-Ops.pptx</div>
+<div class="trow" style="padding-left:22px"><div class="ft doc" style="width:24px;height:24px;font-size:7px">DOC</div>KYC-AML-Capability.docx</div>
+<div class="trow" style="padding-left:22px"><div class="ft img" style="width:24px;height:24px;font-size:7px">IMG</div>Delivery-Model.png</div>
+<div class="trow fold">▾ Commercials</div>
+<div class="trow" style="padding-left:22px"><div class="ft xls" style="width:24px;height:24px;font-size:7px">XLS</div>Pricing-Model-2026.xlsx</div>
+<div class="trow" style="padding-left:22px"><div class="ft xls" style="width:24px;height:24px;font-size:7px">XLS</div>Rate-Card-Global.xlsx</div>
+<div class="trow fold">▾ Templates</div>
+<div class="trow" style="padding-left:22px"><div class="ft htm" style="width:24px;height:24px;font-size:7px">HTM</div>RFP-Response-Template.html</div>
+<div class="trow fold">▸ Compliance library</div>
+</div>
+<div style="height:1px;background:#eaeff4;margin:14px 0"></div>
+<p class="secl" style="margin-bottom:9px">Attached to proposal · 4</p>
+<div class="col gap8">
+<div class="doc"><div class="ft ppt">PPT</div><div><div class="docn">Retail-Bank-Fraud-Ops.pptx</div><div class="docm">Case study proof point</div></div></div>
+<div class="doc"><div class="ft doc">DOC</div><div><div class="docn">KYC-AML-Capability.docx</div><div class="docm">Capability narrative</div></div></div>
+<div class="doc"><div class="ft xls">XLS</div><div><div class="docn">Pricing-Model-2026.xlsx</div><div class="docm">Commercials source</div></div></div>
+<div class="doc"><div class="ft img">IMG</div><div><div class="docn">Delivery-Model.png</div><div class="docm">Diagram</div></div></div>
+</div>
+</div>
+<!-- center: prompt + plugins compact -->
+<div class="center">
+<p class="secl">Proposal prompt</p>
+<div class="prompt" style="margin:8px 0 20px">
+<textarea class="pta" rows="3">Transform Meridian Retail Bank's KYC/AML onboarding with our Gen-AI extraction accelerator — 40% lower cost-to-serve, higher straight-through processing, audit-ready. Cite the attached fraud-ops case study and pull commercials from the pricing model.</textarea>
+<div class="fx ac gap8" style="margin-top:10px;border-top:1px solid #eef2f7;padding-top:10px"><span class="pchip">Tone: Executive</span><span class="pchip">Length: Standard</span><span class="pchip on">✦ Cite sources</span></div>
+</div>
+<p class="secl" style="margin-bottom:10px">Plugins</p>
+<div class="pgrid" style="grid-template-columns:1fr 1fr 1fr">
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#1E2247">B</div><div class="pname">Banking Pack</div></div>
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#13338E">AI</div><div class="pname">Gen-AI &amp; Data</div></div>
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#DF6014">§</div><div class="pname">Exec Summary</div></div>
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#DF6014">$</div><div class="pname">Pricing</div></div>
+<div class="pcard"><div class="tg"></div><div class="picon" style="background:#6CB1DB">◆</div><div class="pname">Case Studies</div></div>
+<div class="pcard on"><div class="tg on"></div><div class="picon" style="background:#1E7A3F">✓</div><div class="pname">KYC Guardrails</div></div>
+</div>
+<div style="height:1px;background:#eaeff4;margin:20px 0"></div>
+<p class="secl" style="margin-bottom:10px">Output format</p>
+<div class="fx gap8"><div class="fmt on"><div class="fl">Slides</div><div class="fn">PPT</div></div><div class="fmt"><div class="fl">Document</div><div class="fn">Word</div></div><div class="fmt"><div class="fl">Web</div><div class="fn">HTML</div></div></div>
+</div>
+<!-- right: live preview -->
+<div class="rrail" style="width:340px;background:#eef2f6">
+<div class="fx ac jb" style="margin-bottom:12px"><p class="secl" style="margin:0">Live preview</p><span style="font-size:11px;color:#93a0b3">PPT · 8 slides</span></div>
+<div class="prev" style="margin-bottom:12px">
+<div class="prevband"></div>
+<div style="font-size:9px;color:#DF6014;font-weight:700;letter-spacing:.5px">FIRSTSOURCE · PROPOSAL</div>
+<div class="fghead" style="font-size:17px;color:#1E2247;line-height:1.15;margin:5px 0 10px">KYC / AML Onboarding Transformation<br>Meridian Retail Bank</div>
+<div class="plh" style="width:80%;margin-bottom:6px"></div><div class="plh" style="width:60%"></div>
+</div>
+<div class="prev" style="margin-bottom:12px">
+<div style="font-size:9px;color:#93a0b3;font-weight:700">02 · EXECUTIVE SUMMARY</div>
+<div class="plh" style="width:90%;margin:9px 0 6px"></div><div class="plh" style="width:85%;margin-bottom:6px"></div><div class="plh" style="width:70%;margin-bottom:12px"></div>
+<div class="fx gap8"><div style="flex:1;height:38px;border-radius:6px;background:#f0f4f9"></div><div style="flex:1;height:38px;border-radius:6px;background:#f0f4f9"></div><div style="flex:1;height:38px;border-radius:6px;background:#fff5ed"></div></div>
+</div>
+<button class="btn pri w100" style="width:100%">✦ Generate proposal</button>
+<div class="fx gap8" style="margin-top:10px"><button class="btn sec f1">Save</button><button class="btn dark f1">Download PPT</button></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ============ OPTION 1c — GUIDED WIZARD ============ -->
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a><b>Guided Wizard</b> — linear stepper, one focused decision per step, single centered column</div>
+<div class="app" style="width:1040px">
+<div class="tbar"><img class="tlogo" src="assets/Firstsource-logo-white.png" alt="Firstsource"><div class="tdiv"></div><div class="ttitle fghead">Proposal Studio</div><div class="tcrumb"><span class="tsub">Guided proposal builder</span><div class="tav">KS</div></div></div>
+<!-- stepper -->
+<div style="background:#fff;border-bottom:1px solid #e6ecf3;padding:18px 40px"><div class="fx ac gap10">
+<div class="step done"><div class="snum">✓</div><div class="sname">Domain</div></div><div class="sline"></div>
+<div class="step on"><div class="snum">2</div><div class="sname">Plugins</div></div><div class="sline"></div>
+<div class="step"><div class="snum">3</div><div class="sname">References</div></div><div class="sline"></div>
+<div class="step"><div class="snum">4</div><div class="sname">Prompt</div></div><div class="sline"></div>
+<div class="step"><div class="snum">5</div><div class="sname">Format &amp; generate</div></div>
+</div></div>
+<div style="padding:30px 40px 34px;height:696px;overflow:auto;background:#F7F9FC">
+<div class="fx ac gap8" style="margin-bottom:6px"><span class="pchip on">Banking &amp; FS</span><span style="color:#c3d0e0">▸</span><span class="pchip on">KYC / AML Onboarding</span><span style="margin-left:auto;font-size:12px;color:#93a0b3">Step 2 of 5</span></div>
+<h2 class="fghead" style="font-size:26px;color:#1E2247;margin:14px 0 4px">Choose the plugins for this proposal</h2>
+<p style="font-size:14px;color:#5a6a80;margin:0 0 22px">Packs, content generators, connectors and compliance checks. Toggle what applies — you can change these later.</p>
+<p class="secl" style="color:#B25400;margin-bottom:11px">Domain &amp; capability packs</p>
+<div class="pgrid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:22px">
+<div class="tile on"><div class="fx ac jb"><div class="picon" style="background:#1E2247">B</div><div class="chk on">✓</div></div><div class="pname">Banking &amp; FS Pack</div><div class="pdesc">Vertical language, offerings, proof points</div></div>
+<div class="tile on"><div class="fx ac jb"><div class="picon" style="background:#13338E">AI</div><div class="chk on">✓</div></div><div class="pname">Gen-AI &amp; Data Services</div><div class="pdesc">Doc extraction &amp; model accelerators</div></div>
+<div class="tile"><div class="fx ac jb"><div class="picon" style="background:#2746C4">CX</div><div class="chk"></div></div><div class="pname">Customer Experience</div><div class="pdesc">Servicing &amp; contact-centre capability</div></div>
+</div>
+<p class="secl" style="color:#B25400;margin-bottom:11px">Content generators</p>
+<div class="pgrid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:22px">
+<div class="tile on"><div class="fx ac jb"><div class="picon" style="background:#DF6014">§</div><div class="chk on">✓</div></div><div class="pname">Executive Summary</div></div>
+<div class="tile on"><div class="fx ac jb"><div class="picon" style="background:#DF6014">$</div><div class="chk on">✓</div></div><div class="pname">Pricing &amp; Commercials</div></div>
+<div class="tile on"><div class="fx ac jb"><div class="picon" style="background:#DF6014">⟶</div><div class="chk on">✓</div></div><div class="pname">Transition Plan</div></div>
+<div class="tile"><div class="fx ac jb"><div class="picon" style="background:#6CB1DB">◆</div><div class="chk"></div></div><div class="pname">Case Studies</div></div>
+<div class="tile"><div class="fx ac jb"><div class="picon" style="background:#6CB1DB">≡</div><div class="chk"></div></div><div class="pname">Statement of Work</div></div>
+<div class="tile"><div class="fx ac jb"><div class="picon" style="background:#6CB1DB">◷</div><div class="chk"></div></div><div class="pname">Risk &amp; Assumptions</div></div>
+</div>
+<p class="secl" style="color:#B25400;margin-bottom:11px">Connectors &amp; compliance</p>
+<div class="pgrid" style="grid-template-columns:1fr 1fr 1fr">
+<div class="tile on"><div class="fx ac jb"><div class="picon" style="background:#13338E">◱</div><div class="chk on">✓</div></div><div class="pname">SharePoint</div><div class="pdesc">Reference document library</div></div>
+<div class="tile"><div class="fx ac jb"><div class="picon" style="background:#13338E">◎</div><div class="chk"></div></div><div class="pname">Salesforce CRM</div><div class="pdesc">Account &amp; opportunity data</div></div>
+<div class="tile on"><div class="fx ac jb"><div class="picon" style="background:#1E7A3F">✓</div><div class="chk on">✓</div></div><div class="pname">KYC/AML Guardrails</div><div class="pdesc">Regulatory &amp; brand check</div></div>
+</div>
+<div class="fx ac jb" style="margin-top:30px;border-top:1px solid #eaeff4;padding-top:20px"><button class="btn sec">← Back to domain</button><div class="fx ac gap10"><span style="font-size:13px;color:#93a0b3">6 plugins selected</span><button class="btn pri">Continue to references →</button></div></div>
+</div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "wire up <a class="dv-oid" href="#1a">1a</a> so the domain accordion and plugin toggles actually work" · "make <a class="dv-oid" href="#1b">1b</a> the direction and add a generating/progress state" · "show the generated proposal + download screen for <a class="dv-oid" href="#1c">1c</a>"</p>
+</section>
+</x-dc>
+</body>
+</html>
